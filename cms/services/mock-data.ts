@@ -128,6 +128,13 @@ bike.builder = builder;
 bike2.builder = builder;
 bike3.builder = builder;
 
+// Top-level collections — Bike/Builder have so far only been consumed as
+// nested relations (Story.relatedBike, BuildersCup.participants, etc.).
+// Search needs to enumerate all of them directly, the same way a real
+// Sanity query would target the bike/builder document type directly.
+export const mockBikes: Bike[] = [bike, bike2, bike3];
+export const mockBuilders: Builder[] = [builder];
+
 export const mockStories: Story[] = [
   {
     id: "story-panhead",

@@ -81,6 +81,7 @@ export const mockStories: Story[] = [
     category: "Bike",
     author,
     publishedDate: "2026-05-01",
+    gallery: [wideImage, squareImage, portraitImage],
     relatedBike: [bike],
     relatedBuilder: [builder],
     status: "published",

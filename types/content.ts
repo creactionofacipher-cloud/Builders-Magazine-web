@@ -20,7 +20,11 @@ export interface MediaAsset {
   relatedObject?: string;
 }
 
-export type StoryCategory = "Bike" | "Builder" | "Culture" | "Interview" | "Event";
+// Const array (not just a union type) so it can also drive the category
+// filter UI and validate the ?category= search param at runtime —
+// mirrors the SUPPORTED_LOCALES/ENABLED_LOCALES pattern in lib/i18n/locales.ts.
+export const STORY_CATEGORIES = ["Bike", "Builder", "Culture", "Interview", "Event"] as const;
+export type StoryCategory = (typeof STORY_CATEGORIES)[number];
 
 export interface Person {
   id: string;

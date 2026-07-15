@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getAllBuildersCupEvents } from "@/cms/services/buildersCup";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
@@ -11,6 +12,7 @@ import { BuildersCupHighlight } from "@/components/editorial/BuildersCupHighligh
 import { BuildersCupCard } from "@/components/editorial/BuildersCupCard";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
   const title = "Builders Cup | Builders Magazine";
   const description =
     "Официальная платформа Builders Cup: последний слёт, прошедшие события, участники и победители.";
@@ -24,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "website",
     },

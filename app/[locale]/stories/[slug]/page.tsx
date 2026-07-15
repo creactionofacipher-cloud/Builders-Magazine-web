@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getStories, getStoryBySlug } from "@/cms/services/stories";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
@@ -32,6 +33,7 @@ export async function generateMetadata({
     return { title: "Материал не найден | Builders Magazine" };
   }
 
+  const settings = await getSiteSettings();
   const title = `${story.title} | Builders Magazine`;
   const url = `${SITE_URL}/${DEFAULT_LOCALE}/stories/${story.slug}`;
 
@@ -43,7 +45,7 @@ export async function generateMetadata({
       title,
       description: story.shortDescription,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "article",
       images: [{ url: story.coverImage.url }],

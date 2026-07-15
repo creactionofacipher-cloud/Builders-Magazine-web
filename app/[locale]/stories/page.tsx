@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getStories } from "@/cms/services/stories";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { isStoryCategory } from "@/utils/isStoryCategory";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
@@ -12,6 +13,7 @@ import { StoryCard } from "@/components/editorial/StoryCard";
 import { StoryCategoryNav } from "@/components/editorial/StoryCategoryNav";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
   const title = "Истории — Builders Magazine";
   const description =
     "Цифровые материалы Builders Magazine: мотоциклы, мастера, культура кастома и интервью.";
@@ -25,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "website",
     },

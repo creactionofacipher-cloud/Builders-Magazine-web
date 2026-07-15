@@ -278,7 +278,7 @@ Examples:
 | **Field** | **Type**    |
 | --------- | ----------- |
 | id        | string      |
-  slug      | string      |
+| slug      | string      |
 | name      | string      |
 | role      | string      |
 | photo     | Media Asset |
@@ -434,3 +434,18 @@ Future entities may include:
 - Tag
 
 These additions should integrate with the existing relationship model without requiring structural changes.
+
+
+
+## Site Settings
+
+- siteTitle
+- siteDescription
+- mission
+- philosophy
+- contacts
+- cooperation
+- socialLinks[]
+- defaultSEO
+- footerText
+

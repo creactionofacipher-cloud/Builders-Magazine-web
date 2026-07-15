@@ -271,3 +271,7 @@ The MVP must not implement these features.
 However, the project architecture should make their future implementation possible without major refactoring.
 
 All reusable components, data models and routing decisions should consider this future evolution.
+
+
+
+Create Site Settings singleton in Sanity.

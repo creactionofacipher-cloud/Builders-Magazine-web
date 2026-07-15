@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBuildersCupEvents, getBuildersCupEventBySlug } from "@/cms/services/buildersCup";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { portableTextToPlainText } from "@/utils/portableTextToPlainText";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
@@ -31,6 +32,7 @@ export async function generateMetadata({
     return { title: "Событие не найдено | Builders Magazine" };
   }
 
+  const settings = await getSiteSettings();
   const title = `${event.name} | Builders Magazine`;
   const description =
     portableTextToPlainText(event.description, 160) ||
@@ -45,7 +47,7 @@ export async function generateMetadata({
       title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "article",
       images: [{ url: event.coverImage.url }],

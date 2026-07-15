@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllIssues, getIssueBySlug } from "@/cms/services/issues";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { portableTextToPlainText } from "@/utils/portableTextToPlainText";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
@@ -32,6 +33,7 @@ export async function generateMetadata({
     return { title: "Номер не найден | Builders Magazine" };
   }
 
+  const settings = await getSiteSettings();
   const title = `${issue.title} | Builders Magazine`;
   const description =
     portableTextToPlainText(issue.description, 160) || `Номер ${issue.number}, ${issue.year} год.`;
@@ -45,7 +47,7 @@ export async function generateMetadata({
       title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "article",
       images: [{ url: issue.coverImage.url }],

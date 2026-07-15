@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getAllIssues } from "@/cms/services/issues";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
@@ -10,6 +11,7 @@ import { Text } from "@/components/ui/Text";
 import { IssueCard } from "@/components/editorial/IssueCard";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
   const title = "Журнал — архив номеров | Builders Magazine";
   const description =
     "Все номера печатного журнала Builders Magazine: обложки, описания и ссылки на покупку.";
@@ -23,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "website",
     },

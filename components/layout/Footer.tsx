@@ -6,17 +6,18 @@ import { PRIMARY_NAV, localizedNavHref } from "@/lib/navigation";
 
 interface FooterProps {
   locale: EnabledLocale;
+  siteTitle: string;
+  footerText: string;
 }
 
-export function Footer({ locale }: FooterProps) {
+export function Footer({ locale, siteTitle, footerText }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border">
       <Container className="flex flex-col gap-8 py-[var(--spacing-gutter-lg)] md:flex-row md:items-start md:justify-between">
         <Text variant="muted" className="max-w-sm">
-          Builders Magazine — независимый печатный журнал, посвящённый культуре кастомных
-          мотоциклов.
+          {footerText}
         </Text>
         <nav aria-label="Footer" className="flex flex-wrap gap-4">
           {PRIMARY_NAV.map((item) => (
@@ -33,7 +34,7 @@ export function Footer({ locale }: FooterProps) {
       </Container>
       <Container className="border-t border-border py-4">
         <Text variant="muted" className="text-xs">
-          © {year} Builders Magazine
+          © {year} {siteTitle}
         </Text>
       </Container>
     </footer>

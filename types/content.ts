@@ -110,3 +110,31 @@ export interface BuildersCup {
   winners?: Bike[];
   stories?: Story[];
 }
+
+// Singleton (not a collection) — docs/10_POST_MVP.md: "Create Site
+// Settings singleton in Sanity." Only one document of this shape exists.
+export interface SiteSettings {
+  siteTitle: string;
+  siteDescription: string;
+  mission: string;
+  philosophy: string;
+  contacts: {
+    email: string;
+    city?: string;
+  };
+  cooperation: string;
+  // Not consumed by any UI yet — no social links section exists on the
+  // site. Populated in mock data anyway per the project's existing
+  // practice of mirroring the full content model ahead of the UI that
+  // will use it.
+  socialLinks?: { label: string; url: string }[];
+  // Not consumed yet either — per-page metadata is currently
+  // self-contained (see each route's own generateMetadata). Reserved for
+  // Milestone 11 (SEO) as the site-wide fallback.
+  defaultSEO?: {
+    title: string;
+    description: string;
+    ogImage?: MediaAsset;
+  };
+  footerText: string;
+}

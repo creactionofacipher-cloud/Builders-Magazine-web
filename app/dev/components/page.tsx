@@ -195,13 +195,17 @@ export default function DevComponentsPage() {
 
       <Catalog title="Header">
         <div className="border border-border">
-          <Header locale="ru" />
+          <Header locale="ru" siteTitle="Builders Magazine" />
         </div>
       </Catalog>
 
       <Catalog title="Footer">
         <div className="border border-border">
-          <Footer locale="ru" />
+          <Footer
+            locale="ru"
+            siteTitle="Builders Magazine"
+            footerText="Builders Magazine — независимый печатный журнал, посвящённый культуре кастомных мотоциклов."
+          />
         </div>
       </Catalog>
 

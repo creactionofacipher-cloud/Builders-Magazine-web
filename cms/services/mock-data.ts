@@ -1,5 +1,14 @@
 import type { PortableTextBlock } from "@portabletext/types";
-import type { Bike, Builder, BuildersCup, Issue, MediaAsset, Person, Story } from "@/types/content";
+import type {
+  Bike,
+  Builder,
+  BuildersCup,
+  Issue,
+  MediaAsset,
+  Person,
+  SiteSettings,
+  Story,
+} from "@/types/content";
 
 // Placeholder fixtures standing in for Sanity content until Milestone 10
 // (CMS Integration). Only cms/services/*.ts files should import this —
@@ -47,6 +56,32 @@ const author: Person = {
   role: "Автор",
   photo: squareImage,
 };
+
+const editorInChief: Person = {
+  id: "person-aleksei",
+  slug: "aleksei-volkov",
+  name: "Алексей Волков",
+  role: "Главный редактор",
+  photo: squareImage,
+};
+
+const photographer: Person = {
+  id: "person-dmitry",
+  slug: "dmitry-orlov",
+  name: "Дмитрий Орлов",
+  role: "Фотограф",
+  photo: squareImage,
+};
+
+const founder: Person = {
+  id: "person-ekaterina",
+  slug: "ekaterina-titova",
+  name: "Екатерина Титова",
+  role: "Основатель",
+  photo: squareImage,
+};
+
+export const mockCrew: Person[] = [founder, editorInChief, author, photographer];
 
 const bike: Bike = {
   id: "bike-panhead",
@@ -236,6 +271,39 @@ export const mockIssues: Issue[] = [
     featuredStories: [mockStories[0], mockStories[2]],
   },
 ];
+
+export const mockSiteSettings: SiteSettings = {
+  siteTitle: "Builders Magazine",
+  siteDescription: "Цифровая платформа независимого журнала о культуре кастомных мотоциклов.",
+  mission:
+    "Builders Magazine существует, чтобы рассказывать о людях, мотоциклах и мастерстве, " +
+    "которые формируют культуру кастомных мотоциклов. Мы не гонимся за трендами и коммерческим " +
+    "успехом — наша миссия в том, чтобы сохранять культуру, вдохновлять мастеров и " +
+    "документировать выдающиеся проекты для будущих поколений.",
+  philosophy:
+    "Builders Magazine — не корпоративный сайт, не новостной портал и не онлайн-магазин. Это " +
+    "кураторская издательская платформа, построенная вокруг фотографии, историй и мастерства. " +
+    "Мы говорим спокойно и уверенно, как человек, который давно в теме — без агрессивного " +
+    "маркетинга и лишней рекламы.",
+  contacts: {
+    email: "hello@buildersmagazine.ru",
+    city: "Москва, Россия",
+  },
+  cooperation:
+    "Мы открыты к сотрудничеству с брендами, мастерскими и организациями, которые разделяют " +
+    "наши ценности. Коммерческие партнёрства никогда не влияют на редакционную независимость — " +
+    "читатели должны быть уверены в честности публикуемых материалов.",
+  socialLinks: [
+    { label: "Telegram", url: "https://t.me/example" },
+    { label: "Instagram", url: "https://instagram.com/example" },
+  ],
+  defaultSEO: {
+    title: "Builders Magazine",
+    description: "Цифровая платформа независимого журнала о культуре кастомных мотоциклов.",
+  },
+  footerText:
+    "Builders Magazine — независимый печатный журнал, посвящённый культуре кастомных мотоциклов.",
+};
 
 export const mockBuildersCupEvents: BuildersCup[] = [
   {

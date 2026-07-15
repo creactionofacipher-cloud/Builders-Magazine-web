@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { ENABLED_LOCALES, isEnabledLocale } from "@/lib/i18n/locales";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -26,11 +27,13 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  const settings = await getSiteSettings();
+
   return (
     <>
-      <Header locale={locale} />
+      <Header locale={locale} siteTitle={settings.siteTitle} />
       <main>{children}</main>
-      <Footer locale={locale} />
+      <Footer locale={locale} siteTitle={settings.siteTitle} footerText={settings.footerText} />
     </>
   );
 }

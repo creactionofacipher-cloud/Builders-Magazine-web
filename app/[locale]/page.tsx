@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { getCurrentIssue } from "@/cms/services/issues";
 import { getFeaturedContent, getFeaturedStories } from "@/cms/services/stories";
 import { getLatestBuildersCup } from "@/cms/services/buildersCup";
+import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Hero } from "@/components/editorial/Hero";
@@ -12,6 +13,7 @@ import { BuildersCupHighlight } from "@/components/editorial/BuildersCupHighligh
 import { StoryCollection } from "@/components/editorial/StoryCollection";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
   const title = "Builders Magazine — независимый журнал о кастомных мотоциклах";
   const description =
     "Цифровая платформа Builders Magazine: архив печатных номеров, эксклюзивные истории и Builders Cup.";
@@ -25,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: SITE_NAME,
+      siteName: settings.siteTitle,
       locale: "ru_RU",
       type: "website",
     },
@@ -41,19 +43,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const activeLocale = isEnabledLocale(locale) ? locale : DEFAULT_LOCALE;
 
-  const [currentIssue, featuredStories, featuredContent, latestBuildersCup] = await Promise.all([
-    getCurrentIssue(),
-    getFeaturedStories(),
-    getFeaturedContent(),
-    getLatestBuildersCup(),
-  ]);
+  const [currentIssue, featuredStories, featuredContent, latestBuildersCup, settings] =
+    await Promise.all([
+      getCurrentIssue(),
+      getFeaturedStories(),
+      getFeaturedContent(),
+      getLatestBuildersCup(),
+      getSiteSettings(),
+    ]);
 
   return (
     <>
       {currentIssue && (
         <Hero
           image={currentIssue.coverImage}
-          title={SITE_NAME}
+          title={settings.siteTitle}
           subtitle={`Свежий номер: ${currentIssue.title}`}
           cta={{
             label: "Смотреть номер",

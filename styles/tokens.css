@@ -1,12 +1,18 @@
 /*
  * Design tokens (docs/06_DESIGN_GUIDE.md, docs/09_BRAND_GUIDE.md).
  *
- * Two layers:
- * 1. `@theme` — tokens Tailwind turns into utility classes
- *    (bg-*, text-*, font-*, p-*, rounded-*, shadow-*, ease-*).
- * 2. `:root` custom properties — tokens with no Tailwind theme
- *    namespace (z-index, motion durations). Use via arbitrary
- *    values, e.g. `z-[var(--z-header)]`, `duration-[var(--duration-base)]`.
+ * Three layers:
+ * 1. `@theme` — theme-independent tokens Tailwind turns into utility
+ *    classes (font-*, text-*, p-*, rounded-*, ease-*, and the raw
+ *    --color-neutral-* / white / black palette).
+ * 2. `@theme inline` — semantic color/shadow tokens that Tailwind still
+ *    turns into utility classes (bg-*, text-*, shadow-*), but whose
+ *    *value* is an indirection variable resolved at runtime rather than
+ *    inlined at build time. This is what makes them theme-switchable.
+ * 3. `:root[data-theme="..."]` — the actual light/dark values those
+ *    indirection variables resolve to. See components/ui/ThemeToggle.tsx
+ *    and the inline script in app/layout.tsx for how `data-theme` gets
+ *    set on <html>.
  *
  * Every component must read from these tokens — no hardcoded hex,
  * pixel, or ad hoc timing values in component code.
@@ -14,17 +20,11 @@
 
 @theme {
   /* ---------------------------------------------------------------- */
-  /* Color                                                             */
+  /* Raw palette                                                       */
   /* Primary: black/white. Secondary: neutral grays. No brand accent   */
   /* hue — "the motorcycle projects themselves should provide most of  */
-  /* the visual color" (docs/06_DESIGN_GUIDE.md). Feedback colors are  */
-  /* functional, not decorative, and stay muted.                      */
-  /*                                                                    */
-  /* Dark visual theme: the semantic tokens below point to the         */
-  /* opposite end of the same neutral scale from the original light    */
-  /* pass. The raw --color-neutral-* steps are unchanged — only which  */
-  /* step each semantic role uses was flipped. There is no light/dark  */
-  /* toggle; this is the site's one fixed theme.                       */
+  /* the visual color" (docs/06_DESIGN_GUIDE.md). Theme-independent —   */
+  /* light and dark both draw from this same scale, just opposite ends.*/
   /* ---------------------------------------------------------------- */
   --color-white: #ffffff;
   --color-black: #000000;
@@ -40,21 +40,6 @@
   --color-neutral-800: #262626;
   --color-neutral-900: #171717;
   --color-neutral-950: #0a0a0a;
-
-  --color-background: var(--color-neutral-950);
-  --color-foreground: var(--color-white);
-  --color-surface: var(--color-neutral-900);
-  --color-border: var(--color-neutral-800);
-  --color-muted: var(--color-neutral-400);
-
-  --color-success: #6fae8c;
-  --color-error: #d97b6c;
-
-  /* Photo-overlay scrim (Hero). Always black regardless of theme — a
-   * scrim darkens a photo for text legibility, it isn't a themed
-   * surface, which is why it's a separate token from --color-background
-   * rather than reusing it. */
-  --color-scrim: var(--color-black);
 
   /* ---------------------------------------------------------------- */
   /* Typography                                                        */
@@ -123,16 +108,6 @@
   --radius-full: 9999px;
 
   /* ---------------------------------------------------------------- */
-  /* Shadow                                                             */
-  /* "Avoid heavy shadows" (docs/06_DESIGN_GUIDE.md) — two subtle       */
-  /* levels only, no elevated/dramatic shadows. Opacity is higher than  */
-  /* a typical light-theme shadow because a black shadow needs more     */
-  /* contrast to read at all against a near-black surface.             */
-  /* ---------------------------------------------------------------- */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.4);
-
-  /* ---------------------------------------------------------------- */
   /* Motion easing                                                      */
   /* "Subtle fade, smooth transitions, gentle image reveals. Avoid      */
   /* bouncing, spinning, exaggerated motion." No elastic/bounce curves. */
@@ -140,6 +115,62 @@
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+@theme inline {
+  /* ---------------------------------------------------------------- */
+  /* Semantic color + shadow tokens                                    */
+  /* Values are indirection variables (--theme-*), not literals, so     */
+  /* Tailwind's generated utilities (bg-background, text-muted,         */
+  /* shadow-sm, ...) automatically follow whichever [data-theme] block  */
+  /* below is active — no component changes needed to support both      */
+  /* themes.                                                            */
+  /* ---------------------------------------------------------------- */
+  --color-background: var(--theme-background);
+  --color-foreground: var(--theme-foreground);
+  --color-surface: var(--theme-surface);
+  --color-border: var(--theme-border);
+  --color-muted: var(--theme-muted);
+  --color-success: var(--theme-success);
+  --color-error: var(--theme-error);
+  --color-scrim: var(--theme-scrim);
+  --shadow-sm: var(--theme-shadow-sm);
+  --shadow-md: var(--theme-shadow-md);
+}
+
+/*
+ * Dark is the default and the no-JS/no-attribute-yet fallback (matches
+ * the site's original fixed-dark design, docs/06_DESIGN_GUIDE.md). The
+ * inline script in app/layout.tsx sets [data-theme] on <html> before
+ * first paint so there is no flash of the wrong theme.
+ */
+:root,
+:root[data-theme="dark"] {
+  --theme-background: var(--color-neutral-950);
+  --theme-foreground: var(--color-white);
+  --theme-surface: var(--color-neutral-900);
+  --theme-border: var(--color-neutral-800);
+  --theme-muted: var(--color-neutral-400);
+  --theme-success: #6fae8c;
+  --theme-error: #d97b6c;
+  --theme-scrim: var(--color-black);
+  /* Higher opacity than the light theme's shadow — a black shadow needs
+   * more contrast to read at all against a near-black surface. */
+  --theme-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --theme-shadow-md: 0 4px 12px rgb(0 0 0 / 0.4);
+}
+
+:root[data-theme="light"] {
+  --theme-background: var(--color-white);
+  --theme-foreground: var(--color-neutral-950);
+  --theme-surface: var(--color-neutral-50);
+  --theme-border: var(--color-neutral-200);
+  --theme-muted: var(--color-neutral-600);
+  --theme-success: #2e6b46;
+  --theme-error: #a3342a;
+  --theme-scrim: var(--color-black);
+  --theme-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
+  --theme-shadow-md: 0 4px 12px rgb(0 0 0 / 0.06);
 }
 
 :root {

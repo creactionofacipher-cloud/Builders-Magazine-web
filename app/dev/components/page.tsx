@@ -15,6 +15,7 @@ import { Tag } from "@/components/ui/Tag";
 import { Button } from "@/components/ui/Button";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SearchInput } from "@/components/ui/SearchInput";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Image } from "@/components/ui/Image";
 import { Gallery } from "@/components/ui/Gallery";
 import { ImageGrid } from "@/components/ui/ImageGrid";
@@ -177,6 +178,10 @@ export default function DevComponentsPage() {
         <div className="flex max-w-sm flex-col gap-6">
           <SearchInput placeholder="Поиск по журналу..." />
           <FilterDemo />
+          <div className="flex items-center gap-3">
+            <Text variant="muted">Тема:</Text>
+            <ThemeToggle className="border border-border" />
+          </div>
         </div>
       </Catalog>
 

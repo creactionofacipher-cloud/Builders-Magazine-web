@@ -15,9 +15,19 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// Sets [data-theme] on <html> before first paint, so there's no flash of
+// the wrong theme between server render and hydration. Stored preference
+// wins; otherwise falls back to system preference, defaulting to the
+// site's dark theme unless the OS explicitly prefers light. Plain script,
+// no dependency — mirrors the pattern next-themes uses internally.
+const THEME_INIT_SCRIPT = `(function(){try{var s=localStorage.getItem('theme');var l=window.matchMedia('(prefers-color-scheme: light)').matches;var t=(s==='light'||s==='dark')?s:(l?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang={DEFAULT_LOCALE}>
+    <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>{children}</body>
     </html>
   );

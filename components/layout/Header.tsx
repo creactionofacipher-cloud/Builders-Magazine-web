@@ -3,6 +3,7 @@ import { Container } from "./Container";
 import { Navigation } from "./Navigation";
 import { MobileNav } from "./MobileNav";
 import { Link } from "@/components/ui/Link";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface HeaderProps {
   locale: EnabledLocale;
@@ -16,8 +17,11 @@ export function Header({ locale, siteTitle }: HeaderProps) {
         <Link href={`/${locale}`} variant="plain" className="font-display text-xl font-semibold">
           {siteTitle}
         </Link>
-        <Navigation locale={locale} className="hidden md:flex" />
-        <MobileNav locale={locale} className="md:hidden" />
+        <div className="flex items-center gap-2">
+          <Navigation locale={locale} className="hidden md:flex" />
+          <ThemeToggle />
+          <MobileNav locale={locale} className="md:hidden" />
+        </div>
       </Container>
     </header>
   );

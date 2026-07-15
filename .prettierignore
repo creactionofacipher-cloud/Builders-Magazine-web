@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+build
+public
+package-lock.json
+next-env.d.ts
+
+# Project documentation and non-app content are hand-authored and
+# intentionally outside Prettier's scope.
+docs
+content
+assets
+README.md
+LICENSE

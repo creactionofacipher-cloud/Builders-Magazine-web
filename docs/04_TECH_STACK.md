@@ -31,7 +31,11 @@ All content is delivered through the CMS.
 
 ---
 
+
+
 # **Core Technologies**
+
+
 
 ## **Frontend**
 
@@ -52,6 +56,8 @@ Rendering:
 
 ---
 
+
+
 ## **Styling**
 
 Framework:
@@ -71,6 +77,8 @@ No inline styles.
 No duplicated layouts.
 
 ---
+
+
 
 ## **CMS**
 
@@ -93,6 +101,8 @@ The website must not depend on hardcoded content.
 
 ---
 
+
+
 ## **Image Management**
 
 Images are a core part of the project.
@@ -114,6 +124,8 @@ Every image must support:
 
 ---
 
+
+
 ## **Deployment**
 
 Hosting:
@@ -129,6 +141,8 @@ Requirements:
 - Global CDN
 
 ---
+
+
 
 # **Project Structure**
 
@@ -151,6 +165,8 @@ site/
 Each folder has a single responsibility.
 
 ---
+
+
 
 # **Components**
 
@@ -177,6 +193,8 @@ Core components:
 Components should remain independent and reusable.
 
 ---
+
+
 
 # **Routing**
 
@@ -224,6 +242,8 @@ Future routes:
 
 ---
 
+
+
 # **Data Layer**
 
 The application should isolate all CMS communication.
@@ -246,6 +266,8 @@ UI components must never communicate directly with the CMS.
 
 ---
 
+
+
 # **Type Safety**
 
 Use TypeScript everywhere.
@@ -264,6 +286,8 @@ Avoid using:
 
 ---
 
+
+
 # **SEO**
 
 Every public page should support:
@@ -279,6 +303,8 @@ Every public page should support:
 URLs should remain clean and readable.
 
 ---
+
+
 
 # **Performance**
 
@@ -301,6 +327,8 @@ Excellent Core Web Vitals.
 
 ---
 
+
+
 # **Accessibility**
 
 Minimum requirements:
@@ -315,6 +343,8 @@ Minimum requirements:
 Accessibility should be considered from the beginning.
 
 ---
+
+
 
 # **Internationalization**
 
@@ -335,7 +365,13 @@ Future structure:
 
 No hardcoded assumptions about language.
 
+Use App Router locale segments.
+
+Although MVP will launch with a single language, the routing structure must already support future localization without changing URLs.
+
 ---
+
+
 
 # **Analytics**
 
@@ -353,6 +389,8 @@ Analytics should not negatively affect performance.
 
 ---
 
+
+
 # **Security**
 
 Requirements:
@@ -367,6 +405,8 @@ Requirements:
 No secrets should be stored in the repository.
 
 ---
+
+
 
 # **Code Quality**
 
@@ -386,6 +426,8 @@ Avoid:
 
 ---
 
+
+
 # **Development Workflow**
 
 Development process:
@@ -403,6 +445,8 @@ Development process:
 Every stage should result in a working application.
 
 ---
+
+
 
 # **Future Scalability**
 
@@ -424,3 +468,40 @@ Potential future modules:
 - Mobile App API
 
 The MVP should serve as a stable foundation for these future capabilities.
+
+## Architecture Rules
+
+- UI components must never communicate directly with the CMS.
+- Pages must never contain GROQ queries.
+- All data access must go through the cms/services layer.
+- Data returned by the CMS should be mapped to application types before reaching the UI.
+- Components must only consume typed application models.
+
+
+
+## Search
+
+MVP search should be implemented using Sanity GROQ queries.
+
+Initial search scope:
+
+- Stories
+
+- Issues
+
+- Bikes
+
+- Builders
+
+The MVP search implementation may use simple text matching.
+
+Known MVP limitations:
+
+- no typo tolerance
+
+- no relevance ranking
+
+- no fuzzy search
+
+The architecture must allow future replacement with a dedicated search engine (such as Algolia or Typesense) without requiring changes to UI components or page structure.
+

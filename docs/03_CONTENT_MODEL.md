@@ -50,6 +50,8 @@ Represents a printed magazine issue.
 | gallery         | Media Asset[]     |
 
 
+
+
 ## **Relationships**
 
 Issue → Stories
@@ -63,6 +65,8 @@ Issue → Products
 Issue → Downloads
 
 ---
+
+
 
 # **Entity: Story**
 
@@ -90,6 +94,8 @@ Stories are independent from the printed magazine but may optionally reference o
 | relatedBuilder   | Builder[]     |
 
 
+
+
 ## **Categories**
 
 - Bike
@@ -97,6 +103,8 @@ Stories are independent from the printed magazine but may optionally reference o
 - Culture
 - Interview
 - Event
+
+
 
 ## **Relationships**
 
@@ -117,6 +125,8 @@ Story → Related Stories
 Story → Products
 
 ---
+
+
 
 # **Entity: Bike**
 
@@ -144,6 +154,8 @@ A bike can appear in multiple stories and multiple magazine issues.
 | issues         | Issue[]       |
 
 
+
+
 ## **Relationships**
 
 Bike → Builder
@@ -164,6 +176,8 @@ Bike → Location
 
 ---
 
+
+
 # **Entity: Builder**
 
 Represents a motorcycle builder or workshop.
@@ -182,6 +196,8 @@ Represents a motorcycle builder or workshop.
 | stories     | Story[]   |
 
 
+
+
 ## **Relationships**
 
 Builder → Bikes
@@ -197,6 +213,8 @@ Builder → Awards
 Builder → Events
 
 ---
+
+
 
 # **Entity: Builders Cup**
 
@@ -219,6 +237,8 @@ Represents one Builders Cup event.
 | stories      | Story[]       |
 
 
+
+
 ## **Relationships**
 
 Builders Cup → Bikes
@@ -237,6 +257,8 @@ Builders Cup → Judges
 
 ---
 
+
+
 # **Entity: Person**
 
 Represents a contributor.
@@ -248,17 +270,22 @@ Examples:
 - editor
 - organizer
 
+
+
 ## **Fields**
 
 
 | **Field** | **Type**    |
 | --------- | ----------- |
 | id        | string      |
+  slug      | string      |
 | name      | string      |
 | role      | string      |
 | photo     | Media Asset |
 | bio       | rich text   |
 | articles  | Story[]     |
+
+
 
 
 ## **Relationships**
@@ -272,6 +299,8 @@ Person → Social Links
 Person → Team
 
 ---
+
+
 
 # **Entity: Media Asset**
 
@@ -301,6 +330,8 @@ Future:
 
 ---
 
+
+
 # **Entity Relationships**
 
 ```text
@@ -328,6 +359,8 @@ Builders Cup
 
 ---
 
+
+
 # **Slug Strategy**
 
 All public entities should use human-readable slugs.
@@ -348,6 +381,8 @@ Slugs must be unique.
 
 ---
 
+
+
 # **Media Strategy**
 
 Images are first-class content.
@@ -364,6 +399,8 @@ Images should never be duplicated unnecessarily.
 
 ---
 
+
+
 # **Draft & Publish Workflow**
 
 All editable entities should support:
@@ -378,6 +415,8 @@ Future:
 - Content approval workflow
 
 ---
+
+
 
 # **Scalability**
 

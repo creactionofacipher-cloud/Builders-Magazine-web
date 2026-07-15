@@ -25,11 +25,7 @@ export function BikeCard({ bike, className }: BikeCardProps) {
           </Text>
         )}
         <Heading level={4}>{bike.name}</Heading>
-        {bike.builder && (
-          <Text variant="small" className="text-muted">
-            {bike.builder.name}
-          </Text>
-        )}
+        {bike.builder && <Text variant="muted">{bike.builder.name}</Text>}
       </div>
     </article>
   );

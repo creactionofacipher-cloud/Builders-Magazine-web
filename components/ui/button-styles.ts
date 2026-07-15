@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "inverted";
 export type ButtonSize = "sm" | "md";
 
 const base =
@@ -9,9 +9,16 @@ const base =
   "disabled:pointer-events-none disabled:opacity-50";
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "bg-foreground text-background hover:bg-neutral-800",
+  // hover:opacity-90 (not a specific neutral step) so this stays correct
+  // regardless of which raw color --color-foreground/--color-background
+  // resolve to.
+  primary: "bg-foreground text-background hover:opacity-90",
   secondary: "border border-border text-foreground hover:border-foreground",
   ghost: "text-foreground hover:text-muted",
+  // Hardcoded white/black, not theme tokens — guarantees contrast on a
+  // dark photo overlay (Hero) regardless of the page's own theme, unlike
+  // `primary` which follows --color-foreground/--color-background.
+  inverted: "bg-white text-black hover:bg-neutral-200",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

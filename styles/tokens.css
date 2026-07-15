@@ -19,6 +19,12 @@
   /* hue — "the motorcycle projects themselves should provide most of  */
   /* the visual color" (docs/06_DESIGN_GUIDE.md). Feedback colors are  */
   /* functional, not decorative, and stay muted.                      */
+  /*                                                                    */
+  /* Dark visual theme: the semantic tokens below point to the         */
+  /* opposite end of the same neutral scale from the original light    */
+  /* pass. The raw --color-neutral-* steps are unchanged — only which  */
+  /* step each semantic role uses was flipped. There is no light/dark  */
+  /* toggle; this is the site's one fixed theme.                       */
   /* ---------------------------------------------------------------- */
   --color-white: #ffffff;
   --color-black: #000000;
@@ -35,14 +41,14 @@
   --color-neutral-900: #171717;
   --color-neutral-950: #0a0a0a;
 
-  --color-background: var(--color-white);
-  --color-foreground: var(--color-neutral-950);
-  --color-surface: var(--color-neutral-50);
-  --color-border: var(--color-neutral-200);
-  --color-muted: var(--color-neutral-600);
+  --color-background: var(--color-neutral-950);
+  --color-foreground: var(--color-white);
+  --color-surface: var(--color-neutral-900);
+  --color-border: var(--color-neutral-800);
+  --color-muted: var(--color-neutral-400);
 
-  --color-success: #2e6b46;
-  --color-error: #a3342a;
+  --color-success: #6fae8c;
+  --color-error: #d97b6c;
 
   /* ---------------------------------------------------------------- */
   /* Typography                                                        */
@@ -113,10 +119,12 @@
   /* ---------------------------------------------------------------- */
   /* Shadow                                                             */
   /* "Avoid heavy shadows" (docs/06_DESIGN_GUIDE.md) — two subtle       */
-  /* levels only, no elevated/dramatic shadows.                        */
+  /* levels only, no elevated/dramatic shadows. Opacity is higher than  */
+  /* a typical light-theme shadow because a black shadow needs more     */
+  /* contrast to read at all against a near-black surface.             */
   /* ---------------------------------------------------------------- */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
-  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.06);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.4);
 
   /* ---------------------------------------------------------------- */
   /* Motion easing                                                      */

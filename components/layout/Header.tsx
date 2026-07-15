@@ -1,6 +1,7 @@
 import type { EnabledLocale } from "@/lib/i18n/locales";
 import { Container } from "./Container";
 import { Navigation } from "./Navigation";
+import { MobileNav } from "./MobileNav";
 import { Link } from "@/components/ui/Link";
 
 interface HeaderProps {
@@ -14,7 +15,8 @@ export function Header({ locale }: HeaderProps) {
         <Link href={`/${locale}`} variant="plain" className="font-display text-xl font-semibold">
           Builders Magazine
         </Link>
-        <Navigation locale={locale} />
+        <Navigation locale={locale} className="hidden md:flex" />
+        <MobileNav locale={locale} className="md:hidden" />
       </Container>
     </header>
   );

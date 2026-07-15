@@ -35,11 +35,7 @@ export function IssueCard({ issue, locale, className }: IssueCardProps) {
             №{issue.number} · {issue.year}
           </Text>
           <Heading level={4}>{issue.title}</Heading>
-          {excerpt && (
-            <Text variant="small" className="text-muted">
-              {excerpt}
-            </Text>
-          )}
+          {excerpt && <Text variant="muted">{excerpt}</Text>}
         </div>
       </Link>
       {buyHref && (

@@ -19,11 +19,7 @@ export function BuilderCard({ builder, className }: BuilderCardProps) {
       {cover && <Image asset={cover} sizes="(min-width: 1024px) 33vw, 100vw" />}
       <div className="flex flex-col gap-1">
         <Heading level={4}>{builder.name}</Heading>
-        {builder.location && (
-          <Text variant="small" className="text-muted">
-            {builder.location}
-          </Text>
-        )}
+        {builder.location && <Text variant="muted">{builder.location}</Text>}
       </div>
     </article>
   );

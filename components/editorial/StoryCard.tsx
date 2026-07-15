@@ -28,9 +28,7 @@ export function StoryCard({ story, locale, className }: StoryCardProps) {
       <div className="flex flex-col gap-2">
         <Badge>{story.category}</Badge>
         <Heading level={4}>{story.title}</Heading>
-        <Text variant="small" className="text-muted">
-          {story.shortDescription}
-        </Text>
+        <Text variant="muted">{story.shortDescription}</Text>
       </div>
     </Link>
   );

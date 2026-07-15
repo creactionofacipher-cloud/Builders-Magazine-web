@@ -59,15 +59,39 @@ const bike: Bike = {
   images: [wideImage, squareImage],
 };
 
+const bike2: Bike = {
+  id: "bike-bobber",
+  slug: "ironhead-bobber",
+  name: "Ironhead Bobber",
+  brand: "Harley-Davidson",
+  model: "Ironhead",
+  year: 1972,
+  style: "Bobber",
+  images: [squareImage, wideImage],
+};
+
+const bike3: Bike = {
+  id: "bike-cafe-racer",
+  slug: "cb750-cafe-racer",
+  name: "CB750 Café Racer",
+  brand: "Honda",
+  model: "CB750",
+  year: 1978,
+  style: "Café Racer",
+  images: [wideImage, portraitImage],
+};
+
 const builder: Builder = {
   id: "builder-ironhide",
   slug: "ironhide-garage",
   name: "Ironhide Garage",
   location: "Москва",
-  projects: [bike],
+  projects: [bike, bike2, bike3],
 };
 
 bike.builder = builder;
+bike2.builder = builder;
+bike3.builder = builder;
 
 export const mockStories: Story[] = [
   {
@@ -227,7 +251,25 @@ export const mockBuildersCupEvents: BuildersCup[] = [
       ),
     ],
     coverImage: wideImage,
-    participants: [bike],
+    gallery: [wideImage, squareImage],
+    participants: [bike, bike2, bike3],
     winners: [bike],
+  },
+  {
+    id: "builders-cup-2024",
+    slug: "builders-cup-2024",
+    name: "Builders Cup 2024",
+    date: "2024-09-14",
+    location: "Санкт-Петербург",
+    description: [
+      paragraph(
+        "bc-2024-p1",
+        "Первый выездной слёт Builders Cup: конкурс построек и встреча мастерских со всей страны.",
+      ),
+    ],
+    coverImage: squareImage,
+    gallery: [squareImage],
+    participants: [bike2],
+    winners: [bike2],
   },
 ];

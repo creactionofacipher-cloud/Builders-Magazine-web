@@ -138,3 +138,24 @@ export interface SiteSettings {
   };
   footerText: string;
 }
+
+// Product catalog entity — docs/03_CONTENT_MODEL.md's Scalability
+// section names "Product" as a future addition without a field list;
+// this is that field list, scoped to catalog presentation only. No
+// cart/checkout/stock fields — external-link purchase only, per
+// docs/10_POST_MVP.md Phase 3 (Shop is still post-MVP).
+export interface Product {
+  id: string;
+  slug: string;
+  name: string;
+  description?: RichText;
+  shortDescription: string;
+  mainImage: MediaAsset;
+  gallery?: MediaAsset[];
+  price: number;
+  currency: string;
+  sizes?: string[];
+  materials?: string;
+  externalBuyUrl: string;
+  status: PublishStatus;
+}

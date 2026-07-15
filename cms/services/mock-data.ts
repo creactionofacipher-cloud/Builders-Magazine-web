@@ -6,6 +6,7 @@ import type {
   Issue,
   MediaAsset,
   Person,
+  Product,
   SiteSettings,
   Story,
 } from "@/types/content";
@@ -346,5 +347,91 @@ export const mockBuildersCupEvents: BuildersCup[] = [
     gallery: [squareImage],
     participants: [bike2],
     winners: [bike2],
+  },
+];
+
+export const mockProducts: Product[] = [
+  {
+    id: "product-tshirt",
+    slug: "builders-tshirt",
+    name: "Футболка Builders Magazine",
+    shortDescription: "Плотная хлопковая футболка с принтом логотипа Builders Magazine.",
+    description: [
+      paragraph(
+        "product-tshirt-p1",
+        "Футболка из плотного хлопка с минималистичным принтом логотипа на груди. Свободный крой, " +
+          "не садится после стирки. Один из первых предметов мерча журнала — печатается небольшими " +
+          "партиями.",
+      ),
+    ],
+    mainImage: squareImage,
+    gallery: [squareImage, wideImage],
+    price: 2500,
+    currency: "RUB",
+    sizes: ["S", "M", "L", "XL"],
+    materials: "100% хлопок, плотность 180 г/м²",
+    externalBuyUrl: "https://example.com/shop/tshirt",
+    status: "published",
+  },
+  {
+    id: "product-cap",
+    slug: "builders-magazine-cap",
+    name: "Кепка Builders Magazine",
+    shortDescription: "Кепка с вышитым логотипом и регулируемым ремешком.",
+    description: [
+      paragraph(
+        "product-cap-p1",
+        "Классическая пятипанельная кепка с вышитым логотипом Builders Magazine спереди. " +
+          "Регулируемый ремешок на затылке подходит под любой размер головы.",
+      ),
+    ],
+    mainImage: squareImage,
+    gallery: [squareImage],
+    price: 1800,
+    currency: "RUB",
+    sizes: ["Один размер (регулируется)"],
+    materials: "Хлопок, регулируемый ремешок",
+    externalBuyUrl: "https://example.com/shop/cap",
+    status: "published",
+  },
+  {
+    id: "product-patch",
+    slug: "ironhide-garage-patch",
+    name: "Шеврон Ironhide Garage",
+    shortDescription: "Вышитый шеврон мастерской Ironhide Garage на термоклею.",
+    description: [
+      paragraph(
+        "product-patch-p1",
+        "Вышитый шеврон в честь мастерской Ironhide Garage — одной из мастерских, о которых мы " +
+          "писали в журнале. Термоклеевая основа, можно закрепить утюгом или пришить.",
+      ),
+    ],
+    mainImage: squareImage,
+    gallery: [squareImage],
+    price: 500,
+    currency: "RUB",
+    materials: "Вышивка, термоклеевая основа",
+    externalBuyUrl: "https://example.com/shop/patch",
+    status: "published",
+  },
+  {
+    id: "product-stickers",
+    slug: "builders-magazine-stickers",
+    name: "Набор наклеек",
+    shortDescription: "Набор виниловых наклеек с мотивами из журнала.",
+    description: [
+      paragraph(
+        "product-stickers-p1",
+        "Набор из шести виниловых наклеек с иллюстрациями и логотипами из разных номеров " +
+          "журнала. Влагостойкие, подходят для бака, шлема или ноутбука.",
+      ),
+    ],
+    mainImage: squareImage,
+    gallery: [squareImage],
+    price: 300,
+    currency: "RUB",
+    materials: "Виниловая плёнка, влагостойкая печать",
+    externalBuyUrl: "https://example.com/shop/stickers",
+    status: "published",
   },
 ];

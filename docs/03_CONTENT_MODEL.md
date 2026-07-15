@@ -21,6 +21,7 @@ The MVP consists of the following content types:
 - Builders Cup
 - Person
 - Media Asset
+- Product
 
 All entities should support future expansion without breaking existing content.
 
@@ -332,6 +333,46 @@ Future:
 
 
 
+# **Entity: Product**
+
+Represents a merchandise item available for purchase through the Buy section.
+
+MVP scope is catalog presentation only. There is no cart, checkout, payment, or stock management — every product links out to an external purchase URL (see Post-MVP Roadmap, Phase 3 — Shop).
+
+## **Fields**
+
+
+| **Field**        | **Type**           |
+| ----------------- | ------------------ |
+| id                | string              |
+| slug              | string              |
+| name              | string              |
+| shortDescription  | string              |
+| description       | rich text           |
+| mainImage         | Media Asset         |
+| gallery           | Media Asset[]       |
+| price             | number              |
+| currency          | string              |
+| sizes             | array               |
+| materials         | string              |
+| externalBuyUrl    | string              |
+| status            | draft / published   |
+
+
+
+
+## **Relationships**
+
+Product has no relationships to other entities in the current implementation — it is a standalone catalog entity.
+
+Future:
+
+Product → Issue
+
+---
+
+
+
 # **Entity Relationships**
 
 ```text
@@ -375,6 +416,8 @@ panhead-chopper
 john-doe-customs
 
 builders-cup-2025
+
+builders-tshirt
 ```
 
 Slugs must be unique.
@@ -425,7 +468,6 @@ The content model is designed for long-term growth.
 Future entities may include:
 
 - Workshop
-- Product
 - Partner
 - Sponsor
 - Video

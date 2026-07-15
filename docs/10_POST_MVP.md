@@ -79,7 +79,7 @@ Routes:
 
 # Phase 3 — Shop
 
-Expand the Buy section into a complete ecommerce experience.
+Expand the Buy section into a complete ecommerce experience. Full ecommerce functionality remains post-MVP.
 
 Future features:
 
@@ -90,6 +90,7 @@ Future features:
 - stock management
 - product categories
 - product search
+- product management
 
 Possible routes:
 
@@ -102,6 +103,14 @@ Possible routes:
 /cart
 
 /checkout
+
+MVP includes only:
+
+- merchandise catalog
+
+- product presentation pages
+
+- external purchase links
 
 ---
 
@@ -271,7 +280,5 @@ The MVP must not implement these features.
 However, the project architecture should make their future implementation possible without major refactoring.
 
 All reusable components, data models and routing decisions should consider this future evolution.
-
-
 
 Create Site Settings singleton in Sanity.

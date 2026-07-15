@@ -35,10 +35,22 @@ const cmsBoundaryRule = {
   },
 };
 
+// components/ui/Image.tsx takes a MediaAsset, not a flat `alt` prop, so
+// jsx-a11y/alt-text can't see the alt text it forwards to next/image.
+// Alt text is enforced structurally instead: MediaAsset.altText
+// (types/content.ts) is a required field, not optional.
+const mediaAssetAltTextRule = {
+  files: ["**/*.{ts,tsx}"],
+  rules: {
+    "jsx-a11y/alt-text": ["error", { img: [] }],
+  },
+};
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   cmsBoundaryRule,
+  mediaAssetAltTextRule,
   eslintConfigPrettier,
   // Override default ignores of eslint-config-next.
   globalIgnores([

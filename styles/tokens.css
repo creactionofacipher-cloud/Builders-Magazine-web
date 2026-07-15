@@ -50,6 +50,12 @@
   --color-success: #6fae8c;
   --color-error: #d97b6c;
 
+  /* Photo-overlay scrim (Hero). Always black regardless of theme — a
+   * scrim darkens a photo for text legibility, it isn't a themed
+   * surface, which is why it's a separate token from --color-background
+   * rather than reusing it. */
+  --color-scrim: var(--color-black);
+
   /* ---------------------------------------------------------------- */
   /* Typography                                                        */
   /* Font families are dependency-free system stacks for now — a       */

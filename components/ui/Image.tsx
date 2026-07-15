@@ -38,7 +38,7 @@ export function Image({
       {hasCaption && (
         <figcaption className="mt-2 font-body text-sm text-muted">
           {asset.caption}
-          {asset.copyright && <span className="ml-2 text-neutral-400">© {asset.copyright}</span>}
+          {asset.copyright && <span className="ml-2 text-muted">© {asset.copyright}</span>}
         </figcaption>
       )}
     </figure>

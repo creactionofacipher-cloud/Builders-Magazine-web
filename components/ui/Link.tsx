@@ -8,7 +8,7 @@ type LinkProps = ComponentProps<typeof NextLink> & { variant?: LinkVariant };
 
 const styleByVariant: Record<LinkVariant, string> = {
   default:
-    "text-foreground underline underline-offset-4 decoration-neutral-300 hover:decoration-foreground",
+    "text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground",
   muted: "text-muted hover:text-foreground",
   plain: "text-foreground",
 };

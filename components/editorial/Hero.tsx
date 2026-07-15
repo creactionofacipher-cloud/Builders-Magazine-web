@@ -24,16 +24,11 @@ interface HeroProps {
 // detail pages, which also open on a Hero Image per docs/02_SITE_STRUCTURE.md).
 export function Hero({ image, title, subtitle, cta, className }: HeroProps) {
   return (
-    <div
-      className={cn(
-        "relative flex min-h-[70vh] items-end overflow-hidden bg-neutral-900",
-        className,
-      )}
-    >
+    <div className={cn("relative flex min-h-[70vh] items-end overflow-hidden", className)}>
       <div className="absolute inset-0">
         <Image asset={image} fill priority sizes="100vw" />
       </div>
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-scrim/30" />
       <Container className="relative flex flex-col gap-4 pb-[var(--spacing-gutter-lg)]">
         <Heading level={1} tone="inverted">
           {title}

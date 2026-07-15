@@ -69,26 +69,6 @@ const builder: Builder = {
 
 bike.builder = builder;
 
-export const mockIssues: Issue[] = [
-  {
-    id: "issue-3",
-    slug: "builders-magazine-03",
-    number: 3,
-    year: 2025,
-    title: "Builders Magazine №3",
-    coverImage: portraitImage,
-    description: [
-      paragraph(
-        "issue-3-p1",
-        "Третий номер журнала посвящён мастерским, которые строят мотоциклы вручную — от рамы до последней гайки.",
-      ),
-    ],
-    releaseDate: "2025-11-01",
-    buyLinks: [{ label: "Купить", url: "https://example.com/buy/issue-03" }],
-    status: "published",
-  },
-];
-
 export const mockStories: Story[] = [
   {
     id: "story-panhead",
@@ -167,6 +147,68 @@ export const mockStories: Story[] = [
     publishedDate: "2026-01-05",
     relatedBike: [bike],
     status: "published",
+  },
+];
+
+export const mockIssues: Issue[] = [
+  {
+    id: "issue-3",
+    slug: "builders-magazine-03",
+    number: 3,
+    year: 2025,
+    title: "Builders Magazine №3",
+    coverImage: portraitImage,
+    description: [
+      paragraph(
+        "issue-3-p1",
+        "Третий номер журнала посвящён мастерским, которые строят мотоциклы вручную — от рамы до последней гайки.",
+      ),
+    ],
+    releaseDate: "2025-11-01",
+    buyLinks: [
+      { label: "Купить на сайте", url: "https://example.com/buy/issue-03" },
+      { label: "Купить в фирменном магазине", url: "https://example.com/shop/issue-03" },
+    ],
+    status: "published",
+    featuredStories: [mockStories[0], mockStories[1], mockStories[3]],
+    gallery: [wideImage, squareImage],
+  },
+  {
+    id: "issue-2",
+    slug: "builders-magazine-02",
+    number: 2,
+    year: 2025,
+    title: "Builders Magazine №2",
+    coverImage: squareImage,
+    description: [
+      paragraph(
+        "issue-2-p1",
+        "Во втором номере — репортаж с Builders Cup, мотопутешествие через Кавказ и разговор о культуре чопперов.",
+      ),
+    ],
+    releaseDate: "2025-06-01",
+    buyLinks: [{ label: "Купить на сайте", url: "https://example.com/buy/issue-02" }],
+    status: "published",
+    featuredStories: [mockStories[4], mockStories[5], mockStories[2]],
+    gallery: [wideImage],
+  },
+  {
+    id: "issue-1",
+    slug: "builders-magazine-01",
+    number: 1,
+    year: 2024,
+    title: "Builders Magazine №1",
+    coverImage: wideImage,
+    description: [
+      paragraph(
+        "issue-1-p1",
+        "Первый номер Builders Magazine: с чего началась история независимого журнала о кастомных мотоциклах.",
+      ),
+    ],
+    releaseDate: "2024-10-01",
+    buyLinks: [{ label: "Купить на сайте", url: "https://example.com/buy/issue-01" }],
+    status: "published",
+    featuredStories: [mockStories[0], mockStories[2]],
   },
 ];
 

@@ -29,6 +29,50 @@ const cmsBoundaryRule = {
             message:
               "Do not import cms/mappers directly from UI code. Consume already-mapped data from cms/services instead.",
           },
+          {
+            group: ["@/cms/sanity", "@/cms/sanity/*", "**/cms/sanity", "**/cms/sanity/*"],
+            message:
+              "Do not import the Sanity client wrapper directly from UI code. Fetch data through cms/services instead.",
+          },
+          {
+            group: ["@sanity/client"],
+            message:
+              "Do not import @sanity/client directly from UI code. Fetch data through cms/services instead.",
+          },
+          {
+            group: ["**/mock-data", "**/services/mock-data", "@/cms/services/mock-data"],
+            message:
+              "mock-data is private to cms/services — do not import it directly. Fetch data through the exported service functions instead.",
+          },
+        ],
+      },
+    ],
+  },
+};
+
+// mock-data.ts is an implementation detail of cms/services, not of the
+// query/mapper/schema/client layers either — those get their data from
+// Sanity, not from mock-data. Only cms/services/*.ts may import it. This
+// is a separate, non-overlapping file scope from cmsBoundaryRule above
+// (ESLint flat config: the same rule set on two configs matching the
+// same file has the later one win outright, not merge — so this stays a
+// distinct rule object rather than folded into cmsBoundaryRule's scope).
+const mockDataBoundaryRule = {
+  files: [
+    "cms/queries/**/*.ts",
+    "cms/mappers/**/*.ts",
+    "cms/schemas/**/*.ts",
+    "cms/sanity/**/*.ts",
+  ],
+  rules: {
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          {
+            group: ["**/mock-data", "**/services/mock-data", "@/cms/services/mock-data"],
+            message: "mock-data is private to cms/services — do not import it directly.",
+          },
         ],
       },
     ],
@@ -50,6 +94,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   cmsBoundaryRule,
+  mockDataBoundaryRule,
   mediaAssetAltTextRule,
   eslintConfigPrettier,
   // Override default ignores of eslint-config-next.

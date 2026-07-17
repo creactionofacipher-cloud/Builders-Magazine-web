@@ -1,14 +1,25 @@
 import type { Product } from "@/types/content";
+import { isSanityConfigured, sanityFetch } from "@/cms/sanity/client";
+import { ALL_PRODUCTS_QUERY, PRODUCT_BY_SLUG_QUERY } from "@/cms/queries/product";
+import { mapProduct } from "@/cms/mappers/product";
 import { mockProducts } from "./mock-data";
 
-// Mock implementations — Milestone 10 replaces each body with a Sanity
-// fetch behind the same signature. Callers never change.
+// Sanity path when configured (see cms/sanity/client.ts), mock fallback
+// otherwise — same signature either way, callers never change.
 
 export async function getMerchandise(): Promise<Product[]> {
+  if (isSanityConfigured) {
+    const raw = await sanityFetch<Product[]>(ALL_PRODUCTS_QUERY);
+    return raw.map(mapProduct);
+  }
   return mockProducts;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
+  if (isSanityConfigured) {
+    const raw = await sanityFetch<Product | null>(PRODUCT_BY_SLUG_QUERY, { slug });
+    return raw ? mapProduct(raw) : null;
+  }
   return mockProducts.find((product) => product.slug === slug) ?? null;
 }
 
@@ -16,7 +27,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 // are simply other catalog entries. Kept as a service function (not
 // filtered inline on the page) so the curation strategy can change later
 // (e.g. a real "related" reference, or same-category matching) without
-// touching the detail page.
+// touching the detail page. Composes over getMerchandise() above, so it
+// is already dual-path with no changes needed here.
 export async function getRelatedProducts(slug: string, limit = 3): Promise<Product[]> {
   const all = await getMerchandise();
   return all.filter((product) => product.slug !== slug).slice(0, limit);

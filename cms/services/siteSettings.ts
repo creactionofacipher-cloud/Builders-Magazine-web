@@ -1,5 +1,8 @@
 import { cache } from "react";
 import type { SiteSettings } from "@/types/content";
+import { isSanityConfigured, sanityFetch } from "@/cms/sanity/client";
+import { SITE_SETTINGS_QUERY } from "@/cms/queries/siteSettings";
+import { mapSiteSettings } from "@/cms/mappers/siteSettings";
 import { mockSiteSettings } from "./mock-data";
 
 // Singleton — one document, not a collection.
@@ -13,9 +16,18 @@ import { mockSiteSettings } from "./mock-data";
 // a real duplicate fetch. See the architecture note in
 // app/[locale]/layout.tsx for the full reasoning.
 //
-// Mock implementation now; Milestone 10 replaces the body with a Sanity
-// fetch behind this same signature and cache() continues to dedupe it
-// exactly the same way. Callers never change either way.
+// Sanity path when configured (see cms/sanity/client.ts), mock fallback
+// otherwise — same signature either way, callers never change. Also
+// falls back to mock if Sanity is configured but the singleton document
+// doesn't exist yet (a freshly created project with no content entered) —
+// every page depends on siteTitle for its own metadata, so a missing
+// singleton should never mean a broken site.
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
+  if (isSanityConfigured) {
+    const raw = await sanityFetch<SiteSettings | null>(SITE_SETTINGS_QUERY);
+    if (raw) {
+      return mapSiteSettings(raw);
+    }
+  }
   return mockSiteSettings;
 });

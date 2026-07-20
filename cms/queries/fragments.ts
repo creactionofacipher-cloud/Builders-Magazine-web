@@ -34,6 +34,23 @@ export function richTextField(fieldName: string): string {
     ...,
     _type == "richTextImage" => {
       "image": image->${mediaAssetProjection}
+    },
+    _type == "imageRow" => {
+      "images": images[]->${mediaAssetProjection}
+    },
+    _type == "imageText" => {
+      "image": image->${mediaAssetProjection}
+    },
+    _type == "fullBleedImage" => {
+      "image": image->${mediaAssetProjection}
+    },
+    _type == "twoColumnText" => {
+      "content": content[]{
+        ...,
+        _type == "richTextImage" => {
+          "image": image->${mediaAssetProjection}
+        }
+      }
     }
   }`;
 }

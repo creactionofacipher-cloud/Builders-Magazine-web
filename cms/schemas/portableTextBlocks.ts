@@ -8,8 +8,16 @@ import type { SchemaArrayMember } from "./types";
 // model.
 export const RICH_TEXT_IMAGE_VARIANTS = ["inline", "wide", "fullWidth"];
 export const EMBED_PROVIDERS = ["youtube", "vimeo", "other"];
+export const IMAGE_ROW_LAYOUTS = ["equal", "2-1", "1-2", "large-left", "large-right"];
+export const IMAGE_ROW_GAPS = ["small", "medium", "large"];
+export const IMAGE_TEXT_POSITIONS = ["left", "right"];
+export const IMAGE_TEXT_WIDTHS = ["35%", "40%", "50%"];
 
-export const portableTextBlocks: SchemaArrayMember[] = [
+// Mirrors studio/schemas/portableTextBlocks.ts's BASE_PORTABLE_TEXT_BLOCKS
+// — the block set allowed inside twoColumnText's own `content` array. Kept
+// separate from `portableTextBlocks` below for the same reason (avoids a
+// self-reference).
+const baseBlocks: SchemaArrayMember[] = [
   { type: "block" },
   {
     name: "richTextImage",
@@ -50,5 +58,53 @@ export const portableTextBlocks: SchemaArrayMember[] = [
       { name: "url", title: "URL", type: "url" },
       { name: "provider", title: "Provider", type: "string", options: { list: EMBED_PROVIDERS } },
     ],
+  },
+];
+
+export const portableTextBlocks: SchemaArrayMember[] = [
+  ...baseBlocks,
+  {
+    name: "imageRow",
+    title: "Image Row",
+    type: "object",
+    fields: [
+      {
+        name: "images",
+        title: "Images",
+        type: "array",
+        of: [{ type: "reference", to: [{ type: "mediaAsset" }] }],
+      },
+      { name: "layout", title: "Layout", type: "string", options: { list: IMAGE_ROW_LAYOUTS } },
+      { name: "gap", title: "Gap", type: "string", options: { list: IMAGE_ROW_GAPS } },
+      { name: "caption", title: "Caption", type: "string" },
+    ],
+  },
+  {
+    name: "imageText",
+    title: "Image + Text",
+    type: "object",
+    fields: [
+      { name: "image", title: "Image", type: "reference", to: [{ type: "mediaAsset" }] },
+      {
+        name: "position",
+        title: "Position",
+        type: "string",
+        options: { list: IMAGE_TEXT_POSITIONS },
+      },
+      { name: "width", title: "Width", type: "string", options: { list: IMAGE_TEXT_WIDTHS } },
+      { name: "textWrap", title: "Wrap text around image", type: "boolean" },
+    ],
+  },
+  {
+    name: "fullBleedImage",
+    title: "Full Bleed Image",
+    type: "object",
+    fields: [{ name: "image", title: "Image", type: "reference", to: [{ type: "mediaAsset" }] }],
+  },
+  {
+    name: "twoColumnText",
+    title: "Two-Column Text",
+    type: "object",
+    fields: [{ name: "content", title: "Content", type: "array", of: baseBlocks }],
   },
 ];

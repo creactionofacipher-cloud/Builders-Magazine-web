@@ -46,12 +46,80 @@ export interface RichTextEmbed {
   provider?: EmbedProvider;
 }
 
+// Advanced editorial layout blocks (docs: "advanced editorial image
+// layouts for Rich Text"). Each has its own renderer component under
+// components/ui/richtext/ — see RichText.tsx. Nested inside a
+// twoColumnText (below), only the base block set is allowed — none of
+// these four may nest inside each other or inside a twoColumnText.
+export const IMAGE_ROW_LAYOUTS = ["equal", "2-1", "1-2", "large-left", "large-right"] as const;
+export type ImageRowLayout = (typeof IMAGE_ROW_LAYOUTS)[number];
+
+export const IMAGE_ROW_GAPS = ["small", "medium", "large"] as const;
+export type ImageRowGap = (typeof IMAGE_ROW_GAPS)[number];
+
+export interface RichTextImageRowBlock {
+  _type: "imageRow";
+  _key: string;
+  images: MediaAsset[];
+  layout?: ImageRowLayout;
+  gap?: ImageRowGap;
+  caption?: string;
+}
+
+export const IMAGE_TEXT_POSITIONS = ["left", "right"] as const;
+export type ImageTextPosition = (typeof IMAGE_TEXT_POSITIONS)[number];
+
+export const IMAGE_TEXT_WIDTHS = ["35%", "40%", "50%"] as const;
+export type ImageTextWidth = (typeof IMAGE_TEXT_WIDTHS)[number];
+
+// No dedicated text field — when textWrap is on, the image floats and
+// whatever plain-paragraph blocks follow it elsewhere in the same
+// RichText body wrap around it via CSS float (see RichText.tsx's
+// flow-root container and RichTextImageText.tsx). Desktop only; always
+// stacks full-width on mobile regardless of textWrap.
+export interface RichTextImageTextBlock {
+  _type: "imageText";
+  _key: string;
+  image?: MediaAsset;
+  position?: ImageTextPosition;
+  width?: ImageTextWidth;
+  textWrap?: boolean;
+}
+
+// Caption comes from the referenced MediaAsset's own caption/copyright
+// (see MediaAsset above) — no separate field, same as every other image
+// block in this file. The image itself breaks out to the existing
+// "fullWidth" breakout used by RichTextImageBlock's own fullWidth
+// variant; the caption stays constrained to the normal reading column.
+export interface RichTextFullBleedBlock {
+  _type: "fullBleedImage";
+  _key: string;
+  image?: MediaAsset;
+}
+
+// Nested Portable Text, restricted Studio-side to the base block set
+// (block/richTextImage/pullQuote/divider/embed — see
+// studio/schemas/portableTextBlocks.ts's BASE_PORTABLE_TEXT_BLOCKS).
+// Reuses the full RichText union here for simplicity rather than a
+// separate narrower type; content that somehow contained one of the four
+// blocks above just renders nothing for that entry (no matching handler
+// in RichTextTwoColumns's nested PortableText components).
+export interface RichTextTwoColumnTextBlock {
+  _type: "twoColumnText";
+  _key: string;
+  content: RichText;
+}
+
 export type RichText = (
   | PortableTextBlock
   | RichTextImageBlock
   | RichTextPullQuote
   | RichTextDivider
   | RichTextEmbed
+  | RichTextImageRowBlock
+  | RichTextImageTextBlock
+  | RichTextFullBleedBlock
+  | RichTextTwoColumnTextBlock
 )[];
 
 export type PublishStatus = "draft" | "published";

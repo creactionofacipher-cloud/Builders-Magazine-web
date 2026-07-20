@@ -187,13 +187,37 @@ export interface SiteSettings {
   // practice of mirroring the full content model ahead of the UI that
   // will use it.
   socialLinks?: { label: string; url: string }[];
-  // Not consumed yet either — per-page metadata is currently
-  // self-contained (see each route's own generateMetadata). Reserved for
-  // Milestone 11 (SEO) as the site-wide fallback.
+  // The single source of truth for site-wide SEO configuration (see
+  // app/layout.tsx and lib/seo/*.ts) — every page still defines its own
+  // title/description/openGraph/etc (see each route's own
+  // generateMetadata), but whatever a page *doesn't* specify falls back
+  // to these values via Next.js's normal parent/child metadata merging,
+  // rather than being duplicated as a hardcoded literal in every page.
   defaultSEO?: {
     title: string;
     description: string;
+    // Same string array shape Next.js's own `Metadata.keywords` expects
+    // — see lib/seo/keywords.ts, which combines this with any
+    // page-specific keywords a route wants to add later.
+    keywords?: string[];
     ogImage?: MediaAsset;
+    favicon?: MediaAsset;
+    // Falls back to `ogImage` when unset (see app/layout.tsx) rather
+    // than requiring every project to upload a second near-identical
+    // image just to have *a* Twitter image.
+    twitterImage?: MediaAsset;
+    // Raw `<meta name="robots">` content (e.g. "index, follow") — a
+    // plain string field in Sanity rather than a structured toggle set,
+    // since Next.js's `Metadata.robots` accepts a string directly and
+    // this covers the MVP need (global default, per-page override via
+    // the page's own `robots` key — see app/[locale]/search/page.tsx
+    // for an example of a page that already overrides it).
+    robots?: string;
+    // Distinct from `siteTitle` on purpose: this is specifically what
+    // OpenGraph/Twitter/JSON-LD should call the site (falls back to
+    // siteTitle when unset), not necessarily identical to the
+    // editorial/branding title used elsewhere.
+    siteName?: string;
   };
   footerText: string;
 }

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
@@ -52,7 +53,12 @@ function Catalog({ title, children }: { title: string; children: React.ReactNode
 }
 
 // Internal design-system catalog — not part of the public site, not
-// locale-routed. Unavailable in production.
+// locale-routed. Unavailable in production (404s below), but noindex
+// regardless as defense-in-depth (also disallowed in app/robots.ts).
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function DevComponentsPage() {
   if (process.env.NODE_ENV === "production") {
     notFound();

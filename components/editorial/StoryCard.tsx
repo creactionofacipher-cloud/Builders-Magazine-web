@@ -5,15 +5,20 @@ import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { Badge } from "@/components/ui/Badge";
+import { HighlightText } from "@/components/ui/HighlightText";
 import { cn } from "@/utils/cn";
 
 interface StoryCardProps {
   story: Story;
   locale: EnabledLocale;
   className?: string;
+  /** Highlights the matching substring in the title — set when this card
+   * renders inside search results (see app/[locale]/search/page.tsx).
+   * Omitted (default) everywhere else this card is used. */
+  highlightQuery?: string;
 }
 
-export function StoryCard({ story, locale, className }: StoryCardProps) {
+export function StoryCard({ story, locale, className, highlightQuery }: StoryCardProps) {
   return (
     <Link
       href={`/${locale}/stories/${story.slug}`}
@@ -27,7 +32,9 @@ export function StoryCard({ story, locale, className }: StoryCardProps) {
       />
       <div className="flex flex-col gap-2">
         <Badge>{story.category}</Badge>
-        <Heading level={4}>{story.title}</Heading>
+        <Heading level={4}>
+          <HighlightText text={story.title} query={highlightQuery} />
+        </Heading>
         <Text variant="muted">{story.shortDescription}</Text>
       </div>
     </Link>

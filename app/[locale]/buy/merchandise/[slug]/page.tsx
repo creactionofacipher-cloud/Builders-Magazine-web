@@ -4,6 +4,9 @@ import { getMerchandise, getProductBySlug, getRelatedProducts } from "@/cms/serv
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
+import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
+import { buildProductJsonLd } from "@/lib/seo/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
@@ -45,15 +48,16 @@ export async function generateMetadata({
       title,
       description: product.shortDescription,
       url,
-      siteName: settings.siteTitle,
+      siteName: settings.defaultSEO?.siteName || settings.siteTitle,
       locale: "ru_RU",
       type: "website",
-      images: [{ url: product.mainImage.url }],
+      images: resolveOgImages(settings, product.mainImage),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: product.shortDescription,
+      images: resolveTwitterImages(settings, product.mainImage),
     },
   };
 }
@@ -81,6 +85,7 @@ export default async function ProductPage({
 
   return (
     <>
+      <JsonLd data={buildProductJsonLd(product)} />
       <Section>
         <Container className="grid gap-[var(--spacing-gutter-lg)] md:grid-cols-2 md:items-start">
           <Image asset={product.mainImage} sizes="(min-width: 768px) 50vw, 100vw" priority lightbox />

@@ -13,7 +13,12 @@ export const SITE_SETTINGS_QUERY = `*[_id == "siteSettings"][0]{
   "defaultSEO": defaultSEO{
     title,
     description,
-    "ogImage": ogImage->${mediaAssetProjection}
+    keywords,
+    "ogImage": ogImage->${mediaAssetProjection},
+    "favicon": favicon->${mediaAssetProjection},
+    "twitterImage": twitterImage->${mediaAssetProjection},
+    robots,
+    siteName
   },
   footerText
 }`;

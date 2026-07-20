@@ -4,19 +4,23 @@ import { Link } from "@/components/ui/Link";
 import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
+import { HighlightText } from "@/components/ui/HighlightText";
 import { cn } from "@/utils/cn";
 
 interface ProductCardProps {
   product: Product;
   locale: EnabledLocale;
   className?: string;
+  /** Highlights the matching substring in the title — set when this card
+   * renders inside search results. Omitted everywhere else. */
+  highlightQuery?: string;
 }
 
 // Whole card is a Link to the detail page, same pattern as StoryCard —
 // no nested anchor issue because there's no second interactive element
 // on the card. The external purchase button lives only on the detail
 // page (/buy/merchandise/[slug]).
-export function ProductCard({ product, locale, className }: ProductCardProps) {
+export function ProductCard({ product, locale, className, highlightQuery }: ProductCardProps) {
   const priceLabel = new Intl.NumberFormat("ru-RU", {
     style: "currency",
     currency: product.currency,
@@ -38,7 +42,9 @@ export function ProductCard({ product, locale, className }: ProductCardProps) {
         <Text variant="muted" className="text-xs tracking-wide uppercase">
           {priceLabel}
         </Text>
-        <Heading level={4}>{product.name}</Heading>
+        <Heading level={4}>
+          <HighlightText text={product.name} query={highlightQuery} />
+        </Heading>
         <Text variant="muted">{product.shortDescription}</Text>
       </div>
     </Link>

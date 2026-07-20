@@ -360,6 +360,18 @@ export const mockSiteSettings: SiteSettings = {
   defaultSEO: {
     title: "Builders Magazine",
     description: "Цифровая платформа независимого журнала о культуре кастомных мотоциклов.",
+    keywords: [
+      "кастомные мотоциклы",
+      "мотожурнал",
+      "builders magazine",
+      "мотоциклетная культура",
+      "кастом байк",
+    ],
+    ogImage: wideImage,
+    favicon: squareImage,
+    twitterImage: wideImage,
+    robots: "index, follow",
+    siteName: "Builders Magazine",
   },
   footerText:
     "Builders Magazine — независимый печатный журнал, посвящённый культуре кастомных мотоциклов.",

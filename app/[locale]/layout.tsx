@@ -5,6 +5,8 @@ import { getSiteSettings } from "@/cms/services/siteSettings";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { LightboxProvider } from "@/components/lightbox/LightboxProvider";
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "@/lib/seo/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export function generateStaticParams() {
   return ENABLED_LOCALES.map((locale) => ({ locale }));
@@ -32,6 +34,8 @@ export default async function LocaleLayout({
 
   return (
     <>
+      <JsonLd data={buildOrganizationJsonLd(settings)} />
+      <JsonLd data={buildWebSiteJsonLd(settings)} />
       <Header locale={locale} siteTitle={settings.siteTitle} />
       <main>
         <LightboxProvider>{children}</LightboxProvider>

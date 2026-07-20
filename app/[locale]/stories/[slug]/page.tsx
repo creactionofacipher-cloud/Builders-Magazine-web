@@ -4,6 +4,9 @@ import { getStories, getStoryBySlug } from "@/cms/services/stories";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
+import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
+import { buildArticleJsonLd } from "@/lib/seo/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
@@ -45,15 +48,16 @@ export async function generateMetadata({
       title,
       description: story.shortDescription,
       url,
-      siteName: settings.siteTitle,
+      siteName: settings.defaultSEO?.siteName || settings.siteTitle,
       locale: "ru_RU",
       type: "article",
-      images: [{ url: story.coverImage.url }],
+      images: resolveOgImages(settings, story.coverImage),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: story.shortDescription,
+      images: resolveTwitterImages(settings, story.coverImage),
     },
   };
 }
@@ -64,7 +68,7 @@ export default async function StoryPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { slug } = await params;
-  const story = await getStoryBySlug(slug);
+  const [story, settings] = await Promise.all([getStoryBySlug(slug), getSiteSettings()]);
 
   if (!story) {
     notFound();
@@ -82,6 +86,7 @@ export default async function StoryPage({
 
   return (
     <>
+      <JsonLd data={buildArticleJsonLd(story, settings)} />
       <Hero
         image={story.coverImage}
         title={story.title}

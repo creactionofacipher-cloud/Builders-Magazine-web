@@ -1,5 +1,9 @@
 import type { SchemaTypeDefinition } from "./types";
 
+// Mirrors studio/schemas/siteSettings.ts's defaultSEO.robots options
+// exactly (kept in sync manually).
+const ROBOTS_OPTIONS = ["index, follow", "noindex, follow", "index, nofollow", "noindex, nofollow"];
+
 // Singleton, not a collection — in a real Studio this is enforced by
 // desk-structure configuration (restricting creation to one document)
 // and/or a fixed _id, not by anything in the schema itself. This
@@ -47,7 +51,22 @@ export const siteSettings: SchemaTypeDefinition = {
       fields: [
         { name: "title", title: "Title", type: "string" },
         { name: "description", title: "Description", type: "text" },
+        { name: "keywords", title: "Keywords", type: "array", of: [{ type: "string" }] },
         { name: "ogImage", title: "OG Image", type: "reference", to: [{ type: "mediaAsset" }] },
+        { name: "favicon", title: "Favicon", type: "reference", to: [{ type: "mediaAsset" }] },
+        {
+          name: "twitterImage",
+          title: "Twitter Image",
+          type: "reference",
+          to: [{ type: "mediaAsset" }],
+        },
+        {
+          name: "robots",
+          title: "Robots",
+          type: "string",
+          options: { list: ROBOTS_OPTIONS },
+        },
+        { name: "siteName", title: "Site Name", type: "string" },
       ],
     },
     { name: "footerText", title: "Footer Text", type: "text" },

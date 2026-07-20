@@ -6,15 +6,19 @@ import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { portableTextToPlainText } from "@/utils/portableTextToPlainText";
+import { HighlightText } from "@/components/ui/HighlightText";
 import { cn } from "@/utils/cn";
 
 interface IssueCardProps {
   issue: Issue;
   locale: EnabledLocale;
   className?: string;
+  /** Highlights the matching substring in the title — set when this card
+   * renders inside search results. Omitted everywhere else. */
+  highlightQuery?: string;
 }
 
-export function IssueCard({ issue, locale, className }: IssueCardProps) {
+export function IssueCard({ issue, locale, className, highlightQuery }: IssueCardProps) {
   const excerpt = portableTextToPlainText(issue.description, 140);
   const buyHref = issue.buyLinks?.[0]?.url;
 
@@ -34,7 +38,9 @@ export function IssueCard({ issue, locale, className }: IssueCardProps) {
           <Text variant="muted" className="text-xs tracking-wide uppercase">
             №{issue.number} · {issue.year}
           </Text>
-          <Heading level={4}>{issue.title}</Heading>
+          <Heading level={4}>
+            <HighlightText text={issue.title} query={highlightQuery} />
+          </Heading>
           {excerpt && <Text variant="muted">{excerpt}</Text>}
         </div>
       </Link>

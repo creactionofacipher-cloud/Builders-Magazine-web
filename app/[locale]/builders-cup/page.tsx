@@ -3,6 +3,7 @@ import { getAllBuildersCupEvents } from "@/cms/services/buildersCup";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
+import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
@@ -26,14 +27,16 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       url,
-      siteName: settings.siteTitle,
+      siteName: settings.defaultSEO?.siteName || settings.siteTitle,
       locale: "ru_RU",
       type: "website",
+      images: resolveOgImages(settings),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: resolveTwitterImages(settings),
     },
   };
 }

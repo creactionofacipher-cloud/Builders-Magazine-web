@@ -1,5 +1,12 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+// Mirrors types/content.ts's SiteSettings.defaultSEO.robots exactly
+// (also duplicated in cms/schemas/siteSettings.ts) — a plain string
+// field with a curated list of common values, not a structured
+// boolean-toggle set. Next.js's Metadata.robots accepts this string
+// directly (see app/layout.tsx).
+const ROBOTS_OPTIONS = ["index, follow", "noindex, follow", "index, nofollow", "noindex, nofollow"];
+
 // Ported from cms/schemas/siteSettings.ts. Singleton, not a collection —
 // this integration assumes the document is created with
 // _id: "siteSettings" (see cms/queries/siteSettings.ts), the
@@ -44,15 +51,52 @@ export default defineType({
     defineField({
       name: "defaultSEO",
       title: "Default SEO",
+      description:
+        "Site-wide SEO fallback — used whenever a specific page doesn't define its own title, description, image, etc. (see app/layout.tsx).",
       type: "object",
       fields: [
         defineField({ name: "title", title: "Title", type: "string" }),
         defineField({ name: "description", title: "Description", type: "text" }),
         defineField({
+          name: "keywords",
+          title: "Keywords",
+          type: "array",
+          of: [{ type: "string" }],
+        }),
+        defineField({
           name: "ogImage",
           title: "OG Image",
+          description: "Open Graph fallback image — used by any page that doesn't set its own.",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+        }),
+        defineField({
+          name: "favicon",
+          title: "Favicon",
+          description: "Reused for the browser tab icon, shortcut icon, and Apple touch icon.",
+          type: "reference",
+          to: [{ type: "mediaAsset" }],
+        }),
+        defineField({
+          name: "twitterImage",
+          title: "Twitter Image",
+          description: "Falls back to OG Image above when left empty.",
+          type: "reference",
+          to: [{ type: "mediaAsset" }],
+        }),
+        defineField({
+          name: "robots",
+          title: "Robots",
+          type: "string",
+          options: { list: ROBOTS_OPTIONS },
+          initialValue: "index, follow",
+        }),
+        defineField({
+          name: "siteName",
+          title: "Site Name",
+          description:
+            "What OpenGraph/Twitter/structured data call the site — falls back to Site Title above when left empty.",
+          type: "string",
         }),
       ],
     }),

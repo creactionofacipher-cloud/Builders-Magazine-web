@@ -5,19 +5,23 @@ import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { portableTextToPlainText } from "@/utils/portableTextToPlainText";
+import { HighlightText } from "@/components/ui/HighlightText";
 import { cn } from "@/utils/cn";
 
 interface BuildersCupCardProps {
   event: BuildersCup;
   locale: EnabledLocale;
   className?: string;
+  /** Highlights the matching substring in the title — set when this card
+   * renders inside search results. Omitted everywhere else. */
+  highlightQuery?: string;
 }
 
 // Compact grid card, same pattern as IssueCard/StoryCard. Necessary here
 // because BuildersCupHighlight is a single-event spotlight layout (used
 // for "latest event"), not a grid card — no existing component fits a
 // "previous events" grid.
-export function BuildersCupCard({ event, locale, className }: BuildersCupCardProps) {
+export function BuildersCupCard({ event, locale, className, highlightQuery }: BuildersCupCardProps) {
   const excerpt = portableTextToPlainText(event.description, 140);
   const dateLabel = new Date(event.date).toLocaleDateString("ru-RU", {
     year: "numeric",
@@ -40,7 +44,9 @@ export function BuildersCupCard({ event, locale, className }: BuildersCupCardPro
           {dateLabel}
           {event.location ? ` · ${event.location}` : ""}
         </Text>
-        <Heading level={4}>{event.name}</Heading>
+        <Heading level={4}>
+          <HighlightText text={event.name} query={highlightQuery} />
+        </Heading>
         {excerpt && <Text variant="muted">{excerpt}</Text>}
       </div>
     </Link>

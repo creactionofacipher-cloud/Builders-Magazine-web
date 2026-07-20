@@ -30,5 +30,14 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // Sanity Studio (/studio) is a separate app with its own package.json,
+  // node_modules, and tsconfig — it type-checks independently (see
+  // studio/tsconfig.json, run via `npm --prefix studio`). Without this,
+  // this project's include (**/*.ts) pulls studio/*.ts into the root
+  // TypeScript program too, and studio/sanity.cli.ts imports "sanity/cli"
+  // — a package that only exists in studio/node_modules, not root
+  // node_modules — which fails `next build`'s type-checking step (and
+  // would fail the same way in `tsc --noEmit` here) with a "Cannot find
+  // module" error.
+  "exclude": ["node_modules", "studio/**/*"]
 }

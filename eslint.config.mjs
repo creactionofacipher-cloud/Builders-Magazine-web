@@ -105,12 +105,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     // Sanity Studio is a separate app (its own package.json/node_modules —
-    // see studio/README or ARCHITECTURE.md). Its build output is generated,
-    // minified, and multiple MB — linting it is both pointless and enough
-    // to OOM the default Node heap.
-    "studio/dist/**",
-    "studio/.sanity/**",
-    "studio/node_modules/**",
+    // see ARCHITECTURE.md / docs/11_SANITY_SETUP.md), excluded from the
+    // root tsconfig.json too. Beyond its build output (generated,
+    // minified, multiple MB — enough to OOM the default Node heap on its
+    // own), linting its *source* files here would also fail: Next.js's
+    // type-aware lint rules resolve against the root tsconfig, which no
+    // longer includes studio/*.ts, and those files import the `sanity`
+    // package that's only installed in studio/node_modules anyway.
+    "studio/**",
   ]),
 ]);
 

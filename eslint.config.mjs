@@ -104,6 +104,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Sanity Studio is a separate app (its own package.json/node_modules —
+    // see studio/README or ARCHITECTURE.md). Its build output is generated,
+    // minified, and multiple MB — linting it is both pointless and enough
+    // to OOM the default Node heap.
+    "studio/dist/**",
+    "studio/.sanity/**",
+    "studio/node_modules/**",
   ]),
 ]);
 

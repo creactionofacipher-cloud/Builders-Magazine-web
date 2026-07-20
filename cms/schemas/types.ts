@@ -11,9 +11,16 @@
 // only object/reference members that need disambiguation are named.
 export interface SchemaArrayMember {
   name?: string;
+  title?: string;
   type: string;
   to?: { type: string }[];
   fields?: SchemaField[];
+  options?: Record<string, unknown>;
+  // Reference only: allows deleting the referenced document without
+  // Sanity blocking it for referential integrity. See the `weak`
+  // comments on story-referencing fields in cms/schemas/{issue,bike,
+  // builder,buildersCup}.ts.
+  weak?: boolean;
 }
 
 export interface SchemaField {
@@ -24,6 +31,7 @@ export interface SchemaField {
   of?: SchemaArrayMember[];
   fields?: SchemaField[];
   options?: Record<string, unknown>;
+  weak?: boolean;
 }
 
 export interface SchemaTypeDefinition {

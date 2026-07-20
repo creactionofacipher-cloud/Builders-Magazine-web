@@ -9,14 +9,17 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "dev:studio": "npm --prefix studio run dev",
+    "build:studio": "npm --prefix studio run build"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",
     "@sanity/client": "^7.23.2",
     "next": "16.2.10",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "yet-another-react-lightbox": "^3.32.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

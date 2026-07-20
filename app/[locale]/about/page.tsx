@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { getCrew } from "@/cms/services/people";
+import { getAllPeople } from "@/cms/services/people";
 import { getSiteSettings } from "@/cms/services/siteSettings";
+import { PERSON_GROUPS } from "@/types/content";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
 import { Section } from "@/components/layout/Section";
@@ -46,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const [crew, settings] = await Promise.all([getCrew(), getSiteSettings()]);
+  const [people, settings] = await Promise.all([getAllPeople(), getSiteSettings()]);
   const mailtoHref = `mailto:${settings.contacts.email}`;
 
   return (
@@ -68,16 +69,23 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      <Section>
-        <Container className="flex flex-col gap-8">
-          <Heading level={2}>Команда</Heading>
-          <Grid columns={4}>
-            {crew.map((person) => (
-              <PersonCard key={person.id} person={person} />
-            ))}
-          </Grid>
-        </Container>
-      </Section>
+      {PERSON_GROUPS.map((group) => {
+        const members = people.filter((person) => person.groups?.includes(group));
+        if (members.length === 0) return null;
+
+        return (
+          <Section key={group}>
+            <Container className="flex flex-col gap-8">
+              <Heading level={2}>{group}</Heading>
+              <Grid columns={4}>
+                {members.map((person) => (
+                  <PersonCard key={person.id} person={person} />
+                ))}
+              </Grid>
+            </Container>
+          </Section>
+        );
+      })}
 
       <Section surface>
         <Container className="flex max-w-2xl flex-col gap-4">

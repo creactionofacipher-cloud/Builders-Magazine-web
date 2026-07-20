@@ -1,4 +1,5 @@
 import type { SchemaTypeDefinition } from "./types";
+import { portableTextBlocks } from "./portableTextBlocks";
 
 // Mirrors types/content.ts's STORY_CATEGORIES exactly.
 const STORY_CATEGORIES = ["Bike", "Builder", "Culture", "Interview", "Event"];
@@ -12,7 +13,7 @@ export const story: SchemaTypeDefinition = {
     { name: "slug", title: "Slug", type: "slug", options: { source: "title" } },
     { name: "coverImage", title: "Cover Image", type: "reference", to: [{ type: "mediaAsset" }] },
     { name: "shortDescription", title: "Short Description", type: "string" },
-    { name: "content", title: "Content", type: "array", of: [{ type: "block" }] },
+    { name: "content", title: "Content", type: "array", of: portableTextBlocks },
     { name: "category", title: "Category", type: "string", options: { list: STORY_CATEGORIES } },
     { name: "author", title: "Author", type: "reference", to: [{ type: "person" }] },
     { name: "publishedDate", title: "Published Date", type: "date" },

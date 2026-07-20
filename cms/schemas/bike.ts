@@ -42,7 +42,7 @@ export const bike: SchemaTypeDefinition = {
       name: "stories",
       title: "Stories",
       type: "array",
-      of: [{ name: "bikeStory", type: "reference", to: [{ type: "story" }] }],
+      of: [{ name: "bikeStory", type: "reference", to: [{ type: "story" }], weak: true }],
     },
     {
       name: "issues",

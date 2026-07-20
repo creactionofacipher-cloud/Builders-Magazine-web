@@ -82,7 +82,12 @@ export default async function StoryPage({
 
   return (
     <>
-      <Hero image={story.coverImage} title={story.title} subtitle={story.shortDescription} />
+      <Hero
+        image={story.coverImage}
+        title={story.title}
+        subtitle={story.shortDescription}
+        lightbox
+      />
 
       <Section>
         <Container>

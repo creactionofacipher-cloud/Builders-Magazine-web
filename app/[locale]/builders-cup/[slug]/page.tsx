@@ -82,7 +82,7 @@ export default async function BuildersCupEventPage({
     <>
       <Section>
         <Container className="grid gap-[var(--spacing-gutter-lg)] md:grid-cols-2 md:items-start">
-          <Image asset={event.coverImage} sizes="(min-width: 768px) 50vw, 100vw" priority />
+          <Image asset={event.coverImage} sizes="(min-width: 768px) 50vw, 100vw" priority lightbox />
           <div className="flex flex-col gap-4">
             <Text variant="muted" className="text-xs tracking-wide uppercase">
               {dateLabel}

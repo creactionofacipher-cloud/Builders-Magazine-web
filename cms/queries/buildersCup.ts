@@ -1,4 +1,4 @@
-import { mediaAssetProjection, bikeProjection } from "./fragments";
+import { mediaAssetProjection, bikeProjection, richTextField } from "./fragments";
 
 const buildersCupFields = `{
   "id": _id,
@@ -6,7 +6,7 @@ const buildersCupFields = `{
   name,
   date,
   location,
-  description,
+  ${richTextField("description")},
   "coverImage": coverImage->${mediaAssetProjection},
   "gallery": gallery[]->${mediaAssetProjection},
   "participants": participants[]->${bikeProjection},

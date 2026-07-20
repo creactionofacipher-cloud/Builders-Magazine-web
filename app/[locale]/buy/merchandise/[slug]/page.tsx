@@ -83,7 +83,7 @@ export default async function ProductPage({
     <>
       <Section>
         <Container className="grid gap-[var(--spacing-gutter-lg)] md:grid-cols-2 md:items-start">
-          <Image asset={product.mainImage} sizes="(min-width: 768px) 50vw, 100vw" priority />
+          <Image asset={product.mainImage} sizes="(min-width: 768px) 50vw, 100vw" priority lightbox />
           <div className="flex flex-col gap-4">
             <Heading level={1}>{product.name}</Heading>
             <Text variant="lead">{priceLabel}</Text>
@@ -112,9 +112,11 @@ export default async function ProductPage({
               </div>
             )}
 
-            <ButtonLink href={product.externalBuyUrl} variant="primary" className="self-start">
-              Купить
-            </ButtonLink>
+            {product.externalBuyUrl && (
+              <ButtonLink href={product.externalBuyUrl} variant="primary" className="self-start">
+                Купить
+              </ButtonLink>
+            )}
           </div>
         </Container>
       </Section>

@@ -1,4 +1,5 @@
 import type { SchemaTypeDefinition } from "./types";
+import { portableTextBlocks } from "./portableTextBlocks";
 
 export const buildersCup: SchemaTypeDefinition = {
   name: "buildersCup",
@@ -9,7 +10,7 @@ export const buildersCup: SchemaTypeDefinition = {
     { name: "slug", title: "Slug", type: "slug", options: { source: "name" } },
     { name: "date", title: "Date", type: "date" },
     { name: "location", title: "Location", type: "string" },
-    { name: "description", title: "Description", type: "array", of: [{ type: "block" }] },
+    { name: "description", title: "Description", type: "array", of: portableTextBlocks },
     { name: "coverImage", title: "Cover Image", type: "reference", to: [{ type: "mediaAsset" }] },
     {
       name: "gallery",
@@ -33,7 +34,7 @@ export const buildersCup: SchemaTypeDefinition = {
       name: "stories",
       title: "Stories",
       type: "array",
-      of: [{ name: "cupStory", type: "reference", to: [{ type: "story" }] }],
+      of: [{ name: "cupStory", type: "reference", to: [{ type: "story" }], weak: true }],
     },
   ],
 };

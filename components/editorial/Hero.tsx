@@ -17,18 +17,23 @@ interface HeroProps {
   subtitle?: string;
   cta?: HeroCta;
   className?: string;
+  /** Registers the hero image in the page's shared lightbox gallery (see
+   * components/lightbox/) — on for entity detail-page heroes (the hero
+   * *is* that page's cover image), off for the homepage's promotional
+   * hero, which isn't "content" in that sense. Off by default. */
+  lightbox?: boolean;
 }
 
 // Full-bleed image with overlaid title/CTA. Reusable wherever a large
 // visual intro is needed (homepage, and later Story/Issue/Builders Cup
 // detail pages, which also open on a Hero Image per docs/02_SITE_STRUCTURE.md).
-export function Hero({ image, title, subtitle, cta, className }: HeroProps) {
+export function Hero({ image, title, subtitle, cta, className, lightbox = false }: HeroProps) {
   return (
     <div className={cn("relative flex min-h-[70vh] items-end overflow-hidden", className)}>
       <div className="absolute inset-0">
-        <Image asset={image} fill priority sizes="100vw" />
+        <Image asset={image} fill priority sizes="100vw" lightbox={lightbox} />
       </div>
-      <div className="absolute inset-0 bg-scrim/30" />
+      <div className="absolute inset-0 bg-scrim/30 pointer-events-none" />
       <Container className="relative flex flex-col gap-4 pb-[var(--spacing-gutter-lg)]">
         <Heading level={1} tone="inverted">
           {title}

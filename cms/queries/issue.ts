@@ -1,4 +1,4 @@
-import { mediaAssetProjection, storyProjection } from "./fragments";
+import { mediaAssetProjection, richTextField, storyProjection } from "./fragments";
 
 const issueFields = `{
   "id": _id,
@@ -7,12 +7,15 @@ const issueFields = `{
   year,
   title,
   "coverImage": coverImage->${mediaAssetProjection},
-  description,
+  ${richTextField("description")},
   releaseDate,
   advertisers,
   buyLinks,
   status,
-  "featuredStories": featuredStories[]->${storyProjection},
+  // featuredStory is a weak reference (studio/schemas/issue.ts) — filters
+  // out any entry whose target was deleted before dereferencing, so a
+  // stale reference never surfaces as a null Story to the app.
+  "featuredStories": featuredStories[defined(@->_id)]->${storyProjection},
   "gallery": gallery[]->${mediaAssetProjection}
 }`;
 

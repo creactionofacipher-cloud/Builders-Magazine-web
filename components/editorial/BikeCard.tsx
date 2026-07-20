@@ -12,7 +12,7 @@ interface BikeCardProps {
 // Not a Link: /bikes/[slug] is a post-MVP route (docs/10_POST_MVP.md,
 // Phase 2). Becomes clickable once that route ships.
 export function BikeCard({ bike, className }: BikeCardProps) {
-  const cover = bike.images[0];
+  const cover = bike.images?.[0];
   const meta = [bike.brand, bike.year?.toString()].filter(Boolean).join(" · ");
 
   return (

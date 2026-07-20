@@ -27,6 +27,14 @@ next-env.d.ts
 
 .vercel
 
+# Sanity Studio build/dev artifacts (studio/node_modules is already
+# covered by the bare `node_modules/` pattern above, which matches at
+# any depth)
+
+studio/dist/
+
+studio/.sanity/
+
 # Logs
 
 *.log

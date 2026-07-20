@@ -7,6 +7,7 @@ import type {
   MediaAsset,
   Person,
   Product,
+  RichText,
   SiteSettings,
   Story,
 } from "@/types/content";
@@ -56,6 +57,7 @@ const author: Person = {
   name: "Мария Соколова",
   role: "Автор",
   photo: squareImage,
+  groups: ["Команда"],
 };
 
 const editorInChief: Person = {
@@ -64,14 +66,18 @@ const editorInChief: Person = {
   name: "Алексей Волков",
   role: "Главный редактор",
   photo: squareImage,
+  groups: ["Команда"],
 };
 
+// Belongs to both blocks at once — demonstrates that group membership
+// isn't exclusive (see PERSON_GROUPS in types/content.ts).
 const photographer: Person = {
   id: "person-dmitry",
   slug: "dmitry-orlov",
   name: "Дмитрий Орлов",
   role: "Фотограф",
   photo: squareImage,
+  groups: ["Команда", "Фотографы"],
 };
 
 const founder: Person = {
@@ -80,6 +86,7 @@ const founder: Person = {
   name: "Екатерина Титова",
   role: "Основатель",
   photo: squareImage,
+  groups: ["Команда"],
 };
 
 export const mockCrew: Person[] = [founder, editorInChief, author, photographer];
@@ -144,7 +151,52 @@ export const mockStories: Story[] = [
     coverImage: wideImage,
     shortDescription:
       "История постройки классического чоппера на базе Harley-Davidson Panhead 1958 года.",
-    content: [paragraph("story-panhead-p1", "Полный текст истории появится после интеграции CMS.")],
+    // Demonstrates the print-magazine rich text block set (see
+    // types/content.ts's RichText union / cms/schemas/portableTextBlocks.ts):
+    // text between images, a wide image, a full-width image, an
+    // automatically-grouped inline image gallery, a pull quote, a
+    // divider, and a video embed.
+    content: [
+      paragraph("story-panhead-p1", "Полный текст истории появится после интеграции CMS."),
+      {
+        _type: "richTextImage",
+        _key: "story-panhead-img-wide",
+        image: portraitImage,
+        variant: "wide",
+      },
+      {
+        _type: "richTextImage",
+        _key: "story-panhead-img-full",
+        image: wideImage,
+        variant: "fullWidth",
+      },
+      {
+        _type: "pullQuote",
+        _key: "story-panhead-quote",
+        text: "Мы не строим мотоциклы, которые нравятся всем — мы строим те, что не дают спать нам самим.",
+        attribution: "Ironhide Garage",
+      },
+      { _type: "divider", _key: "story-panhead-divider" },
+      paragraph(
+        "story-panhead-p2",
+        "Несколько кадров с разных этапов сборки — от рамы до финальной покраски.",
+      ),
+      // Consecutive inline images — RichText.tsx groups these into one
+      // gallery automatically, no authoring change needed here.
+      { _type: "richTextImage", _key: "story-panhead-img-1", image: squareImage, variant: "inline" },
+      {
+        _type: "richTextImage",
+        _key: "story-panhead-img-2",
+        image: portraitImage,
+        variant: "inline",
+      },
+      paragraph("story-panhead-p3", "Видео с последнего заезда — прямо со стартовой решётки."),
+      {
+        _type: "embed",
+        _key: "story-panhead-embed",
+        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      },
+    ] satisfies RichText,
     category: "Bike",
     author,
     publishedDate: "2026-05-01",

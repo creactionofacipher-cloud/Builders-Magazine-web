@@ -4,7 +4,55 @@
 
 import type { PortableTextBlock } from "@portabletext/types";
 
-export type RichText = PortableTextBlock[];
+// Print-magazine-style rich text blocks beyond plain paragraphs/marks —
+// shared by Story.content, Issue.description, and BuildersCup.description
+// (see cms/schemas/portableTextBlocks.ts / studio/schemas/portableTextBlocks.ts,
+// the single source of truth for which block types exist and their
+// fields). Person.bio and Product.description also use RichText but their
+// schemas only allow plain blocks — this union is a superset, not a claim
+// that every RichText field can contain these.
+export const RICH_TEXT_IMAGE_VARIANTS = ["inline", "wide", "fullWidth"] as const;
+export type RichTextImageVariant = (typeof RICH_TEXT_IMAGE_VARIANTS)[number];
+
+export interface RichTextImageBlock {
+  _type: "richTextImage";
+  _key: string;
+  image?: MediaAsset;
+  variant?: RichTextImageVariant;
+}
+
+export interface RichTextPullQuote {
+  _type: "pullQuote";
+  _key: string;
+  text: string;
+  attribution?: string;
+}
+
+export interface RichTextDivider {
+  _type: "divider";
+  _key: string;
+}
+
+// Provider is optional in the schema — the renderer (components/ui/Embed.tsx)
+// auto-detects YouTube/Vimeo from the URL regardless, so an editor never has
+// to set it correctly for the embed to work.
+export const EMBED_PROVIDERS = ["youtube", "vimeo", "other"] as const;
+export type EmbedProvider = (typeof EMBED_PROVIDERS)[number];
+
+export interface RichTextEmbed {
+  _type: "embed";
+  _key: string;
+  url: string;
+  provider?: EmbedProvider;
+}
+
+export type RichText = (
+  | PortableTextBlock
+  | RichTextImageBlock
+  | RichTextPullQuote
+  | RichTextDivider
+  | RichTextEmbed
+)[];
 
 export type PublishStatus = "draft" | "published";
 
@@ -26,6 +74,16 @@ export interface MediaAsset {
 export const STORY_CATEGORIES = ["Bike", "Builder", "Culture", "Interview", "Event"] as const;
 export type StoryCategory = (typeof STORY_CATEGORIES)[number];
 
+// Which block(s) of the About page's team section a Person shows up in.
+// A person can belong to more than one (e.g. someone who is both on the
+// core team and a photographer) — see cms/services/people.ts. Adding a
+// new block later (the team grid is expected to grow) means adding one
+// entry here plus the two schema mirrors (cms/schemas/person.ts,
+// studio/schemas/person.ts) — no other code changes, same pattern as
+// STORY_CATEGORIES above.
+export const PERSON_GROUPS = ["Команда", "Фотографы"] as const;
+export type PersonGroup = (typeof PERSON_GROUPS)[number];
+
 export interface Person {
   id: string;
   slug: string;
@@ -33,6 +91,7 @@ export interface Person {
   role: string;
   photo?: MediaAsset;
   bio?: RichText;
+  groups?: PersonGroup[];
   articles?: Story[];
 }
 

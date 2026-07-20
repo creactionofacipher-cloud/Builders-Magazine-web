@@ -17,7 +17,15 @@ export const product: SchemaTypeDefinition = {
       of: [{ name: "galleryImage", type: "reference", to: [{ type: "mediaAsset" }] }],
     },
     { name: "price", title: "Price", type: "number" },
-    { name: "currency", title: "Currency", type: "string" },
+    // Required + defaults to "RUB" in studio/schemas/product.ts — that
+    // needs the real Rule-builder API (a function, not plain data), which
+    // this lightweight type intentionally doesn't model. See types.ts.
+    {
+      name: "currency",
+      title: "Currency",
+      type: "string",
+      options: { list: ["RUB", "USD", "EUR"] },
+    },
     { name: "sizes", title: "Sizes", type: "array", of: [{ type: "string" }] },
     { name: "materials", title: "Materials", type: "string" },
     { name: "externalBuyUrl", title: "External Buy URL", type: "url" },

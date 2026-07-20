@@ -5,6 +5,12 @@
 // than a separate "summary" shape that could drift out of sync with
 // which fields are actually required.
 
+// "author" is deliberately a shallow inline projection (id/slug/name/role
+// — Person's *required* fields only), not personProjection, which would
+// nest a full mediaAssetProjection for the person's own photo and risk
+// circular-depth queries (mediaAsset -> author -> photo -> mediaAsset -> ...).
+// No page currently renders more than the author's name (lightbox
+// photographer credit — see components/lightbox/useLightbox.ts).
 export const mediaAssetProjection = `{
   "id": _id,
   "url": file.asset->url,
@@ -13,14 +19,31 @@ export const mediaAssetProjection = `{
   caption,
   copyright,
   altText,
-  relatedObject
+  relatedObject,
+  "author": author->{"id": _id, "slug": slug.current, name, role}
 }`;
+
+// Story.content / Issue.description / BuildersCup.description use the
+// shared print-magazine block set (cms/schemas/portableTextBlocks.ts),
+// which mixes plain Portable Text blocks with richTextImage objects that
+// hold a *reference* to a mediaAsset. `...` passes every other block type
+// (block, pullQuote, divider) through unchanged; only richTextImage needs
+// its `image` reference resolved into a full MediaAsset.
+export function richTextField(fieldName: string): string {
+  return `"${fieldName}": ${fieldName}[]{
+    ...,
+    _type == "richTextImage" => {
+      "image": image->${mediaAssetProjection}
+    }
+  }`;
+}
 
 export const personProjection = `{
   "id": _id,
   "slug": slug.current,
   name,
   role,
+  groups,
   "photo": photo->${mediaAssetProjection}
 }`;
 
@@ -63,7 +86,7 @@ export const storyProjection = `{
   title,
   "coverImage": coverImage->${mediaAssetProjection},
   shortDescription,
-  content,
+  ${richTextField("content")},
   category,
   "author": author->${personProjection},
   publishedDate,

@@ -1,4 +1,5 @@
 import type { SchemaTypeDefinition } from "./types";
+import { portableTextBlocks } from "./portableTextBlocks";
 
 export const issue: SchemaTypeDefinition = {
   name: "issue",
@@ -10,7 +11,7 @@ export const issue: SchemaTypeDefinition = {
     { name: "number", title: "Number", type: "number" },
     { name: "year", title: "Year", type: "number" },
     { name: "coverImage", title: "Cover Image", type: "reference", to: [{ type: "mediaAsset" }] },
-    { name: "description", title: "Description", type: "array", of: [{ type: "block" }] },
+    { name: "description", title: "Description", type: "array", of: portableTextBlocks },
     { name: "releaseDate", title: "Release Date", type: "date" },
     { name: "advertisers", title: "Advertisers", type: "array", of: [{ type: "string" }] },
     {
@@ -33,7 +34,7 @@ export const issue: SchemaTypeDefinition = {
       name: "featuredStories",
       title: "Featured Stories",
       type: "array",
-      of: [{ name: "featuredStory", type: "reference", to: [{ type: "story" }] }],
+      of: [{ name: "featuredStory", type: "reference", to: [{ type: "story" }], weak: true }],
     },
     {
       name: "gallery",

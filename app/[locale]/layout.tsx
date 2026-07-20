@@ -4,6 +4,7 @@ import { ENABLED_LOCALES, isEnabledLocale } from "@/lib/i18n/locales";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { LightboxProvider } from "@/components/lightbox/LightboxProvider";
 
 export function generateStaticParams() {
   return ENABLED_LOCALES.map((locale) => ({ locale }));
@@ -32,7 +33,9 @@ export default async function LocaleLayout({
   return (
     <>
       <Header locale={locale} siteTitle={settings.siteTitle} />
-      <main>{children}</main>
+      <main>
+        <LightboxProvider>{children}</LightboxProvider>
+      </main>
       <Footer locale={locale} siteTitle={settings.siteTitle} footerText={settings.footerText} />
     </>
   );

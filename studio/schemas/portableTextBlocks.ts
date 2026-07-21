@@ -1,4 +1,12 @@
 import { defineArrayMember, defineField } from "sanity";
+import { richTextImagePreview } from "../components/previews/RichTextImagePreview";
+import { pullQuotePreview } from "../components/previews/PullQuotePreview";
+import { dividerPreview } from "../components/previews/DividerPreview";
+import { embedPreview } from "../components/previews/EmbedPreview";
+import { imageRowPreview } from "../components/previews/ImageRowPreview";
+import { imageTextPreview } from "../components/previews/ImageTextPreview";
+import { fullBleedPreview } from "../components/previews/FullBleedPreview";
+import { twoColumnPreview } from "../components/previews/TwoColumnPreview";
 
 // Shared print-magazine-style rich text block set — reused by every field
 // that needs it (story.content, issue.description, buildersCup.description;
@@ -40,12 +48,7 @@ const BASE_PORTABLE_TEXT_BLOCKS = [
         initialValue: "inline",
       }),
     ],
-    preview: {
-      select: { media: "image.file", variant: "variant" },
-      prepare({ media, variant }) {
-        return { title: `Image (${variant ?? "inline"})`, media };
-      },
-    },
+    preview: richTextImagePreview,
   }),
   defineArrayMember({
     name: "pullQuote",
@@ -55,9 +58,7 @@ const BASE_PORTABLE_TEXT_BLOCKS = [
       defineField({ name: "text", title: "Text", type: "text", validation: (Rule) => Rule.required() }),
       defineField({ name: "attribution", title: "Attribution", type: "string" }),
     ],
-    preview: {
-      select: { title: "text" },
-    },
+    preview: pullQuotePreview,
   }),
   defineArrayMember({
     name: "divider",
@@ -68,11 +69,7 @@ const BASE_PORTABLE_TEXT_BLOCKS = [
     // this exists only to satisfy that constraint and is hidden from the
     // Studio UI.
     fields: [defineField({ name: "marker", type: "boolean", hidden: true, initialValue: true })],
-    preview: {
-      prepare() {
-        return { title: "— Divider —" };
-      },
-    },
+    preview: dividerPreview,
   }),
   defineArrayMember({
     name: "embed",
@@ -94,12 +91,7 @@ const BASE_PORTABLE_TEXT_BLOCKS = [
         options: { list: EMBED_PROVIDERS },
       }),
     ],
-    preview: {
-      select: { subtitle: "url" },
-      prepare({ subtitle }) {
-        return { title: "Embed", subtitle };
-      },
-    },
+    preview: embedPreview,
   }),
 ];
 
@@ -137,12 +129,7 @@ export const portableTextBlocks = [
       }),
       defineField({ name: "caption", title: "Caption", type: "string" }),
     ],
-    preview: {
-      select: { media: "images.0.file", layout: "layout", count: "images.length" },
-      prepare({ media, layout, count }) {
-        return { title: `Image Row — ${layout ?? "equal"} (${count ?? 0})`, media };
-      },
-    },
+    preview: imageRowPreview,
   }),
   defineArrayMember({
     name: "imageText",
@@ -179,12 +166,7 @@ export const portableTextBlocks = [
         initialValue: true,
       }),
     ],
-    preview: {
-      select: { media: "image.file", position: "position", width: "width" },
-      prepare({ media, position, width }) {
-        return { title: `Image + Text — ${position ?? "left"}, ${width ?? "40%"}`, media };
-      },
-    },
+    preview: imageTextPreview,
   }),
   defineArrayMember({
     name: "fullBleedImage",
@@ -199,12 +181,7 @@ export const portableTextBlocks = [
         to: [{ type: "mediaAsset" }],
       }),
     ],
-    preview: {
-      select: { media: "image.file" },
-      prepare({ media }) {
-        return { title: "Full Bleed Image", media };
-      },
-    },
+    preview: fullBleedPreview,
   }),
   defineArrayMember({
     name: "twoColumnText",
@@ -219,10 +196,6 @@ export const portableTextBlocks = [
         of: BASE_PORTABLE_TEXT_BLOCKS,
       }),
     ],
-    preview: {
-      prepare() {
-        return { title: "Two-Column Text" };
-      },
-    },
+    preview: twoColumnPreview,
   }),
 ];

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { draftMode } from "next/headers";
 import "@/styles/globals.css";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { buildKeywords } from "@/lib/seo/keywords";
+import { PresentationVisualEditing } from "@/components/presentation/PresentationVisualEditing";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -63,13 +65,18 @@ export async function generateMetadata(): Promise<Metadata> {
 // no dependency — mirrors the pattern next-themes uses internally.
 const THEME_INIT_SCRIPT = `(function(){try{var s=localStorage.getItem('theme');var l=window.matchMedia('(prefers-color-scheme: light)').matches;var t=(s==='light'||s==='dark')?s:(l?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {isDraftMode && <PresentationVisualEditing />}
+      </body>
     </html>
   );
 }

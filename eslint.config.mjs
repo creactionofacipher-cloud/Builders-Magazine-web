@@ -90,10 +90,24 @@ const mediaAssetAltTextRule = {
   },
 };
 
+// app/api/draft-mode/enable needs a raw Sanity client to hand to
+// @sanity/preview-url-secret's validatePreviewUrl() — that's SDK
+// plumbing for the Presentation tool's preview-secret handshake, not a
+// content query, so this one route is exempt from the cms/sanity
+// UI-boundary rule above. Scoped narrowly (this file only), not the
+// whole app/api/ tree.
+const draftModeRouteException = {
+  files: ["app/api/draft-mode/**/*.ts"],
+  rules: {
+    "no-restricted-imports": "off",
+  },
+};
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   cmsBoundaryRule,
+  draftModeRouteException,
   mockDataBoundaryRule,
   mediaAssetAltTextRule,
   eslintConfigPrettier,

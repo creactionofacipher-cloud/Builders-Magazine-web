@@ -138,6 +138,7 @@ export const basePortableTextComponents: PortableTextComponents = {
       return (
         <Image
           asset={value.image}
+          preset="editorial"
           showCaption
           sizes={variant === "inline" ? "(min-width: 1024px) 66vw, 100vw" : "100vw"}
           className={cn(IMAGE_VARIANT_CLASSES[variant], "clear-both")}

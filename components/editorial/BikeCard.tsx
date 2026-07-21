@@ -21,7 +21,7 @@ export function BikeCard({ bike, className, highlightQuery }: BikeCardProps) {
 
   return (
     <article className={cn("flex flex-col gap-3", className)}>
-      {cover && <Image asset={cover} sizes="(min-width: 1024px) 33vw, 100vw" />}
+      {cover && <Image asset={cover} preset="card" sizes="(min-width: 1024px) 33vw, 100vw" />}
       <div className="flex flex-col gap-1">
         {meta && (
           <Text variant="muted" className="text-xs tracking-wide uppercase">

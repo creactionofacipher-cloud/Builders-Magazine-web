@@ -27,6 +27,7 @@ export function StoryCard({ story, locale, className, highlightQuery }: StoryCar
     >
       <Image
         asset={story.coverImage}
+        preset="card"
         sizes="(min-width: 1024px) 33vw, 100vw"
         className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
       />

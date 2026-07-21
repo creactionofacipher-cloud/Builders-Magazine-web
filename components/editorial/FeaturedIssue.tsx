@@ -30,7 +30,7 @@ export function FeaturedIssue({ issue, locale, className }: FeaturedIssueProps) 
         className,
       )}
     >
-      <Image asset={issue.coverImage} sizes="(min-width: 768px) 50vw, 100vw" />
+      <Image asset={issue.coverImage} preset="editorial" sizes="(min-width: 768px) 50vw, 100vw" />
       <div className="flex flex-col gap-4">
         <Badge>
           №{issue.number} · {issue.year}

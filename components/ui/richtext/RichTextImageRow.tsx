@@ -44,6 +44,7 @@ export function RichTextImageRow({ value }: { value: RichTextImageRowBlock }) {
       <Image
         key={hero.id}
         asset={hero}
+        preset="editorial"
         fill
         lightbox
         sizes="(min-width: 768px) 50vw, 100vw"
@@ -56,6 +57,7 @@ export function RichTextImageRow({ value }: { value: RichTextImageRowBlock }) {
           <Image
             key={asset.id}
             asset={asset}
+            preset="editorial"
             fill
             lightbox
             sizes="(min-width: 768px) 25vw, 100vw"
@@ -86,6 +88,7 @@ export function RichTextImageRow({ value }: { value: RichTextImageRowBlock }) {
           <Image
             key={asset.id}
             asset={asset}
+            preset="editorial"
             fill
             lightbox
             sizes={`(min-width: 768px) ${Math.round(100 / images.length)}vw, 100vw`}

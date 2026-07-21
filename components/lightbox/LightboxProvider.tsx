@@ -9,8 +9,19 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import dynamic from "next/dynamic";
 import type { ControllerRef, Slide } from "yet-another-react-lightbox";
-import { Lightbox } from "./Lightbox";
+
+// Dynamically imported (not a static import) so yet-another-react-lightbox
+// plus its Zoom/Thumbnails plugins and CSS — otherwise part of every
+// page's shared client bundle via this always-mounted provider — load as
+// their own chunk instead. ssr: false because the library itself is
+// browser-only (portals, matchMedia, etc.); it's already rendered with
+// open={false} until a lightbox-enabled image is clicked, so there's no
+// content to server-render anyway.
+const Lightbox = dynamic(() => import("./Lightbox").then((mod) => mod.Lightbox), {
+  ssr: false,
+});
 
 export interface LightboxContextValue {
   register: (id: string, slide: Slide) => void;

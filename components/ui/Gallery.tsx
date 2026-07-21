@@ -13,7 +13,7 @@ export function Gallery({ images, className }: GalleryProps) {
   return (
     <div className={cn("flex flex-col gap-[var(--spacing-gutter-lg)]", className)}>
       {images.map((asset) => (
-        <Image key={asset.id} asset={asset} showCaption sizes="100vw" lightbox />
+        <Image key={asset.id} asset={asset} preset="gallery" showCaption sizes="100vw" lightbox />
       ))}
     </div>
   );

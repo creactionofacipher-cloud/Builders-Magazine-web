@@ -88,7 +88,13 @@ export default async function ProductPage({
       <JsonLd data={buildProductJsonLd(product)} />
       <Section>
         <Container className="grid gap-[var(--spacing-gutter-lg)] md:grid-cols-2 md:items-start">
-          <Image asset={product.mainImage} sizes="(min-width: 768px) 50vw, 100vw" priority lightbox />
+          <Image
+            asset={product.mainImage}
+            preset="editorial"
+            sizes="(min-width: 768px) 50vw, 100vw"
+            priority
+            lightbox
+          />
           <div className="flex flex-col gap-4">
             <Heading level={1}>{product.name}</Heading>
             <Text variant="lead">{priceLabel}</Text>

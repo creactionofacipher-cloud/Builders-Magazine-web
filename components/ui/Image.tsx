@@ -1,13 +1,15 @@
-"use client";
-
 import NextImage from "next/image";
 import type { MediaAsset } from "@/types/content";
 import { cn } from "@/utils/cn";
-import { useLightboxImage } from "@/components/lightbox/useLightbox";
 import { LightboxImage } from "@/components/lightbox/LightboxImage";
+import { getImageQuality, type ImageQualityPreset } from "@/lib/imageConfig";
 
 interface ImageProps {
   asset: MediaAsset;
+  /** Quality preset (lib/imageConfig.ts) — this is the only place a
+   * next/image `quality` number gets produced; callers pick the preset
+   * matching this image's editorial weight rather than a raw number. */
+  preset: ImageQualityPreset;
   sizes?: string;
   priority?: boolean;
   className?: string;
@@ -27,6 +29,7 @@ interface ImageProps {
 
 export function Image({
   asset,
+  preset,
   sizes = "100vw",
   priority,
   className,
@@ -35,13 +38,21 @@ export function Image({
   lightbox = false,
 }: ImageProps) {
   const hasCaption = showCaption && Boolean(asset.caption || asset.copyright);
-  const { lightboxId, onOpen } = useLightboxImage(asset, lightbox);
+  // Sanity computes a tiny base64 LQIP for every uploaded image asset
+  // automatically (file.asset->metadata.lqip, read via
+  // cms/queries/fragments.ts's mediaAssetProjection) — never generated
+  // here. Mock data has no Sanity asset behind it, so blurDataURL is
+  // simply undefined there and this falls back to next/image's default
+  // "empty" placeholder rather than erroring. Either way the placeholder
+  // (when present) renders inside the same width/height or `fill` box the
+  // real image occupies, so it introduces no layout shift.
+  const blurDataURL = asset.blurDataURL;
 
   return (
     <figure className={cn(fill && "h-full w-full", className)}>
       <LightboxImage
-        lightboxId={lightboxId}
-        onOpen={onOpen}
+        asset={asset}
+        enabled={lightbox}
         className={cn("relative overflow-hidden bg-surface", fill && "h-full w-full")}
       >
         <NextImage
@@ -50,6 +61,8 @@ export function Image({
           {...(fill ? { fill: true } : { width: asset.width, height: asset.height })}
           sizes={sizes}
           priority={priority}
+          quality={getImageQuality(preset)}
+          {...(blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {})}
           className="h-full w-full object-cover"
         />
       </LightboxImage>

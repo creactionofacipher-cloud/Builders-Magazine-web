@@ -170,7 +170,7 @@ export default function DevComponentsPage() {
 
       <Catalog title="Media">
         <Grid columns={3}>
-          <Image asset={wideImage} showCaption sizes="(min-width: 1024px) 33vw, 100vw" />
+          <Image asset={wideImage} preset="editorial" showCaption sizes="(min-width: 1024px) 33vw, 100vw" />
         </Grid>
         <Text variant="muted">Gallery</Text>
         <Gallery images={galleryImages} />

@@ -73,7 +73,6 @@ export default defineConfig({
 
   plugins: [
     structureTool({ structure }),
-    visionTool(),
     // Live article preview — draft content visible without publishing,
     // rendered by the real Next.js pages (no second renderer; see
     // app/api/draft-mode/enable, which the previewMode.enable URL below
@@ -101,6 +100,7 @@ export default defineConfig({
         unstable_header: { component: PresentationPreviewHeader },
       },
     }),
+    visionTool(),
   ],
 
   schema: {

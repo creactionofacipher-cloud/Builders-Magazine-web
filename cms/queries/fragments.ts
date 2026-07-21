@@ -20,7 +20,8 @@ export const mediaAssetProjection = `{
   copyright,
   altText,
   relatedObject,
-  "author": author->{"id": _id, "slug": slug.current, name, role}
+  "author": author->{"id": _id, "slug": slug.current, name, role},
+  "blurDataURL": file.asset->metadata.lqip
 }`;
 
 // Story.content / Issue.description / BuildersCup.description use the

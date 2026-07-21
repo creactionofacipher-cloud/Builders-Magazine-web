@@ -5,6 +5,12 @@ import { draftMode } from "next/headers";
 // changes are gated behind the date, not silently applied).
 const SANITY_API_VERSION = "2025-01-01";
 
+// ISR window for published-content fetches — how long a statically
+// generated page can serve stale content before Next.js re-fetches and
+// regenerates it in the background. Only applies to the public client
+// (see sanityFetch below); draft/preview fetches always read fresh.
+const REVALIDATE_SECONDS = 300;
+
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";
 const token = process.env.SANITY_API_TOKEN;
@@ -93,7 +99,11 @@ export async function sanityFetch<T>(
   if (!client) {
     throw new Error("sanityFetch called without a configured Sanity client");
   }
-  return client.fetch<T>(query, params);
+  // ISR only applies to the public (published, CDN) client — draft mode
+  // must always read fresh, never serve a cached response from before the
+  // edit currently being previewed.
+  const options = client === sanityPreviewClient ? undefined : { next: { revalidate: REVALIDATE_SECONDS } };
+  return client.fetch<T>(query, params, options);
 }
 
 async function resolveClient(): Promise<SanityClient | null> {

@@ -27,6 +27,7 @@ export function RichTextImageText({ value }: { value: RichTextImageTextBlock }) 
   return (
     <Image
       asset={value.image}
+      preset="editorial"
       lightbox
       showCaption
       sizes={`(min-width: 768px) ${width}, 100vw`}

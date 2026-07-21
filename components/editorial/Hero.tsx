@@ -31,7 +31,7 @@ export function Hero({ image, title, subtitle, cta, className, lightbox = false 
   return (
     <div className={cn("relative flex min-h-[70vh] items-end overflow-hidden", className)}>
       <div className="absolute inset-0">
-        <Image asset={image} fill priority sizes="100vw" lightbox={lightbox} />
+        <Image asset={image} preset="hero" fill priority sizes="100vw" lightbox={lightbox} />
       </div>
       <div className="absolute inset-0 bg-scrim/30 pointer-events-none" />
       <Container className="relative flex flex-col gap-4 pb-[var(--spacing-gutter-lg)]">

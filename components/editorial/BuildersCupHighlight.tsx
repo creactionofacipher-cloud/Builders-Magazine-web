@@ -32,7 +32,7 @@ export function BuildersCupHighlight({ event, locale, className }: BuildersCupHi
         className,
       )}
     >
-      <Image asset={event.coverImage} sizes="(min-width: 768px) 50vw, 100vw" />
+      <Image asset={event.coverImage} preset="editorial" sizes="(min-width: 768px) 50vw, 100vw" />
       <div className="flex flex-col gap-4">
         <Text variant="muted" className="text-xs tracking-wide uppercase">
           {dateLabel}

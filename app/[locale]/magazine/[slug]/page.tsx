@@ -85,7 +85,13 @@ export default async function IssuePage({
     <>
       <Section>
         <Container className="grid gap-[var(--spacing-gutter-lg)] md:grid-cols-2 md:items-start">
-          <Image asset={issue.coverImage} sizes="(min-width: 768px) 50vw, 100vw" priority lightbox />
+          <Image
+            asset={issue.coverImage}
+            preset="editorial"
+            sizes="(min-width: 768px) 50vw, 100vw"
+            priority
+            lightbox
+          />
           <div className="flex flex-col gap-4">
             <Badge>
               №{issue.number} · {issue.year}

@@ -35,6 +35,7 @@ export function ProductCard({ product, locale, className, highlightQuery }: Prod
     >
       <Image
         asset={product.mainImage}
+        preset="card"
         sizes="(min-width: 1024px) 25vw, 50vw"
         className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
       />

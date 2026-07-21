@@ -20,7 +20,13 @@ export function ImageGrid({ images, columns = 3, className }: ImageGridProps) {
       )}
     >
       {images.map((asset) => (
-        <Image key={asset.id} asset={asset} sizes="(min-width: 640px) 33vw, 50vw" lightbox />
+        <Image
+          key={asset.id}
+          asset={asset}
+          preset="gallery"
+          sizes="(min-width: 640px) 33vw, 50vw"
+          lightbox
+        />
       ))}
     </div>
   );

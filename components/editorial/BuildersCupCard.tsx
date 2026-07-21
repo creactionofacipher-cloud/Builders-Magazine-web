@@ -36,6 +36,7 @@ export function BuildersCupCard({ event, locale, className, highlightQuery }: Bu
     >
       <Image
         asset={event.coverImage}
+        preset="card"
         sizes="(min-width: 1024px) 33vw, 100vw"
         className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
       />

@@ -17,7 +17,13 @@ export function RichTextFullBleed({ value }: { value: RichTextFullBleedBlock }) 
 
   return (
     <figure className="clear-both">
-      <Image asset={image} lightbox sizes="100vw" className={IMAGE_VARIANT_CLASSES.fullWidth} />
+      <Image
+        asset={image}
+        preset="editorial"
+        lightbox
+        sizes="100vw"
+        className={IMAGE_VARIANT_CLASSES.fullWidth}
+      />
       {hasCaption && (
         <Text variant="muted" as="figcaption" className="mx-auto mt-2 max-w-2xl">
           {image.caption}

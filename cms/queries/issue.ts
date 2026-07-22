@@ -1,6 +1,9 @@
 import { mediaAssetProjection, richTextField, storyProjection } from "./fragments";
 
-const issueFields = `{
+// Exported so cms/queries/fragments.ts's layoutBlocksField() can resolve
+// a featuredIssue Layout Block's `issue` reference through this exact
+// same projection — no second, drifting copy of the Issue shape.
+export const issueFields = `{
   "id": _id,
   "slug": slug.current,
   number,

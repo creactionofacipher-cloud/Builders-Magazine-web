@@ -3,7 +3,14 @@
 // resolver (sanity.config.ts) and the per-document "Open Preview" action
 // (studio/lib/openPreviewAction.tsx), so the two can never drift apart
 // the way two hand-maintained copies of this mapping would.
-export const PREVIEWABLE_TYPES = ["story", "issue", "buildersCup", "product"] as const;
+export const PREVIEWABLE_TYPES = [
+  "story",
+  "issue",
+  "buildersCup",
+  "product",
+  "homePage",
+  "landingPage",
+] as const;
 export type PreviewableType = (typeof PREVIEWABLE_TYPES)[number];
 
 export function isPreviewableType(type: string): type is PreviewableType {
@@ -14,15 +21,24 @@ export function isPreviewableType(type: string): type is PreviewableType {
 // (app/[locale]/stories/[slug], app/[locale]/magazine/[slug],
 // app/[locale]/builders-cup/[slug], app/[locale]/buy/merchandise/[slug]) —
 // "ru" is the only enabled locale (see lib/i18n/locales.ts in the main app).
+// homePage is the odd one out: a singleton with no slug, so its entry is
+// already the *complete* path rather than a listing prefix a slug gets
+// appended to — see resolvePreviewPath below.
 const FRONTEND_PATH_PREFIX: Record<PreviewableType, string> = {
   story: "/ru/stories",
   issue: "/ru/magazine",
   buildersCup: "/ru/builders-cup",
   product: "/ru/buy/merchandise",
+  homePage: "/ru",
+  landingPage: "/ru/p",
 };
 
-export function resolvePreviewPath(type: PreviewableType, slug: string): string {
-  return `${FRONTEND_PATH_PREFIX[type]}/${slug}`;
+// `slug` is omitted only for homePage (a singleton — there's nothing to
+// append); every other previewable type still always passes one, so
+// their resolved paths are unchanged.
+export function resolvePreviewPath(type: PreviewableType, slug?: string): string {
+  const prefix = FRONTEND_PATH_PREFIX[type];
+  return slug ? `${prefix}/${slug}` : prefix;
 }
 
 // Must be SANITY_STUDIO_-prefixed to be exposed to the Studio's Vite

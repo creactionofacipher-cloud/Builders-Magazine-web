@@ -2,7 +2,9 @@ import type { SchemaTypeDefinition } from "./types";
 
 // Mirrors types/content.ts's PERSON_GROUPS exactly (also duplicated in
 // studio/schemas/person.ts for the same reason — kept in sync manually).
-const PERSON_GROUPS = ["Команда", "Фотографы"];
+// English values — see types/content.ts's PERSON_GROUP_LABELS for the
+// Russian label shown on the public site.
+const PERSON_GROUPS = ["Team", "Photographers"];
 
 // Not in the requested schema list, but a structural dependency:
 // Story.author and MediaAsset.author both reference "person" — without

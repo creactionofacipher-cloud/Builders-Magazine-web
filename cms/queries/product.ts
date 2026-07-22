@@ -1,6 +1,9 @@
 import { mediaAssetProjection } from "./fragments";
 
-const productFields = `{
+// Exported so cms/queries/fragments.ts's layoutBlocksField() can resolve
+// a merchandise Layout Block's `products` references through this exact
+// same projection — no second, drifting copy of the shape.
+export const productFields = `{
   "id": _id,
   "slug": slug.current,
   name,

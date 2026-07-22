@@ -36,6 +36,7 @@ export const story: SchemaTypeDefinition = {
       type: "array",
       of: [{ name: "relatedBuilderRef", type: "reference", to: [{ type: "builder" }] }],
     },
+    { name: "tags", title: "Tags", type: "array", of: [{ type: "string" }] },
     { name: "status", title: "Status", type: "string", options: { list: ["draft", "published"] } },
   ],
 };

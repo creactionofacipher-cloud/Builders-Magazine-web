@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
-import { getCurrentIssue } from "@/cms/services/issues";
-import { getFeaturedContent, getFeaturedStories } from "@/cms/services/stories";
-import { getLatestBuildersCup } from "@/cms/services/buildersCup";
+import { getHomepage } from "@/cms/services/homepage";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
 import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
-import { Section } from "@/components/layout/Section";
-import { Container } from "@/components/layout/Container";
-import { Hero } from "@/components/editorial/Hero";
-import { FeaturedIssue } from "@/components/editorial/FeaturedIssue";
-import { BuildersCupHighlight } from "@/components/editorial/BuildersCupHighlight";
-import { StoryCollection } from "@/components/editorial/StoryCollection";
+import { LayoutBlocksRenderer } from "@/components/layout-blocks/LayoutBlocksRenderer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -42,72 +35,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// The homepage as a magazine spread: renders exactly the sequence of
+// Layout Blocks an editor composed in the "Home Page" singleton document
+// (see cms/services/homepage.ts / components/layout-blocks/), in that
+// exact order — no section here is hardcoded or assumed.
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const activeLocale = isEnabledLocale(locale) ? locale : DEFAULT_LOCALE;
 
-  const [currentIssue, featuredStories, featuredContent, latestBuildersCup, settings] =
-    await Promise.all([
-      getCurrentIssue(),
-      getFeaturedStories(),
-      getFeaturedContent(),
-      getLatestBuildersCup(),
-      getSiteSettings(),
-    ]);
+  const homepage = await getHomepage();
 
-  return (
-    <>
-      {currentIssue && (
-        <Hero
-          image={currentIssue.coverImage}
-          title={settings.siteTitle}
-          subtitle={`Свежий номер: ${currentIssue.title}`}
-          cta={{
-            label: "Смотреть номер",
-            href: `/${activeLocale}/magazine/${currentIssue.slug}`,
-          }}
-        />
-      )}
-
-      {currentIssue && (
-        <Section>
-          <Container>
-            <FeaturedIssue issue={currentIssue} locale={activeLocale} />
-          </Container>
-        </Section>
-      )}
-
-      {featuredStories.length > 0 && (
-        <Section surface>
-          <Container>
-            <StoryCollection
-              title="Избранные истории"
-              stories={featuredStories}
-              locale={activeLocale}
-            />
-          </Container>
-        </Section>
-      )}
-
-      {latestBuildersCup && (
-        <Section>
-          <Container>
-            <BuildersCupHighlight event={latestBuildersCup} locale={activeLocale} />
-          </Container>
-        </Section>
-      )}
-
-      {featuredContent.length > 0 && (
-        <Section surface>
-          <Container>
-            <StoryCollection
-              title="Ещё материалы"
-              stories={featuredContent}
-              locale={activeLocale}
-            />
-          </Container>
-        </Section>
-      )}
-    </>
-  );
+  return <LayoutBlocksRenderer blocks={homepage.blocks} locale={activeLocale} />;
 }

@@ -7,6 +7,8 @@ import { builder } from "./builder";
 import { buildersCup } from "./buildersCup";
 import { product } from "./product";
 import { siteSettings } from "./siteSettings";
+import { homePage } from "./homePage";
+import { landingPage } from "./landingPage";
 
 // Consumed by a real sanity.config.ts's schema.types once a Studio
 // project exists — not executed by this Next.js app.
@@ -20,4 +22,6 @@ export const schemaTypes = [
   buildersCup,
   product,
   siteSettings,
+  homePage,
+  landingPage,
 ];

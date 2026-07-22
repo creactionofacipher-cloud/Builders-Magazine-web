@@ -9,7 +9,7 @@ import { openPreviewAction } from "./lib/openPreviewAction";
 import { PresentationPreviewHeader } from "./components/presentation/PresentationPreviewHeader";
 
 // Document types with exactly one fixed-ID instance (see structure.ts).
-const SINGLETON_TYPES = new Set(["siteSettings"]);
+const SINGLETON_TYPES = new Set(["siteSettings", "homePage"]);
 
 // One resolver per previewable document type (studio/lib/previewUrl.ts's
 // PREVIEWABLE_TYPES) — each tells the Presentation tool which single
@@ -64,6 +64,33 @@ const productLocation = defineLocations({
   }),
 });
 
+// homePage is a singleton with no slug/title field to select — nothing
+// meaningful to read off the document itself, so the location is a fixed
+// entry pointing at resolvePreviewPath("homePage") (== "/ru", the actual
+// homepage route). `select` still needs *a* field to satisfy the type;
+// `_type` always exists on every document and is unused in `resolve`.
+const homePageLocation = defineLocations({
+  select: { title: "_type" },
+  resolve: () => ({
+    locations: [{ title: "Главная страница", href: resolvePreviewPath("homePage") }],
+  }),
+});
+
+// landingPage is a collection with a real title/slug, same shape as
+// story/issue/buildersCup/product above (not the homePage singleton
+// special case).
+const landingPageLocation = defineLocations({
+  select: { title: "title", slug: "slug.current" },
+  resolve: (doc) => ({
+    locations: [
+      {
+        title: doc?.title || "Untitled",
+        href: resolvePreviewPath("landingPage", doc?.slug ?? ""),
+      },
+    ],
+  }),
+});
+
 export default defineConfig({
   name: "default",
   title: "Builders Magazine",
@@ -90,6 +117,8 @@ export default defineConfig({
           issue: issueLocation,
           buildersCup: buildersCupLocation,
           product: productLocation,
+          homePage: homePageLocation,
+          landingPage: landingPageLocation,
         },
       },
       components: {

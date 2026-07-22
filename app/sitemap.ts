@@ -5,6 +5,7 @@ import { getStories } from "@/cms/services/stories";
 import { getAllIssues } from "@/cms/services/issues";
 import { getAllBuildersCupEvents } from "@/cms/services/buildersCup";
 import { getMerchandise } from "@/cms/services/products";
+import { getLandingPages } from "@/cms/services/landingPages";
 
 function url(path: string): string {
   return `${SITE_URL}/${DEFAULT_LOCALE}${path}`;
@@ -16,11 +17,12 @@ function url(path: string): string {
 // /dev/components is absent for the same reason as robots.ts disallowing
 // it: internal catalog, never public content.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [stories, issues, events, products] = await Promise.all([
+  const [stories, issues, events, products, landingPages] = await Promise.all([
     getStories(),
     getAllIssues(),
     getAllBuildersCupEvents(),
     getMerchandise(),
+    getLandingPages(),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -59,5 +61,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...storyRoutes, ...issueRoutes, ...eventRoutes, ...productRoutes];
+  const landingPageRoutes: MetadataRoute.Sitemap = landingPages.map((page) => ({
+    url: url(`/p/${page.slug}`),
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...storyRoutes,
+    ...issueRoutes,
+    ...eventRoutes,
+    ...productRoutes,
+    ...landingPageRoutes,
+  ];
 }

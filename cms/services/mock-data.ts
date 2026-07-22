@@ -3,12 +3,16 @@ import type {
   Bike,
   Builder,
   BuildersCup,
+  HomePage,
   Issue,
+  LandingPage,
+  LayoutBlock,
   MediaAsset,
   Person,
   Product,
   RichText,
   SiteSettings,
+  SocialPost,
   Story,
 } from "@/types/content";
 
@@ -57,7 +61,7 @@ const author: Person = {
   name: "Мария Соколова",
   role: "Автор",
   photo: squareImage,
-  groups: ["Команда"],
+  groups: ["Team"],
 };
 
 const editorInChief: Person = {
@@ -66,7 +70,7 @@ const editorInChief: Person = {
   name: "Алексей Волков",
   role: "Главный редактор",
   photo: squareImage,
-  groups: ["Команда"],
+  groups: ["Team"],
 };
 
 // Belongs to both blocks at once — demonstrates that group membership
@@ -77,7 +81,7 @@ const photographer: Person = {
   name: "Дмитрий Орлов",
   role: "Фотограф",
   photo: squareImage,
-  groups: ["Команда", "Фотографы"],
+  groups: ["Team", "Photographers"],
 };
 
 const founder: Person = {
@@ -86,7 +90,7 @@ const founder: Person = {
   name: "Екатерина Титова",
   role: "Основатель",
   photo: squareImage,
-  groups: ["Команда"],
+  groups: ["Team"],
 };
 
 export const mockCrew: Person[] = [founder, editorInChief, author, photographer];
@@ -203,6 +207,7 @@ export const mockStories: Story[] = [
     gallery: [wideImage, squareImage, portraitImage],
     relatedBike: [bike],
     relatedBuilder: [builder],
+    tags: ["Chopper"],
     status: "published",
   },
   {
@@ -228,6 +233,7 @@ export const mockStories: Story[] = [
     category: "Culture",
     author,
     publishedDate: "2026-03-15",
+    tags: ["Chopper"],
     status: "published",
   },
   {
@@ -497,5 +503,191 @@ export const mockProducts: Product[] = [
     materials: "Виниловая плёнка, влагостойкая печать",
     externalBuyUrl: "https://example.com/shop/stickers",
     status: "published",
+  },
+];
+
+// Backs Social Feed blocks' mock provider path (cms/services/socialFeed.ts) —
+// only "instagram" exists today (types/content.ts's SOCIAL_PROVIDERS),
+// so every fixture uses that provider.
+export const mockSocialPosts: SocialPost[] = [
+  {
+    id: "social-1",
+    provider: "instagram",
+    imageUrl: "/placeholders/placeholder-square.png",
+    caption: "Раннее утро в мастерской.",
+    permalink: "https://instagram.com/example",
+  },
+  {
+    id: "social-2",
+    provider: "instagram",
+    imageUrl: "/placeholders/placeholder-wide.png",
+    caption: "Финальная покраска бака.",
+    permalink: "https://instagram.com/example",
+  },
+  {
+    id: "social-3",
+    provider: "instagram",
+    imageUrl: "/placeholders/placeholder-portrait.png",
+    caption: "С прошедшего Builders Cup.",
+    permalink: "https://instagram.com/example",
+  },
+  {
+    id: "social-4",
+    provider: "instagram",
+    imageUrl: "/placeholders/placeholder-square.png",
+    caption: "Деталь двигателя Panhead.",
+    permalink: "https://instagram.com/example",
+  },
+  {
+    id: "social-5",
+    provider: "instagram",
+    imageUrl: "/placeholders/placeholder-wide.png",
+    caption: "Кастомная рама в процессе сварки.",
+    permalink: "https://instagram.com/example",
+  },
+  {
+    id: "social-6",
+    provider: "instagram",
+    imageUrl: "/placeholders/placeholder-portrait.png",
+    caption: "Портрет мастера за работой.",
+    permalink: "https://instagram.com/example",
+  },
+];
+
+// Homepage-as-magazine-spread: every Layout Block type used at least
+// once (see types/content.ts's LayoutBlock union), in a deliberate
+// editorial sequence, so the page works end to end before an editor has
+// composed anything real in Sanity. Reuses the fixtures already defined
+// above rather than inventing new ones. The "home-grid-2" entry exercises
+// Story Grid's automatic/query data source (dataSource: "automatic",
+// mirroring what a separate "Latest Stories" block would have been —
+// tag-filtered here to show that path too); resolveDynamicBlocks() (called
+// by getHomepage()) fills in its `stories` the same way it would for real
+// Sanity content. "home-quote" demonstrates Block Settings overriding a
+// block's default background/spacing/container width.
+const mockHomePageBlocks: LayoutBlock[] = [
+  { _type: "heroStory", _key: "home-hero", story: mockStories[0] },
+  {
+    _type: "storyGrid",
+    _key: "home-grid-1",
+    title: "Свежие истории",
+    layout: "3-columns",
+    dataSource: "manual",
+    stories: mockStories.slice(1, 4),
+  },
+  {
+    _type: "fullWidthPhoto",
+    _key: "home-photo",
+    image: wideImage,
+    caption: "С последнего Builders Cup — раннее утро перед стартом.",
+  },
+  {
+    _type: "quote",
+    _key: "home-quote",
+    text: "Мы не гонимся за трендами и коммерческим успехом — наша миссия в том, чтобы " +
+      "сохранять культуру и вдохновлять мастеров.",
+    author: editorInChief.name,
+    settings: { background: "surface", spacingTop: "lg", containerWidth: "wide" },
+  },
+  {
+    _type: "richText",
+    _key: "home-richtext",
+    content: [
+      paragraph(
+        "home-richtext-p1",
+        "Материал в свободной форме — тот же набор блоков, что и в статье: изображения, врезки, цитаты.",
+      ),
+      {
+        _type: "pullQuote",
+        _key: "home-richtext-quote",
+        text: "Каждая деталь имеет значение, когда собираешь мотоцикл вручную.",
+        attribution: "Ironhide Garage",
+      },
+    ] satisfies RichText,
+  },
+  { _type: "featuredIssue", _key: "home-issue", issue: mockIssues[0] },
+  { _type: "spacer", _key: "home-spacer", size: "lg" },
+  {
+    _type: "buildersCupHighlight",
+    _key: "home-builders-cup",
+    event: mockBuildersCupEvents[0],
+  },
+  {
+    _type: "storyGrid",
+    _key: "home-grid-2",
+    title: "Культура кастома",
+    layout: "2-columns",
+    dataSource: "automatic",
+    tag: "Chopper",
+    count: 4,
+    sort: "newest",
+  },
+  { _type: "editorialDivider", _key: "home-divider", variant: "label", label: "Builders" },
+  { _type: "bikeSpotlight", _key: "home-bike-spotlight", bike: bike, heading: "Байк недели" },
+  {
+    _type: "builderSpotlight",
+    _key: "home-builder-spotlight",
+    builder: builder,
+    ctaText: "Смотреть мастерскую",
+    ctaUrl: "https://example.com/ironhide-garage",
+  },
+  {
+    _type: "cta",
+    _key: "home-cta",
+    title: "Builders Cup 2026",
+    subtitle: "Регистрация участников уже открыта",
+    buttonText: "Участвовать",
+    buttonUrl: "https://example.com/buy",
+    backgroundImage: wideImage,
+    alignment: "center",
+    overlay: true,
+  },
+  {
+    _type: "merchandise",
+    _key: "home-merch",
+    title: "Мерч",
+    products: mockProducts.slice(0, 3),
+  },
+  {
+    _type: "socialFeed",
+    _key: "home-social",
+    title: "Мы в Instagram",
+    provider: "instagram",
+    count: 6,
+    profileUrl: "https://instagram.com/example",
+  },
+];
+
+export const mockHomePage: HomePage = { blocks: mockHomePageBlocks };
+
+// Second consumer of the same Layout Blocks system — a standalone promo
+// page reachable at /ru/p/[slug] (app/[locale]/p/[slug]/page.tsx), not
+// part of the site's main navigation.
+export const mockLandingPages: LandingPage[] = [
+  {
+    id: "landing-builders-cup-2025",
+    slug: "builders-cup-2025",
+    title: "Builders Cup 2025 — промо",
+    status: "published",
+    blocks: [
+      { _type: "heroStory", _key: "landing-hero", story: mockStories[4] },
+      {
+        _type: "buildersCupHighlight",
+        _key: "landing-builders-cup",
+        event: mockBuildersCupEvents[0],
+      },
+      {
+        _type: "fullWidthPhoto",
+        _key: "landing-photo",
+        image: wideImage,
+        caption: "Регистрация участников открыта.",
+      },
+      {
+        _type: "quote",
+        _key: "landing-quote",
+        text: "Каждый год — новые мастерские, новые истории и новые правила игры.",
+        author: founder.name,
+      },
+    ],
   },
 ];

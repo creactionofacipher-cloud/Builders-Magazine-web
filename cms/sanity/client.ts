@@ -23,11 +23,44 @@ const studioUrl = process.env.SANITY_STUDIO_URL || "http://localhost:3333";
 // a URL, href, or attribute rather than rendered as visible text — an
 // embedded invisible character there silently breaks it (a stega-encoded
 // image `url` 404s, a stega-encoded `href` dead-links). Sanity's own
-// `filterDefault` heuristic already catches most of this, but this app's
-// own field names (MediaAsset.url, MediaAsset.altText, every `slug`,
-// `externalBuyUrl`, social `email`) are cheap and unambiguous to also
-// exclude explicitly rather than trust the heuristic alone.
-const STEGA_UNSAFE_FIELD_NAME_FRAGMENTS = ["url", "href", "slug", "alttext", "email"];
+// `filterDefault` heuristic already excludes some field names outright
+// (its own denylist includes "variant", "layout", "tag", "status", "id",
+// etc. — see node_modules/@sanity/client/dist/_chunks-es/stegaEncodeSourceMap.js),
+// but it has no way to know about field names specific to this schema.
+// Confirmed live (2026-07): Editorial Divider's `spacing` field was
+// getting stega-corrupted in Draft Mode, silently breaking the
+// `SPACER_HEIGHT_CLASSES[block.spacing]` lookup in
+// components/layout-blocks/blockSettings.ts (undefined key → cn() drops
+// the class entirely, no visible effect, no error) — every enum/control
+// field this app's Layout Blocks system reads via `===`/lookup rather
+// than renders as prose is equally vulnerable, so all of them are
+// excluded here explicitly rather than trusting Sanity's denylist to
+// happen to cover ones it wasn't designed for.
+const STEGA_UNSAFE_FIELD_NAME_FRAGMENTS = [
+  "url",
+  "href",
+  "slug",
+  "alttext",
+  "email",
+  // Block Settings (components/layout-blocks/blockSettings.ts) — spacing
+  // covers spacingTop/spacingBottom too (substring match), anchor is used
+  // as a DOM `id` for #anchor deep-linking (same danger class as href).
+  "spacing",
+  "background",
+  "containerwidth",
+  "anchor",
+  // Story Grid's data source (types/content.ts's StoryDataSource/StorySortOrder)
+  "datasource",
+  "sort",
+  // Spacer's own size field (components/layout-blocks/SpacerBlock.tsx) —
+  // same SPACER_HEIGHT_CLASSES lookup pattern as Editorial Divider's spacing.
+  "size",
+  // Social Feed's provider (dispatches cms/services/socialFeed.ts and
+  // indexes SOCIAL_PROVIDER_LABELS) and CTA's alignment (indexes
+  // alignClasses in components/layout-blocks/CtaBlock.tsx).
+  "provider",
+  "alignment",
+];
 
 function stegaFilter(props: Parameters<FilterDefault>[0]): boolean {
   const fieldName = String(props.resultPath.at(-1) ?? "").toLowerCase();

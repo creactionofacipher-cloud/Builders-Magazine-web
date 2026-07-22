@@ -63,6 +63,13 @@ export default defineType({
       ],
     }),
     defineField({
+      name: "tags",
+      title: "Tags",
+      description: "Free-form tags — used by Story Grid's automatic/query data source to filter.",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+    }),
+    defineField({
       name: "status",
       title: "Status",
       type: "string",

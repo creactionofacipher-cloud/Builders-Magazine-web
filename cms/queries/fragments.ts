@@ -94,6 +94,20 @@ export const bikeProjection = `{
   "builder": builder->${builderRefProjection}
 }`;
 
+// Fuller than builderRefProjection — includes projects[] (with each
+// project's own images) since BuilderCard reads projects[0].images[0]
+// for its cover photo. Used by the top-level ALL_BUILDERS_QUERY
+// (cms/queries/builder.ts) and the Builder Spotlight Layout Block (needs
+// BuilderCard rendered exactly the same way), not by contexts that only
+// need a shallow builder reference.
+export const builderProjection = `{
+  "id": _id,
+  "slug": slug.current,
+  name,
+  location,
+  "projects": projects[]->${bikeProjection}
+}`;
+
 // Story.content is required on the Story type, so this must be used
 // everywhere a Story can appear — nested (Issue.featuredStories,
 // BuildersCup.stories) or top-level — not a lighter "card" variant that
@@ -111,6 +125,7 @@ export const storyProjection = `{
   "gallery": gallery[]->${mediaAssetProjection},
   "relatedBike": relatedBike[]->${bikeProjection},
   "relatedBuilder": relatedBuilder[]->${builderRefProjection},
+  tags,
   status
 }`;
 // Story.issue is intentionally never fetched (left undefined, a valid

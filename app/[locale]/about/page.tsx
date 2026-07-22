@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getAllPeople } from "@/cms/services/people";
 import { getSiteSettings } from "@/cms/services/siteSettings";
-import { PERSON_GROUPS } from "@/types/content";
+import { PERSON_GROUPS, PERSON_GROUP_LABELS } from "@/types/content";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
 import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
@@ -79,7 +79,7 @@ export default async function AboutPage() {
         return (
           <Section key={group}>
             <Container className="flex flex-col gap-8">
-              <Heading level={2}>{group}</Heading>
+              <Heading level={2}>{PERSON_GROUP_LABELS[group]}</Heading>
               <Grid columns={4}>
                 {members.map((person) => (
                   <PersonCard key={person.id} person={person} />

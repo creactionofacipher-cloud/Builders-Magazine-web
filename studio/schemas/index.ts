@@ -7,6 +7,8 @@ import builder from "./builder";
 import buildersCup from "./buildersCup";
 import product from "./product";
 import siteSettings from "./siteSettings";
+import homePage from "./homePage";
+import landingPage from "./landingPage";
 
 export const schemaTypes = [
   mediaAsset,
@@ -18,4 +20,6 @@ export const schemaTypes = [
   buildersCup,
   product,
   siteSettings,
+  homePage,
+  landingPage,
 ];

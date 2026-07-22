@@ -3,8 +3,11 @@ import { defineField, defineType } from "sanity";
 // Mirrors types/content.ts's PERSON_GROUPS exactly (also duplicated in
 // cms/schemas/person.ts for the same reason — kept in sync manually).
 // Adding a new team block later means adding one entry here (plus the
-// two mirrors) — nothing else changes.
-const PERSON_GROUPS = ["Команда", "Фотографы"];
+// two mirrors) — nothing else changes. English values shown as-is to
+// editors here, same convention as Story's category list below; the
+// Russian label used on the public site lives in
+// types/content.ts's PERSON_GROUP_LABELS.
+const PERSON_GROUPS = ["Team", "Photographers"];
 
 // Ported from cms/schemas/person.ts. "articles" (Story[]) is
 // intentionally not a stored field — it's a back-reference, resolved via

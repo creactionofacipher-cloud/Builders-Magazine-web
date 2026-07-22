@@ -154,9 +154,20 @@ export type StoryCategory = (typeof STORY_CATEGORIES)[number];
 // new block later (the team grid is expected to grow) means adding one
 // entry here plus the two schema mirrors (cms/schemas/person.ts,
 // studio/schemas/person.ts) — no other code changes, same pattern as
-// STORY_CATEGORIES above.
-export const PERSON_GROUPS = ["Команда", "Фотографы"] as const;
+// STORY_CATEGORIES above. English values, matching every other taxonomy
+// enum in this codebase (STORY_CATEGORIES, etc.) — the Russian label
+// shown to site visitors lives in PERSON_GROUP_LABELS below, not in the
+// stored value itself.
+export const PERSON_GROUPS = ["Team", "Photographers"] as const;
 export type PersonGroup = (typeof PERSON_GROUPS)[number];
+
+// Visitor-facing Russian label for each group — see
+// app/[locale]/about/page.tsx, the only place a group is rendered as a
+// section heading rather than just used as a filter key.
+export const PERSON_GROUP_LABELS: Record<PersonGroup, string> = {
+  Team: "Команда",
+  Photographers: "Фотографы",
+};
 
 export interface Person {
   id: string;
@@ -211,6 +222,7 @@ export interface Story {
   gallery?: MediaAsset[];
   relatedBike?: Bike[];
   relatedBuilder?: Builder[];
+  tags?: string[];
   status: PublishStatus;
 }
 
@@ -315,4 +327,272 @@ export interface Product {
   materials?: string;
   externalBuyUrl: string;
   status: PublishStatus;
+}
+
+// Layout Blocks — a general-purpose, reusable editorial composition
+// system (schema in studio/schemas/layoutBlocks.ts + cms/schemas/layoutBlocks.ts,
+// GROQ resolution via cms/queries/fragments.ts's layoutBlocksField(),
+// mapping via cms/mappers/layoutBlocks.ts, rendering via
+// components/layout-blocks/). HomePage (below) is its first consumer —
+// any future document type that wants an editor-composed, freely
+// reorderable sequence of sections (a landing page, a Builders Cup promo
+// page, a digital issue) declares its own `blocks: LayoutBlock[]` field
+// and reuses every layer of this system unchanged.
+//
+// Every block's entity reference(s) are optional, not required: a block
+// an editor has added but not yet filled in (e.g. no story picked yet)
+// is valid, incomplete Sanity data, not an error — every block component
+// under components/layout-blocks/ checks for its own required content
+// and renders nothing when absent, the same defensive pattern already
+// used by components/ui/richtext/RichTextFullBleed.tsx.
+
+export const STORY_GRID_LAYOUTS = ["2-columns", "3-columns", "editorial"] as const;
+export type StoryGridLayout = (typeof STORY_GRID_LAYOUTS)[number];
+
+export const SPACER_SIZES = ["sm", "md", "lg", "xl"] as const;
+export type SpacerSize = (typeof SPACER_SIZES)[number];
+
+// Shared by every Layout Block — see Block Settings below. `_key` moves
+// here (was previously declared independently on every block interface)
+// purely to avoid repeating it once `settings` is added to all of them.
+export interface LayoutBlockBase {
+  _key: string;
+  settings?: BlockSettings;
+}
+
+export const BLOCK_BACKGROUNDS = ["none", "surface", "custom"] as const;
+export type BlockBackground = (typeof BLOCK_BACKGROUNDS)[number];
+
+export const CONTAINER_WIDTHS = ["normal", "wide", "full"] as const;
+export type ContainerWidth = (typeof CONTAINER_WIDTHS)[number];
+
+// Generic per-block overrides available to every Layout Block, authored
+// in a collapsed "Settings" fieldset in Studio (see
+// studio/schemas/layoutBlocks.ts's blockSettingsFields) so they stay out
+// of the way of the block's own primary fields. Applied by
+// components/layout-blocks/blockSettings.ts, not by each block reimplementing
+// this logic — see that file for exactly which blocks honor which
+// setting (e.g. containerWidth is meaningless for an intentionally
+// full-bleed block like Hero).
+export interface BlockSettings {
+  spacingTop?: SpacerSize;
+  spacingBottom?: SpacerSize;
+  background?: BlockBackground;
+  /** Only meaningful when background === "custom". */
+  backgroundColor?: string;
+  containerWidth?: ContainerWidth;
+  /** Renders as this element's `id` — lets a CTA/nav link deep-link to
+   * this specific block via `#anchor`. */
+  anchor?: string;
+}
+
+export interface HeroStoryBlock extends LayoutBlockBase {
+  _type: "heroStory";
+  story?: Story;
+}
+
+// The single "list of stories" block — covers both hand-curated grids
+// (dataSource: "manual", the original/default behavior) and query-driven
+// listings (dataSource: "automatic": category/tag/count/sort filters,
+// resolved by cms/services/layoutBlocks.ts's resolveDynamicBlocks()).
+// "Automatic" with no category/tag set and sort "newest" is exactly what
+// a separate "Latest Stories" block would have been — folded in here
+// rather than duplicated as its own block type.
+export const STORY_DATA_SOURCES = ["manual", "automatic"] as const;
+export type StoryDataSource = (typeof STORY_DATA_SOURCES)[number];
+
+export const STORY_SORT_ORDERS = ["newest", "oldest"] as const;
+export type StorySortOrder = (typeof STORY_SORT_ORDERS)[number];
+
+export interface StoryGridBlock extends LayoutBlockBase {
+  _type: "storyGrid";
+  title?: string;
+  layout?: StoryGridLayout;
+  /** Absent/undefined behaves as "manual" — every pre-v2 document that
+   * only ever picked stories by hand keeps working unchanged. */
+  dataSource?: StoryDataSource;
+  /** Manual mode: editor-picked, GROQ-resolved. Automatic mode: filled
+   * in by resolveDynamicBlocks() after the query runs. Either way, by
+   * the time StoryGridBlock.tsx renders, this is just a plain Story[]. */
+  stories?: Story[];
+  category?: StoryCategory;
+  tag?: string;
+  count?: number;
+  sort?: StorySortOrder;
+}
+
+export interface FullWidthPhotoBlock extends LayoutBlockBase {
+  _type: "fullWidthPhoto";
+  image?: MediaAsset;
+  caption?: string;
+}
+
+export interface QuoteBlock extends LayoutBlockBase {
+  _type: "quote";
+  text: string;
+  author?: string;
+}
+
+export interface FeaturedIssueBlock extends LayoutBlockBase {
+  _type: "featuredIssue";
+  issue?: Issue;
+}
+
+// Named buildersCupHighlight, not buildersCup — a Sanity project has one
+// flat type-name namespace across document and object types, and
+// "buildersCup" is already the document type name (see
+// studio/schemas/buildersCup.ts). Matches the BuildersCupHighlight
+// component this block renders through.
+export interface BuildersCupHighlightBlock extends LayoutBlockBase {
+  _type: "buildersCupHighlight";
+  event?: BuildersCup;
+}
+
+export interface MerchandiseBlock extends LayoutBlockBase {
+  _type: "merchandise";
+  title?: string;
+  products?: Product[];
+}
+
+export interface SpacerBlock extends LayoutBlockBase {
+  _type: "spacer";
+  size?: SpacerSize;
+}
+
+// Reuses the existing article RichText union wholesale — see
+// components/ui/RichText.tsx, rendered here unmodified. No new rich-text
+// feature is introduced by this block; it just makes the same authoring
+// surface available outside a Story.
+export interface RichTextLayoutBlock extends LayoutBlockBase {
+  _type: "richText";
+  content: RichText;
+}
+
+// Highlights a single Bike/Builder via the existing BikeCard/BuilderCard
+// components (components/editorial/) — reused unmodified. ctaUrl is a
+// free-form URL rather than an auto-derived detail-page link because
+// /bikes/[slug] and /builders/[slug] don't exist yet (post-MVP).
+export interface BikeSpotlightBlock extends LayoutBlockBase {
+  _type: "bikeSpotlight";
+  bike?: Bike;
+  heading?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+}
+
+export interface BuilderSpotlightBlock extends LayoutBlockBase {
+  _type: "builderSpotlight";
+  builder?: Builder;
+  heading?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+}
+
+export const CTA_ALIGNMENTS = ["left", "center", "right"] as const;
+export type CtaAlignment = (typeof CTA_ALIGNMENTS)[number];
+
+// A promo/campaign banner — distinct from the generic Block Settings
+// background above: this block's own backgroundImage/backgroundColor are
+// its primary visual design (the banner itself), not an outer-section
+// override.
+export interface CtaBlock extends LayoutBlockBase {
+  _type: "cta";
+  title: string;
+  subtitle?: string;
+  buttonText: string;
+  buttonUrl: string;
+  backgroundImage?: MediaAsset;
+  backgroundColor?: string;
+  alignment?: CtaAlignment;
+  overlay?: boolean;
+}
+
+// Provider-abstracted from the start (per explicit correction — "Social
+// Feed", not "Instagram Feed") so a second network is one more entry in
+// SOCIAL_PROVIDERS plus one more case in cms/services/socialFeed.ts,
+// never a new block _type or schema/renderer change.
+export const SOCIAL_PROVIDERS = ["instagram"] as const;
+export type SocialProvider = (typeof SOCIAL_PROVIDERS)[number];
+
+export const SOCIAL_PROVIDER_LABELS: Record<SocialProvider, string> = {
+  instagram: "Instagram",
+};
+
+export interface SocialPost {
+  id: string;
+  provider: SocialProvider;
+  imageUrl: string;
+  caption?: string;
+  permalink: string;
+}
+
+export interface SocialFeedBlock extends LayoutBlockBase {
+  _type: "socialFeed";
+  title?: string;
+  provider?: SocialProvider;
+  count?: number;
+  /** Editor-authored destination for the "Follow on {provider}" button —
+   * a real provider integration has no reliable way to hand back a
+   * profile URL alongside individual post permalinks, so this is set by
+   * hand rather than derived. Falls back to the first resolved post's
+   * permalink when unset (mainly so the mock provider still shows a
+   * working button before an editor has filled this in). */
+  profileUrl?: string;
+  /** Resolved by cms/services/layoutBlocks.ts's resolveDynamicBlocks() —
+   * never authored directly in Studio. */
+  posts?: SocialPost[];
+}
+
+// A real divider, distinct from Spacer (which only adds empty space) —
+// renders an actual visual mark. New variants are additive: one more
+// entry here plus one more case in EditorialDividerBlock.tsx, no
+// schema/type ripple beyond that.
+export const DIVIDER_VARIANTS = ["line", "dot", "diamond", "label", "minimal"] as const;
+export type DividerVariant = (typeof DIVIDER_VARIANTS)[number];
+
+export interface EditorialDividerBlock extends LayoutBlockBase {
+  _type: "editorialDivider";
+  variant?: DividerVariant;
+  label?: string;
+  spacing?: SpacerSize;
+}
+
+export type LayoutBlock =
+  | HeroStoryBlock
+  | StoryGridBlock
+  | FullWidthPhotoBlock
+  | QuoteBlock
+  | FeaturedIssueBlock
+  | BuildersCupHighlightBlock
+  | MerchandiseBlock
+  | SpacerBlock
+  | RichTextLayoutBlock
+  | BikeSpotlightBlock
+  | BuilderSpotlightBlock
+  | CtaBlock
+  | SocialFeedBlock
+  | EditorialDividerBlock;
+
+
+// Singleton (not a collection), same pattern as SiteSettings above — one
+// document, fetched by fixed _id ("homePage"). The homepage as a
+// "magazine spread": editors compose it as a sequence of Layout Blocks
+// (above) in Sanity, and the frontend renders exactly that sequence in
+// that order — see components/layout-blocks/LayoutBlocksRenderer.tsx.
+export interface HomePage {
+  blocks: LayoutBlock[];
+}
+
+// A collection (not a singleton, unlike HomePage) — any number of these
+// can exist, each at its own /ru/p/[slug] route (see
+// app/[locale]/p/[slug]/page.tsx). Same Layout Blocks composition model
+// as HomePage, proving that system is genuinely reusable rather than
+// homepage-specific — a standalone promo/campaign page, not part of the
+// site's main navigation.
+export interface LandingPage {
+  id: string;
+  slug: string;
+  title: string;
+  status: PublishStatus;
+  blocks: LayoutBlock[];
 }

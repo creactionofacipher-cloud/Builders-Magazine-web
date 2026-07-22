@@ -37,8 +37,10 @@ npm run build:studio   # builds the Studio into studio/dist
 These root-level scripts are thin wrappers (`npm --prefix studio run dev` / `run build`) — they
 exist so you don't have to `cd studio` manually, not because of any workspace/monorepo tooling.
 
-The Studio is not deployed anywhere as part of this setup (no `sanity deploy`, no hosted Studio
-URL) — running it locally against the `production` dataset is enough to manage content.
+As of this writing the Studio hasn't been deployed anywhere (no `sanity deploy`, no hosted Studio
+URL) — content is managed by running it locally against the `production` dataset. See the root
+`README.md`'s "Deploying the Studio" section for how to give editors a real hosted URL when
+that's needed.
 
 ---
 
@@ -54,16 +56,22 @@ app** reads them from `.env.local`:
 NEXT_PUBLIC_SANITY_PROJECT_ID=l1slax0i
 NEXT_PUBLIC_SANITY_DATASET=production
 SANITY_API_TOKEN=
+NEXT_PUBLIC_SITE_URL=
+SANITY_PREVIEW_SECRET=
+SANITY_STUDIO_URL=
 ```
+
+See the root `README.md`'s "Environment variables" table for what each of these does and whether
+it's required in production — this section only covers the two specific to this doc's scope:
 
 - `NEXT_PUBLIC_SANITY_PROJECT_ID` / `NEXT_PUBLIC_SANITY_DATASET` — presence of the project ID is
   what flips the app from mock data to real Sanity queries (see "Fallback" below). Both are
   `NEXT_PUBLIC_` because they're not secret — they identify a dataset that's readable via Sanity's
   CDN, not a credential.
-- `SANITY_API_TOKEN` — not required for reading published content (the app fetches with
-  `useCdn: true`, which only serves published documents and needs no auth). Only needed if this
-  integration is later extended to read drafts or write data — deliberately out of scope here (no
-  preview mode, no draft mode were added, per the current architecture).
+- `SANITY_API_TOKEN` — not required for reading published content (the public client fetches with
+  `useCdn: true`, which only serves published documents and needs no auth). It **is** required for
+  Draft Mode / Presentation preview (see below) — that path needs a token with drafts-read access,
+  not just a plain published-content reader.
 
 `.env.local` is gitignored and never committed — `.env.local.example` is the checked-in template.
 
@@ -87,9 +95,12 @@ SANITY_API_TOKEN=
    inlined per-entity.
 5. Relationships (Story → Builder, Bike → Builder, Builders Cup → participants, etc.) are plain
    Sanity references — pick the related document from the reference field's picker.
-6. There is no draft/preview workflow connected to the Next.js app. Content becomes visible on the
-   site once published in the Studio (the app reads via the CDN, which only serves published
-   documents).
+6. Content becomes visible to *anonymous site visitors* once published in the Studio (the public
+   client reads via the CDN, which only serves published documents). Editors previewing unpublished
+   work don't have to wait for that: opening a document and clicking **Presentation** in the Studio
+   renders it live against the real frontend via Next.js Draft Mode — see `app/api/draft-mode/`,
+   `cms/sanity/client.ts`'s `sanityPreviewClient`, and `studio/lib/previewUrl.ts` for how the two
+   sides stay in sync on which frontend route a given document maps to.
 
 ---
 

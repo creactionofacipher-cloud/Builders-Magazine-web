@@ -6,7 +6,7 @@
 // values automatically, so optional fields are just `condition ? value : undefined`
 // rather than conditionally spreading keys in and out.
 
-import type { BuildersCup, Product, SiteSettings, Story } from "@/types/content";
+import type { BuildersCup, Issue, Product, SiteSettings, Story } from "@/types/content";
 import { SITE_URL } from "@/lib/site";
 import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
 import { portableTextToPlainText } from "@/utils/portableTextToPlainText";
@@ -92,6 +92,32 @@ export function buildEventJsonLd(event: BuildersCup, settings: SiteSettings) {
       : undefined,
     organizer: { "@type": "Organization", name: settings.siteTitle },
     url: absoluteUrl(`/builders-cup/${event.slug}`),
+  };
+}
+
+// A print-magazine issue is a PublicationIssue of the site's own
+// Periodical — the one content type that previously had no structured
+// data at all (Story/Event/Product all did).
+export function buildIssueJsonLd(issue: Issue, settings: SiteSettings) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "PublicationIssue",
+    issueNumber: issue.number,
+    name: issue.title,
+    image: [issue.coverImage.url],
+    datePublished: issue.releaseDate || undefined,
+    description: issue.description
+      ? portableTextToPlainText(issue.description, 300)
+      : undefined,
+    isPartOf: {
+      "@type": "Periodical",
+      name: settings.siteTitle,
+    },
+    url: absoluteUrl(`/magazine/${issue.slug}`),
+    offers:
+      issue.buyLinks && issue.buyLinks.length > 0
+        ? issue.buyLinks.map((link) => ({ "@type": "Offer", url: link.url, name: link.label }))
+        : undefined,
   };
 }
 

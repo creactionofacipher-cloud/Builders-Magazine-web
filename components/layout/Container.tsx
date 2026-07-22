@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
+import type { ContainerWidth } from "@/types/content";
 import { cn } from "@/utils/cn";
-
-type ContainerWidth = "normal" | "wide" | "full";
 
 const maxWidthByWidth: Record<ContainerWidth, string> = {
   normal: "max-w-7xl",

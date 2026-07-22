@@ -36,14 +36,14 @@ export function ProductCard({ product, locale, className, highlightQuery }: Prod
       <Image
         asset={product.mainImage}
         preset="card"
-        sizes="(min-width: 1024px) 25vw, 50vw"
+        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
       />
       <div className="flex flex-col gap-1">
         <Text variant="muted" className="text-xs tracking-wide uppercase">
           {priceLabel}
         </Text>
-        <Heading level={4}>
+        <Heading level={3}>
           <HighlightText text={product.name} query={highlightQuery} />
         </Heading>
         <Text variant="muted">{product.shortDescription}</Text>

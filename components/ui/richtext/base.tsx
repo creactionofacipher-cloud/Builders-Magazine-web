@@ -35,10 +35,22 @@ import { cn } from "@/utils/cn";
 // unconditionally caused real page-level horizontal scroll on mobile
 // (found while verifying RichTextFullBleed, which reuses this exact
 // fullWidth breakout — see components/ui/richtext/RichTextFullBleed.tsx).
+//
+// The percentage alone isn't enough even at md: and up, though: at
+// viewport widths roughly 768–1090px, 142% of a max-w-3xl (768px)
+// reading column is wider than the viewport itself minus Container's own
+// gutters, which reintroduces the same page-level horizontal scroll in
+// that range (confirmed: at 768px viewport the column is 768-96=672px,
+// so 1.42×672≈954px — 186px wider than the viewport). `min(...)` caps
+// the breakout at whichever is smaller: the intended proportional
+// breakout, or the true available viewport width (100vw minus both
+// Container gutters) — never wider than the viewport, in every context
+// this renders in (Story's centered column and Issue/BuildersCup's grid
+// cell alike, since the grid cell is always ≤ that same viewport bound).
 export const IMAGE_VARIANT_CLASSES: Record<string, string> = {
   inline: "mx-auto max-w-2xl",
-  wide: "w-full md:relative md:left-1/2 md:w-[118%] md:max-w-none md:-translate-x-1/2",
-  fullWidth: "w-full md:relative md:left-1/2 md:w-[142%] md:max-w-none md:-translate-x-1/2",
+  wide: "w-full md:relative md:left-1/2 md:w-[min(118%,calc(100vw_-_2*var(--spacing-gutter-lg)))] md:max-w-none md:-translate-x-1/2",
+  fullWidth: "w-full md:relative md:left-1/2 md:w-[min(142%,calc(100vw_-_2*var(--spacing-gutter-lg)))] md:max-w-none md:-translate-x-1/2",
 };
 
 interface RichTextImageGalleryBlock {

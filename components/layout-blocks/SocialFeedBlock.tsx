@@ -42,13 +42,14 @@ export function SocialFeedBlock({ block }: SocialFeedBlockProps) {
               href={post.permalink}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={post.caption || "Открыть публикацию в Instagram"}
               className="relative block aspect-square overflow-hidden bg-surface"
             >
               <NextImage
                 src={post.imageUrl}
-                alt={post.caption ?? ""}
+                alt=""
                 fill
-                sizes="(min-width: 768px) 16vw, 33vw"
+                sizes="(min-width: 768px) 16vw, (min-width: 640px) 33vw, 50vw"
                 className="object-cover"
               />
             </a>
@@ -61,7 +62,7 @@ export function SocialFeedBlock({ block }: SocialFeedBlockProps) {
             rel="noopener noreferrer"
             className="self-center"
           >
-            Follow on {SOCIAL_PROVIDER_LABELS[provider]}
+            Подписаться в {SOCIAL_PROVIDER_LABELS[provider]}
           </ButtonLink>
         )}
       </Container>

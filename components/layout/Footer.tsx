@@ -19,7 +19,7 @@ export function Footer({ locale, siteTitle, footerText }: FooterProps) {
         <Text variant="muted" className="max-w-sm">
           {footerText}
         </Text>
-        <nav aria-label="Footer" className="flex flex-wrap gap-4">
+        <nav aria-label="Нижняя навигация" className="flex flex-wrap gap-4">
           {PRIMARY_NAV.map((item) => (
             <Link
               key={item.path}

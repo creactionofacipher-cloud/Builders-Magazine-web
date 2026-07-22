@@ -19,11 +19,6 @@ export async function getAllBuildersCupEvents(): Promise<BuildersCup[]> {
   return [...mockBuildersCupEvents].sort(byDateDesc);
 }
 
-export async function getLatestBuildersCup(): Promise<BuildersCup | null> {
-  const events = await getAllBuildersCupEvents();
-  return events[0] ?? null;
-}
-
 export async function getBuildersCupEventBySlug(slug: string): Promise<BuildersCup | null> {
   if (isSanityConfigured) {
     const raw = await sanityFetch<RawBuildersCup | null>(BUILDERS_CUP_BY_SLUG_QUERY, { slug });

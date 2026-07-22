@@ -63,6 +63,14 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
   const registry = useRef(new Map<string, Slide>());
   const controllerRef = useRef<ControllerRef>(null);
   const [state, setState] = useState<LightboxViewState>(INITIAL_STATE);
+  // The dynamic import below only actually fetches its chunk once
+  // <Lightbox> is rendered — LightboxProvider itself is mounted on every
+  // page (app/[locale]/layout.tsx), so rendering it unconditionally
+  // would download the library + plugins + their CSS on every single
+  // page view, even ones with zero lightbox-enabled images. Deferred
+  // until the first real open (a click, or a #photo-N URL loaded
+  // directly) and kept mounted afterward so close/reopen stays instant.
+  const [hasEverOpened, setHasEverOpened] = useState(false);
 
   const register = useCallback((id: string, slide: Slide) => {
     registry.current.set(id, slide);
@@ -101,6 +109,7 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
         `${window.location.pathname}${window.location.search}${HASH_PREFIX}${index + 1}`,
       );
       setState({ open: true, slides, index });
+      setHasEverOpened(true);
     },
     [collectOrderedSlides],
   );
@@ -138,6 +147,7 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
       const { slides } = collectOrderedSlides();
       if (index < 0 || index >= slides.length) return;
       setState({ open: true, slides, index });
+      setHasEverOpened(true);
     }
 
     window.addEventListener("popstate", syncFromUrl);
@@ -188,14 +198,16 @@ export function LightboxProvider({ children }: { children: ReactNode }) {
   return (
     <LightboxContext.Provider value={contextValue}>
       {children}
-      <Lightbox
-        open={state.open}
-        slides={state.slides}
-        index={state.index}
-        close={close}
-        onIndexChange={setIndex}
-        controllerRef={controllerRef}
-      />
+      {hasEverOpened && (
+        <Lightbox
+          open={state.open}
+          slides={state.slides}
+          index={state.index}
+          close={close}
+          onIndexChange={setIndex}
+          controllerRef={controllerRef}
+        />
+      )}
     </LightboxContext.Provider>
   );
 }

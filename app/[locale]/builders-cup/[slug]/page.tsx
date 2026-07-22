@@ -32,7 +32,7 @@ export async function generateMetadata({
   const event = await getBuildersCupEventBySlug(slug);
 
   if (!event) {
-    return { title: "Событие не найдено | Builders Magazine" };
+    return { title: "Событие не найдено | Builders Magazine", robots: { index: false } };
   }
 
   const settings = await getSiteSettings();

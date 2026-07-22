@@ -5,6 +5,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { cn } from "@/utils/cn";
+import { isExternalUrl } from "@/utils/isExternalUrl";
 import { getBlockSectionProps } from "./blockSettings";
 
 interface CtaBlockProps {
@@ -30,6 +31,7 @@ export function CtaBlock({ block }: CtaBlockProps) {
   const hasBanner = Boolean(block.backgroundImage || block.backgroundColor);
   const inverted = Boolean(block.backgroundImage);
   const sectionProps = getBlockSectionProps(block.settings, !hasBanner);
+  const external = isExternalUrl(block.buttonUrl);
 
   return (
     <Section
@@ -46,6 +48,7 @@ export function CtaBlock({ block }: CtaBlockProps) {
           preset="editorial"
           sizes="100vw"
           fill
+          decorative
           className="absolute inset-0"
         />
       )}
@@ -66,7 +69,11 @@ export function CtaBlock({ block }: CtaBlockProps) {
             {block.subtitle}
           </Text>
         )}
-        <ButtonLink href={block.buttonUrl} variant={inverted ? "inverted" : "primary"}>
+        <ButtonLink
+          href={block.buttonUrl}
+          variant={inverted ? "inverted" : "primary"}
+          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
           {block.buttonText}
         </ButtonLink>
       </div>

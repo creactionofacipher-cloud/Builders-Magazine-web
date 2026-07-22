@@ -21,10 +21,10 @@ export function PersonCard({ person, className, highlightQuery }: PersonCardProp
   return (
     <article className={cn("flex flex-col gap-3", className)}>
       {person.photo && (
-        <Image asset={person.photo} preset="card" sizes="(min-width: 1024px) 25vw, 50vw" />
+        <Image asset={person.photo} preset="card" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
       )}
       <div className="flex flex-col gap-1">
-        <Heading level={4}>
+        <Heading level={3}>
           <HighlightText text={person.name} query={highlightQuery} />
         </Heading>
         <Text variant="muted">{person.role}</Text>

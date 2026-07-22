@@ -192,7 +192,12 @@ export default async function SearchPage({
           role="search"
           className="flex max-w-xl flex-col gap-3 sm:flex-row"
         >
-          <SearchInput name="q" defaultValue={query} placeholder="Например, Panhead или Ironhide" />
+          <SearchInput
+            name="q"
+            defaultValue={query}
+            placeholder="Например, Panhead или Ironhide"
+            aria-label="Поиск"
+          />
           <Button type="submit" className="sm:shrink-0">
             Найти
           </Button>

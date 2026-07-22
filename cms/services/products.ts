@@ -7,12 +7,19 @@ import { mockProducts } from "./mock-data";
 // Sanity path when configured (see cms/sanity/client.ts), mock fallback
 // otherwise — same signature either way, callers never change.
 
+// Mirrors the Sanity path's PUBLISHED_FILTER (cms/queries/product.ts) —
+// an untouched status field is treated as visible, only an explicit
+// "draft" hides it.
+function isPublished(product: Product): boolean {
+  return product.status !== "draft";
+}
+
 export async function getMerchandise(): Promise<Product[]> {
   if (isSanityConfigured) {
     const raw = await sanityFetch<Product[]>(ALL_PRODUCTS_QUERY);
     return raw.map(mapProduct);
   }
-  return mockProducts;
+  return mockProducts.filter(isPublished);
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
@@ -20,7 +27,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     const raw = await sanityFetch<Product | null>(PRODUCT_BY_SLUG_QUERY, { slug });
     return raw ? mapProduct(raw) : null;
   }
-  return mockProducts.find((product) => product.slug === slug) ?? null;
+  const product = mockProducts.find((p) => p.slug === slug);
+  return product && isPublished(product) ? product : null;
 }
 
 // No "related products" relation field exists on Product — related items

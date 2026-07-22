@@ -21,7 +21,11 @@ export function RichTextFullBleed({ value }: { value: RichTextFullBleedBlock }) 
         asset={image}
         preset="editorial"
         lightbox
-        sizes="100vw"
+        // Mirrors the actual rendered cap (base.tsx's fullWidth variant is
+        // now min(142%, viewport-minus-gutters), effectively topping out
+        // around 1090px against a 768px reading column) rather than a
+        // flat 100vw, which over-requested resolution at wide viewports.
+        sizes="(min-width: 1090px) 1090px, (min-width: 768px) calc(100vw - 6rem), 100vw"
         className={IMAGE_VARIANT_CLASSES.fullWidth}
       />
       {hasCaption && (

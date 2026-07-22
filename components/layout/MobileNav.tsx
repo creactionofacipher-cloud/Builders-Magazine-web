@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { EnabledLocale } from "@/lib/i18n/locales";
 import { Navigation } from "./Navigation";
 
@@ -20,6 +20,8 @@ interface MobileNavProps {
 // toggle button's own size/position.
 export function MobileNav({ locale, className }: MobileNavProps) {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -32,9 +34,23 @@ export function MobileNav({ locale, className }: MobileNavProps) {
     return () => document.removeEventListener("keydown", handleKeydown);
   }, [open]);
 
+  const hasOpenedRef = useRef(false);
+  useEffect(() => {
+    if (open) {
+      hasOpenedRef.current = true;
+      panelRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    } else if (hasOpenedRef.current) {
+      // Only refocuses the toggle on an actual close — guarded so this
+      // doesn't steal focus to the button on the page's initial mount,
+      // when `open` starts `false` and nothing has happened yet.
+      toggleRef.current?.focus();
+    }
+  }, [open]);
+
   return (
     <div className={className}>
       <button
+        ref={toggleRef}
         type="button"
         aria-expanded={open}
         aria-controls="mobile-nav-panel"

@@ -25,6 +25,13 @@ interface ImageProps {
    * detail page shouldn't also open a lightbox. Gallery and ImageGrid
    * enable it unconditionally for their own images. */
   lightbox?: boolean;
+  /** Forces alt="" regardless of the asset's own altText — for cases
+   * where this exact asset is reused purely as a background/decoration
+   * (e.g. a CTA banner's backgroundImage sitting behind heading text)
+   * and its altText (written for some other, content-bearing reuse of
+   * the same asset) would otherwise be announced redundantly to screen
+   * reader users. */
+  decorative?: boolean;
 }
 
 export function Image({
@@ -36,6 +43,7 @@ export function Image({
   showCaption = false,
   fill = false,
   lightbox = false,
+  decorative = false,
 }: ImageProps) {
   const hasCaption = showCaption && Boolean(asset.caption || asset.copyright);
   // Sanity computes a tiny base64 LQIP for every uploaded image asset
@@ -57,7 +65,7 @@ export function Image({
       >
         <NextImage
           src={asset.url}
-          alt={asset.altText}
+          alt={decorative ? "" : (asset.altText ?? "")}
           {...(fill ? { fill: true } : { width: asset.width, height: asset.height })}
           sizes={sizes}
           priority={priority}

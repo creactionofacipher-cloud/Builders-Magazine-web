@@ -20,9 +20,9 @@ export function BuilderCard({ builder, className, highlightQuery }: BuilderCardP
 
   return (
     <article className={cn("flex flex-col gap-3", className)}>
-      {cover && <Image asset={cover} preset="card" sizes="(min-width: 1024px) 33vw, 100vw" />}
+      {cover && <Image asset={cover} preset="card" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />}
       <div className="flex flex-col gap-1">
-        <Heading level={4}>
+        <Heading level={3}>
           <HighlightText text={builder.name} query={highlightQuery} />
         </Heading>
         {builder.location && <Text variant="muted">{builder.location}</Text>}

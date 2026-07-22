@@ -37,7 +37,7 @@ export default async function LocaleLayout({
       <JsonLd data={buildOrganizationJsonLd(settings)} />
       <JsonLd data={buildWebSiteJsonLd(settings)} />
       <Header locale={locale} siteTitle={settings.siteTitle} />
-      <main>
+      <main id="main-content">
         <LightboxProvider>{children}</LightboxProvider>
       </main>
       <Footer locale={locale} siteTitle={settings.siteTitle} footerText={settings.footerText} />

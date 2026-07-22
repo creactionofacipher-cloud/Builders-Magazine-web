@@ -11,7 +11,13 @@ export default defineType({
     defineField({ name: "caption", title: "Caption", type: "string" }),
     defineField({ name: "author", title: "Author", type: "reference", to: [{ type: "person" }] }),
     defineField({ name: "copyright", title: "Copyright", type: "string" }),
-    defineField({ name: "altText", title: "Alt Text", type: "string" }),
+    defineField({
+      name: "altText",
+      title: "Alt Text",
+      description: "Required for accessibility — describes the image for screen reader users.",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({ name: "relatedObject", title: "Related Object", type: "string" }),
   ],
 });

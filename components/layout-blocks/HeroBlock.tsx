@@ -6,6 +6,11 @@ import { getBlockSectionProps } from "./blockSettings";
 interface HeroBlockProps {
   block: HeroStoryBlock;
   locale: EnabledLocale;
+  /** Whether this is the first block in the document's Layout Blocks
+   * sequence — an editor can place more than one Hero Story block, and
+   * only the first is genuinely above the fold and the page's one H1.
+   * See Hero.tsx's `priority`/`headingLevel` props. */
+  isFirstBlock: boolean;
 }
 
 // Wraps the existing Hero component unmodified — no Section/Container,
@@ -15,7 +20,7 @@ interface HeroBlockProps {
 // block: anchor id and spacing overrides. containerWidth/background
 // don't apply here (there's no container to cap and Hero's photo is its
 // own background), same reasoning as FullPhotoBlock.
-export function HeroBlock({ block, locale }: HeroBlockProps) {
+export function HeroBlock({ block, locale, isFirstBlock }: HeroBlockProps) {
   const { story } = block;
   if (!story) return null;
 
@@ -28,6 +33,8 @@ export function HeroBlock({ block, locale }: HeroBlockProps) {
         title={story.title}
         subtitle={story.shortDescription}
         cta={{ label: "Читать", href: `/${locale}/stories/${story.slug}` }}
+        priority={isFirstBlock}
+        headingLevel={isFirstBlock ? 1 : 2}
       />
     </div>
   );

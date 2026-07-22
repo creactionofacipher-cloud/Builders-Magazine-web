@@ -31,7 +31,12 @@ export function StoryGridBlock({ block, locale }: StoryGridBlockProps) {
         <Container width={width} className="flex flex-col gap-8">
           {block.title && <Heading level={2}>{block.title}</Heading>}
           <div className="grid gap-[var(--spacing-gutter-lg)] lg:grid-cols-3">
-            <StoryCard story={first} locale={locale} className="lg:col-span-2" />
+            <StoryCard
+              story={first}
+              locale={locale}
+              className="lg:col-span-2"
+              sizes="(min-width: 1024px) 66vw, 100vw"
+            />
             <div className="flex flex-col gap-8">
               {rest.slice(0, 2).map((story, index) => (
                 <StoryCard key={`${index}-${story.id}`} story={story} locale={locale} />

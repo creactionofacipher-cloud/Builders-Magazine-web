@@ -1,5 +1,3 @@
-"use client";
-
 import type { InputHTMLAttributes } from "react";
 import { cn } from "@/utils/cn";
 
@@ -7,6 +5,9 @@ interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "
   className?: string;
 }
 
+// No "use client" — a plain <input type="search"> with no handlers/state
+// of its own; both callers use it inside a native GET <form>, so it needs
+// no client-side JS at all.
 export function SearchInput({ className, ...props }: SearchInputProps) {
   return (
     <div className={cn("relative w-full", className)}>

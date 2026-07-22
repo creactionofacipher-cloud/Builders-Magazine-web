@@ -33,7 +33,7 @@ export async function generateMetadata({
   const story = await getStoryBySlug(slug);
 
   if (!story) {
-    return { title: "Материал не найден | Builders Magazine" };
+    return { title: "Материал не найден | Builders Magazine", robots: { index: false } };
   }
 
   const settings = await getSiteSettings();

@@ -29,6 +29,7 @@ export function StoryCategoryNav({ active, className }: StoryCategoryNavProps) {
       value={active}
       onChange={handleChange}
       allLabel="Все"
+      ariaLabel="Фильтр по категории"
       className={className}
     />
   );

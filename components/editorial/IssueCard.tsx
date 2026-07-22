@@ -32,14 +32,14 @@ export function IssueCard({ issue, locale, className, highlightQuery }: IssueCar
         <Image
           asset={issue.coverImage}
           preset="card"
-          sizes="(min-width: 1024px) 33vw, 100vw"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
         />
         <div className="flex flex-col gap-1">
           <Text variant="muted" className="text-xs tracking-wide uppercase">
             №{issue.number} · {issue.year}
           </Text>
-          <Heading level={4}>
+          <Heading level={3}>
             <HighlightText text={issue.title} query={highlightQuery} />
           </Heading>
           {excerpt && <Text variant="muted">{excerpt}</Text>}

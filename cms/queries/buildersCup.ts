@@ -1,6 +1,6 @@
 import { mediaAssetProjection, bikeProjection, richTextField } from "./fragments";
 
-// Exported so cms/queries/fragments.ts's layoutBlocksField() can resolve
+// Exported so cms/queries/layoutBlocks.ts's layoutBlocksField() can resolve
 // a buildersCupHighlight Layout Block's `event` reference through this
 // exact same projection — no second, drifting copy of the shape.
 export const buildersCupFields = `{

@@ -5,6 +5,8 @@ import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
 import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
+import { buildIssueJsonLd } from "@/lib/seo/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { portableTextToPlainText } from "@/utils/portableTextToPlainText";
 import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
@@ -31,7 +33,7 @@ export async function generateMetadata({
   const issue = await getIssueBySlug(slug);
 
   if (!issue) {
-    return { title: "Номер не найден | Builders Magazine" };
+    return { title: "Номер не найден | Builders Magazine", robots: { index: false } };
   }
 
   const settings = await getSiteSettings();
@@ -69,7 +71,7 @@ export default async function IssuePage({
 }) {
   const { locale, slug } = await params;
   const activeLocale = isEnabledLocale(locale) ? locale : DEFAULT_LOCALE;
-  const issue = await getIssueBySlug(slug);
+  const [issue, settings] = await Promise.all([getIssueBySlug(slug), getSiteSettings()]);
 
   if (!issue) {
     notFound();
@@ -83,6 +85,7 @@ export default async function IssuePage({
 
   return (
     <>
+      <JsonLd data={buildIssueJsonLd(issue, settings)} />
       <Section>
         <Container className="grid gap-[var(--spacing-gutter-lg)] md:grid-cols-2 md:items-start">
           <Image
@@ -102,7 +105,13 @@ export default async function IssuePage({
             {issue.buyLinks && issue.buyLinks.length > 0 && (
               <div className="flex flex-wrap gap-4 pt-2">
                 {issue.buyLinks.map((link) => (
-                  <ButtonLink key={link.url} href={link.url} variant="primary">
+                  <ButtonLink
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="primary"
+                  >
                     {link.label}
                   </ButtonLink>
                 ))}

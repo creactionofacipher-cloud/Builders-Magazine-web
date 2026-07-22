@@ -29,10 +29,17 @@ interface LayoutBlocksRendererProps {
 export function LayoutBlocksRenderer({ blocks, locale }: LayoutBlocksRendererProps) {
   return (
     <>
-      {blocks.map((block) => {
+      {blocks.map((block, index) => {
         switch (block._type) {
           case "heroStory":
-            return <HeroBlock key={block._key} block={block} locale={locale} />;
+            return (
+              <HeroBlock
+                key={block._key}
+                block={block}
+                locale={locale}
+                isFirstBlock={index === 0}
+              />
+            );
           case "storyGrid":
             return <StoryGridBlock key={block._key} block={block} locale={locale} />;
           case "fullWidthPhoto":

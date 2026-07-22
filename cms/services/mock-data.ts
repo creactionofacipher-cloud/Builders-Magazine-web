@@ -18,8 +18,8 @@ import type {
 
 // Placeholder fixtures standing in for Sanity content until Milestone 10
 // (CMS Integration). Only cms/services/*.ts files should import this —
-// pages consume the named service functions (getFeaturedStories, etc.),
-// never this file directly.
+// pages consume the named service functions (getStories, getMerchandise,
+// etc.), never this file directly.
 
 function paragraph(key: string, text: string): PortableTextBlock {
   return {

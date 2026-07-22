@@ -74,6 +74,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:outline-2 focus:outline-foreground"
+        >
+          Перейти к содержимому
+        </a>
         {children}
         {isDraftMode && <PresentationVisualEditing />}
       </body>

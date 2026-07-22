@@ -37,7 +37,7 @@ export function BuildersCupCard({ event, locale, className, highlightQuery }: Bu
       <Image
         asset={event.coverImage}
         preset="card"
-        sizes="(min-width: 1024px) 33vw, 100vw"
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
       />
       <div className="flex flex-col gap-1">
@@ -45,7 +45,7 @@ export function BuildersCupCard({ event, locale, className, highlightQuery }: Bu
           {dateLabel}
           {event.location ? ` · ${event.location}` : ""}
         </Text>
-        <Heading level={4}>
+        <Heading level={3}>
           <HighlightText text={event.name} query={highlightQuery} />
         </Heading>
         {excerpt && <Text variant="muted">{excerpt}</Text>}

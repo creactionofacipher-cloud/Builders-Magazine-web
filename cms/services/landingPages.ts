@@ -12,12 +12,19 @@ import { mockLandingPages } from "./mock-data";
 // enumeration (sitemap.ts, generateStaticParams) — never rendered
 // directly — so blocks are left un-resolved here; getLandingPageBySlug
 // below is the one that actually renders a page's blocks.
+// Mirrors the Sanity path's PUBLISHED_FILTER (cms/queries/landingPage.ts) —
+// an untouched status field is treated as visible, only an explicit
+// "draft" hides it.
+function isPublished(page: LandingPage): boolean {
+  return page.status !== "draft";
+}
+
 export async function getLandingPages(): Promise<LandingPage[]> {
   if (isSanityConfigured) {
     const raw = await sanityFetch<RawLandingPage[]>(ALL_LANDING_PAGES_QUERY);
     return raw.map(mapLandingPage);
   }
-  return mockLandingPages;
+  return mockLandingPages.filter(isPublished);
 }
 
 export async function getLandingPageBySlug(slug: string): Promise<LandingPage | null> {
@@ -28,6 +35,6 @@ export async function getLandingPageBySlug(slug: string): Promise<LandingPage | 
     return { ...page, blocks: await resolveDynamicBlocks(page.blocks) };
   }
   const page = mockLandingPages.find((p) => p.slug === slug);
-  if (!page) return null;
+  if (!page || !isPublished(page)) return null;
   return { ...page, blocks: await resolveDynamicBlocks(page.blocks) };
 }

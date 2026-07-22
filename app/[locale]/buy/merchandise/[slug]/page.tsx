@@ -33,7 +33,7 @@ export async function generateMetadata({
   const product = await getProductBySlug(slug);
 
   if (!product) {
-    return { title: "Товар не найден | Builders Magazine" };
+    return { title: "Товар не найден | Builders Magazine", robots: { index: false } };
   }
 
   const settings = await getSiteSettings();
@@ -124,7 +124,13 @@ export default async function ProductPage({
             )}
 
             {product.externalBuyUrl && (
-              <ButtonLink href={product.externalBuyUrl} variant="primary" className="self-start">
+              <ButtonLink
+                href={product.externalBuyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="primary"
+                className="self-start"
+              >
                 Купить
               </ButtonLink>
             )}

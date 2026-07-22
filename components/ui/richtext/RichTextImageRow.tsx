@@ -47,7 +47,10 @@ export function RichTextImageRow({ value }: { value: RichTextImageRowBlock }) {
         preset="editorial"
         fill
         lightbox
-        sizes="(min-width: 768px) 50vw, 100vw"
+        // Row lives inside the reading column (max-w-3xl = 768px, no
+        // breakout here), not the full viewport — hero takes ~2/3 of
+        // that column's width, not 50% of the viewport.
+        sizes="(min-width: 768px) 512px, 100vw"
         className={cn(aspectClass, "w-full md:h-full md:flex-[2]")}
       />
     );
@@ -60,7 +63,7 @@ export function RichTextImageRow({ value }: { value: RichTextImageRowBlock }) {
             preset="editorial"
             fill
             lightbox
-            sizes="(min-width: 768px) 25vw, 100vw"
+            sizes="(min-width: 768px) 256px, 100vw"
             className={cn(aspectClass, "w-full flex-1")}
           />
         ))}
@@ -91,7 +94,9 @@ export function RichTextImageRow({ value }: { value: RichTextImageRowBlock }) {
             preset="editorial"
             fill
             lightbox
-            sizes={`(min-width: 768px) ${Math.round(100 / images.length)}vw, 100vw`}
+            // Row lives inside the reading column (max-w-3xl = 768px, no
+            // breakout here), not the full viewport.
+            sizes={`(min-width: 768px) ${Math.round(768 / images.length)}px, 100vw`}
             className={cn(aspectClass, "w-full md:h-full", widthClassFor(layout, index))}
           />
         ))}

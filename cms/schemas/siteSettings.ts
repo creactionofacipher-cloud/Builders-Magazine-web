@@ -17,8 +17,8 @@ export const siteSettings: SchemaTypeDefinition = {
   fields: [
     { name: "siteTitle", title: "Site Title", type: "string" },
     { name: "siteDescription", title: "Site Description", type: "text" },
-    { name: "mission", title: "Mission", type: "text" },
     { name: "philosophy", title: "Philosophy", type: "text" },
+    { name: "mission", title: "Mission", type: "text" },
     {
       name: "contacts",
       title: "Contacts",
@@ -26,24 +26,25 @@ export const siteSettings: SchemaTypeDefinition = {
       fields: [
         { name: "email", title: "Email", type: "string" },
         { name: "city", title: "City", type: "string" },
-      ],
-    },
-    { name: "cooperation", title: "Cooperation", type: "text" },
-    {
-      name: "socialLinks",
-      title: "Social Links",
-      type: "array",
-      of: [
         {
-          name: "socialLink",
-          type: "object",
-          fields: [
-            { name: "label", title: "Label", type: "string" },
-            { name: "url", title: "URL", type: "url" },
+          name: "socialLinks",
+          title: "Social Links",
+          type: "array",
+          of: [
+            {
+              name: "socialLink",
+              type: "object",
+              fields: [
+                { name: "label", title: "Label", type: "string" },
+                { name: "url", title: "URL", type: "url" },
+              ],
+            },
           ],
         },
       ],
     },
+    { name: "cooperation", title: "Cooperation", type: "text" },
+    { name: "footerText", title: "Footer Text", type: "text" },
     {
       name: "defaultSEO",
       title: "Default SEO",
@@ -69,6 +70,5 @@ export const siteSettings: SchemaTypeDefinition = {
         { name: "siteName", title: "Site Name", type: "string" },
       ],
     },
-    { name: "footerText", title: "Footer Text", type: "text" },
   ],
 };

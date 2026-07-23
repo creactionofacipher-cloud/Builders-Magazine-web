@@ -16,7 +16,7 @@ export function Footer({ locale, siteTitle, footerText }: FooterProps) {
   return (
     <footer className="border-t border-border">
       <Container className="flex flex-col gap-8 py-[var(--spacing-gutter-lg)] md:flex-row md:items-start md:justify-between">
-        <Text variant="muted" className="max-w-sm">
+        <Text variant="muted" className="max-w-xl">
           {footerText}
         </Text>
         <nav aria-label="Нижняя навигация" className="flex flex-wrap gap-4">

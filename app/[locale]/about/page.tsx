@@ -49,6 +49,11 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// Block order: О журнале → Философия → Миссия → Команда/Фотографы →
+// Контакты (+ Social Links) → Сотрудничество — matches both Site
+// Settings' Studio field order (studio/schemas/siteSettings.ts) and
+// types/content.ts's SiteSettings field order, so the three stay easy
+// to keep in sync by eye.
 export default async function AboutPage() {
   const [people, settings] = await Promise.all([getAllPeople(), getSiteSettings()]);
   const mailtoHref = `mailto:${settings.contacts.email}`;
@@ -56,8 +61,12 @@ export default async function AboutPage() {
   // mailto: target for both the Contacts and Cooperation sections) — the
   // rest are optional editorial copy blocks, hidden entirely rather than
   // rendered empty when an editor hasn't filled them in yet.
-  const hasContacts = Boolean(settings.contacts.email || settings.contacts.city);
-  const socialLinks = (settings.socialLinks ?? []).filter((link) => link.label && link.url);
+  const socialLinks = (settings.contacts.socialLinks ?? []).filter(
+    (link) => link.label && link.url,
+  );
+  const hasContacts = Boolean(
+    settings.contacts.email || settings.contacts.city || socialLinks.length > 0,
+  );
 
   return (
     <>
@@ -72,8 +81,17 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
-      {settings.mission && (
+      {settings.philosophy && (
         <Section surface>
+          <Container className="flex max-w-2xl flex-col gap-4">
+            <Heading level={2}>Философия</Heading>
+            <Text>{settings.philosophy}</Text>
+          </Container>
+        </Section>
+      )}
+
+      {settings.mission && (
+        <Section>
           <Container className="flex max-w-2xl flex-col gap-4">
             <Heading level={2}>Миссия</Heading>
             <Text>{settings.mission}</Text>
@@ -99,17 +117,8 @@ export default async function AboutPage() {
         );
       })}
 
-      {settings.philosophy && (
+      {hasContacts && (
         <Section surface>
-          <Container className="flex max-w-2xl flex-col gap-4">
-            <Heading level={2}>Философия</Heading>
-            <Text>{settings.philosophy}</Text>
-          </Container>
-        </Section>
-      )}
-
-      {(hasContacts || socialLinks.length > 0) && (
-        <Section>
           <Container className="flex max-w-2xl flex-col gap-4">
             <Heading level={2}>Контакты</Heading>
             {settings.contacts.email && (
@@ -132,7 +141,7 @@ export default async function AboutPage() {
       )}
 
       {settings.cooperation && (
-        <Section surface>
+        <Section>
           <Container className="flex max-w-2xl flex-col gap-4">
             <Heading level={2}>Сотрудничество</Heading>
             <Text>{settings.cooperation}</Text>

@@ -2,14 +2,16 @@ import { mediaAssetProjection } from "./fragments";
 
 // Fetched by fixed _id (the conventional Sanity singleton pattern) —
 // see cms/schemas/siteSettings.ts.
+// `contacts` is fetched as a whole object — its nested `socialLinks`
+// comes along automatically, no separate projection line needed.
 export const SITE_SETTINGS_QUERY = `*[_id == "siteSettings"][0]{
   siteTitle,
   siteDescription,
-  mission,
   philosophy,
+  mission,
   contacts,
   cooperation,
-  socialLinks,
+  footerText,
   "defaultSEO": defaultSEO{
     title,
     description,
@@ -19,6 +21,5 @@ export const SITE_SETTINGS_QUERY = `*[_id == "siteSettings"][0]{
     "twitterImage": twitterImage->${mediaAssetProjection},
     robots,
     siteName
-  },
-  footerText
+  }
 }`;

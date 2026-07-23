@@ -14,6 +14,12 @@ const ROBOTS_OPTIONS = ["index, follow", "noindex, follow", "index, nofollow", "
 // of querying a collection. No desk-structure restriction is configured
 // here (that would be new functionality beyond the existing schemas) —
 // editors should simply not create a second document of this type.
+// Field order mirrors the About page's block order exactly
+// (app/[locale]/about/page.tsx): О журнале → Философия → Миссия →
+// Команда/Фотографы (Person, a separate document type — not a field
+// here) → Контакты (now including Social Links) → Сотрудничество, with
+// Default SEO always last since it's infrastructure config an editor
+// rarely touches, not daily editorial content.
 export default defineType({
   name: "siteSettings",
   title: "Site Settings",
@@ -21,8 +27,8 @@ export default defineType({
   fields: [
     defineField({ name: "siteTitle", title: "Site Title", type: "string" }),
     defineField({ name: "siteDescription", title: "Site Description", type: "text" }),
-    defineField({ name: "mission", title: "Mission", type: "text" }),
     defineField({ name: "philosophy", title: "Philosophy", type: "text" }),
+    defineField({ name: "mission", title: "Mission", type: "text" }),
     defineField({
       name: "contacts",
       title: "Contacts",
@@ -30,24 +36,25 @@ export default defineType({
       fields: [
         defineField({ name: "email", title: "Email", type: "string" }),
         defineField({ name: "city", title: "City", type: "string" }),
-      ],
-    }),
-    defineField({ name: "cooperation", title: "Cooperation", type: "text" }),
-    defineField({
-      name: "socialLinks",
-      title: "Social Links",
-      type: "array",
-      of: [
-        defineArrayMember({
-          name: "socialLink",
-          type: "object",
-          fields: [
-            defineField({ name: "label", title: "Label", type: "string" }),
-            defineField({ name: "url", title: "URL", type: "url" }),
+        defineField({
+          name: "socialLinks",
+          title: "Social Links",
+          type: "array",
+          of: [
+            defineArrayMember({
+              name: "socialLink",
+              type: "object",
+              fields: [
+                defineField({ name: "label", title: "Label", type: "string" }),
+                defineField({ name: "url", title: "URL", type: "url" }),
+              ],
+            }),
           ],
         }),
       ],
     }),
+    defineField({ name: "cooperation", title: "Cooperation", type: "text" }),
+    defineField({ name: "footerText", title: "Footer Text", type: "text" }),
     defineField({
       name: "defaultSEO",
       title: "Default SEO",
@@ -100,6 +107,5 @@ export default defineType({
         }),
       ],
     }),
-    defineField({ name: "footerText", title: "Footer Text", type: "text" }),
   ],
 });

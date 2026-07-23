@@ -258,21 +258,28 @@ export interface BuildersCup {
 
 // Singleton (not a collection) — docs/10_POST_MVP.md: "Create Site
 // Settings singleton in Sanity." Only one document of this shape exists.
+// Field order here matches both the Studio schema's field order
+// (studio/schemas/siteSettings.ts) and the About page's block order
+// (app/[locale]/about/page.tsx) — О журнале → Философия → Миссия →
+// Команда/Фотографы (Person, a separate document type, not a field
+// here) → Контакты → Сотрудничество, with Default SEO always last since
+// it's infrastructure config, not editorial content editors browse daily.
 export interface SiteSettings {
   siteTitle: string;
   siteDescription: string;
-  mission: string;
   philosophy: string;
+  mission: string;
   contacts: {
     email: string;
     city?: string;
+    // Nested under Contacts (not a sibling field) since that's where an
+    // editor naturally looks for "how to reach/follow us" — was a
+    // top-level field until the About page actually started rendering
+    // it (previously true: "not consumed by any UI yet").
+    socialLinks?: { label: string; url: string }[];
   };
   cooperation: string;
-  // Not consumed by any UI yet — no social links section exists on the
-  // site. Populated in mock data anyway per the project's existing
-  // practice of mirroring the full content model ahead of the UI that
-  // will use it.
-  socialLinks?: { label: string; url: string }[];
+  footerText: string;
   // The single source of truth for site-wide SEO configuration (see
   // app/layout.tsx and lib/seo/*.ts) — every page still defines its own
   // title/description/openGraph/etc (see each route's own
@@ -305,7 +312,6 @@ export interface SiteSettings {
     // editorial/branding title used elsewhere.
     siteName?: string;
   };
-  footerText: string;
 }
 
 // Product catalog entity — docs/03_CONTENT_MODEL.md's Scalability

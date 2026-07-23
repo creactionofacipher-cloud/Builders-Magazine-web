@@ -22,7 +22,7 @@ export function buildOrganizationJsonLd(settings: SiteSettings) {
   // real content can still be empty" pattern elsewhere in this project)
   // — filter those out rather than emitting `sameAs: [null]`, which
   // isn't a valid URL list.
-  const sameAs = settings.socialLinks?.map((link) => link.url).filter(Boolean);
+  const sameAs = settings.contacts.socialLinks?.map((link) => link.url).filter(Boolean);
 
   return {
     "@context": "https://schema.org",

@@ -563,6 +563,30 @@ export interface EditorialDividerBlock extends LayoutBlockBase {
   spacing?: SpacerSize;
 }
 
+// Full-width horizontally scrollable strip of photographs — a magazine
+// contact-sheet/film-strip section, distinct from RichText's imageRow
+// (which belongs inside an article's reading column and never scrolls)
+// and from Gallery/ImageGrid (single-column/grid, not a horizontal
+// scroller). Images are stored as direct references exactly like Full
+// Width Photo — no separate per-image caption/credit fields beyond what
+// MediaAsset itself already carries.
+export const HORIZONTAL_IMAGE_STRIP_HEIGHTS = ["small", "medium", "large"] as const;
+export type HorizontalImageStripHeight = (typeof HORIZONTAL_IMAGE_STRIP_HEIGHTS)[number];
+
+export const HORIZONTAL_IMAGE_STRIP_GAPS = ["none", "small", "medium", "large"] as const;
+export type HorizontalImageStripGap = (typeof HORIZONTAL_IMAGE_STRIP_GAPS)[number];
+
+export interface HorizontalImageStripBlock extends LayoutBlockBase {
+  _type: "horizontalImageStrip";
+  images: MediaAsset[];
+  title?: string;
+  caption?: string;
+  imageHeight?: HorizontalImageStripHeight;
+  gap?: HorizontalImageStripGap;
+  showCaptions?: boolean;
+  showScrollbar?: boolean;
+}
+
 export type LayoutBlock =
   | HeroStoryBlock
   | StoryGridBlock
@@ -577,7 +601,8 @@ export type LayoutBlock =
   | BuilderSpotlightBlock
   | CtaBlock
   | SocialFeedBlock
-  | EditorialDividerBlock;
+  | EditorialDividerBlock
+  | HorizontalImageStripBlock;
 
 
 // Singleton (not a collection), same pattern as SiteSettings above — one

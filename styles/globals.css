@@ -15,3 +15,17 @@ body {
   outline: 2px solid var(--color-foreground);
   outline-offset: 2px;
 }
+
+/* Tailwind ships no scrollbar-visibility utility — used by
+   HorizontalImageStripBlock's "Show Scrollbar" toggle
+   (components/layout-blocks/HorizontalImageStripBlock.tsx). Hides the
+   scrollbar chrome only; native keyboard/wheel/touch scrolling is
+   untouched either way. */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

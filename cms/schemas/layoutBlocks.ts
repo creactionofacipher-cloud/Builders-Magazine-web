@@ -15,6 +15,8 @@ export const CONTAINER_WIDTHS = ["normal", "wide", "full"];
 export const CTA_ALIGNMENTS = ["left", "center", "right"];
 export const SOCIAL_PROVIDERS = ["instagram"];
 export const DIVIDER_VARIANTS = ["line", "dot", "diamond", "label", "minimal"];
+export const HORIZONTAL_IMAGE_STRIP_HEIGHTS = ["small", "medium", "large"];
+export const HORIZONTAL_IMAGE_STRIP_GAPS = ["none", "small", "medium", "large"];
 
 // Mirrors studio/schemas/layoutBlocks.ts's blockSettingsField — one
 // shared nested `settings` object field, spread into every block below.
@@ -199,6 +201,31 @@ export const layoutBlocks: SchemaArrayMember[] = [
       { name: "variant", title: "Variant", type: "string", options: { list: DIVIDER_VARIANTS } },
       { name: "label", title: "Label", type: "string" },
       { name: "spacing", title: "Spacing", type: "string", options: { list: SPACER_SIZES } },
+      blockSettingsField,
+    ],
+  },
+  {
+    name: "horizontalImageStrip",
+    title: "Horizontal Image Strip",
+    type: "object",
+    fields: [
+      {
+        name: "images",
+        title: "Images",
+        type: "array",
+        of: [{ name: "imageRef", type: "reference", to: [{ type: "mediaAsset" }] }],
+      },
+      { name: "title", title: "Title", type: "string" },
+      { name: "caption", title: "Caption", type: "string" },
+      {
+        name: "imageHeight",
+        title: "Image Height",
+        type: "string",
+        options: { list: HORIZONTAL_IMAGE_STRIP_HEIGHTS },
+      },
+      { name: "gap", title: "Gap", type: "string", options: { list: HORIZONTAL_IMAGE_STRIP_GAPS } },
+      { name: "showCaptions", title: "Show Captions", type: "boolean" },
+      { name: "showScrollbar", title: "Show Scrollbar", type: "boolean" },
       blockSettingsField,
     ],
   },

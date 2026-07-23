@@ -59,6 +59,9 @@ export function layoutBlocksField(fieldName: string): string {
     },
     _type == "cta" => {
       "backgroundImage": backgroundImage->${mediaAssetProjection}
+    },
+    _type == "horizontalImageStrip" => {
+      "images": images[]->${mediaAssetProjection}
     }
   }`;
 }

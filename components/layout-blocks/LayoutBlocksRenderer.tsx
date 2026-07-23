@@ -14,6 +14,7 @@ import { BuilderSpotlightBlock } from "./BuilderSpotlightBlock";
 import { CtaBlock } from "./CtaBlock";
 import { SocialFeedBlock } from "./SocialFeedBlock";
 import { EditorialDividerBlock } from "./EditorialDividerBlock";
+import { HorizontalImageStripBlock } from "./HorizontalImageStripBlock";
 
 interface LayoutBlocksRendererProps {
   blocks: LayoutBlock[];
@@ -66,6 +67,8 @@ export function LayoutBlocksRenderer({ blocks, locale }: LayoutBlocksRendererPro
             return <SocialFeedBlock key={block._key} block={block} />;
           case "editorialDivider":
             return <EditorialDividerBlock key={block._key} block={block} />;
+          case "horizontalImageStrip":
+            return <HorizontalImageStripBlock key={block._key} block={block} />;
           default:
             return null;
         }

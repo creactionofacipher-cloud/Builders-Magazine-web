@@ -7,6 +7,7 @@ import type {
   FeaturedIssueBlock,
   FullWidthPhotoBlock,
   HeroStoryBlock,
+  HorizontalImageStripBlock,
   LayoutBlock,
   MerchandiseBlock,
   Product,
@@ -44,7 +45,11 @@ export type RawLayoutBlock =
   | (Omit<BuilderSpotlightBlock, "builder"> & { builder?: RawBuilder })
   | CtaBlock
   | SocialFeedBlock
-  | EditorialDividerBlock;
+  | EditorialDividerBlock
+  // images[]->mediaAssetProjection (cms/queries/layoutBlocks.ts) already
+  // resolves directly into MediaAsset[] — no Raw-shape wrapper needed,
+  // same as FullWidthPhotoBlock's image/CtaBlock's backgroundImage above.
+  | HorizontalImageStripBlock;
 
 function mapLayoutBlock(block: RawLayoutBlock): LayoutBlock {
   switch (block._type) {

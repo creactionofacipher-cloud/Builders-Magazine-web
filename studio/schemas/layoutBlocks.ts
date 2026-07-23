@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
+import { horizontalImageStripPreview } from "../components/previews/HorizontalImageStripPreview";
 
 // General-purpose, reusable editorial composition system — not specific
 // to the homepage. `layoutBlocks` is the `of:` value for any document's
@@ -24,6 +25,8 @@ export const CONTAINER_WIDTHS = ["normal", "wide", "full"];
 export const CTA_ALIGNMENTS = ["left", "center", "right"];
 export const SOCIAL_PROVIDERS = ["instagram"];
 export const DIVIDER_VARIANTS = ["line", "dot", "diamond", "label", "minimal"];
+export const HORIZONTAL_IMAGE_STRIP_HEIGHTS = ["small", "medium", "large"];
+export const HORIZONTAL_IMAGE_STRIP_GAPS = ["none", "small", "medium", "large"];
 
 // Generic overrides available on every block (types/content.ts's
 // BlockSettings) — one shared field definition, spread into every block
@@ -465,5 +468,51 @@ export const layoutBlocks = [
       select: { title: "variant" },
       prepare: ({ title }) => ({ title: "Editorial Divider", subtitle: title }),
     },
+  }),
+  defineArrayMember({
+    name: "horizontalImageStrip",
+    title: "Horizontal Image Strip",
+    description: "A full-width, horizontally scrollable strip of 2–30 photographs.",
+    type: "object",
+    fields: [
+      defineField({
+        name: "images",
+        title: "Images",
+        type: "array",
+        of: [{ type: "reference", to: [{ type: "mediaAsset" }] }],
+        validation: (Rule) => Rule.min(2).max(30).required(),
+      }),
+      defineField({ name: "title", title: "Title", type: "string" }),
+      defineField({ name: "caption", title: "Caption", type: "string" }),
+      defineField({
+        name: "imageHeight",
+        title: "Image Height",
+        type: "string",
+        options: { list: HORIZONTAL_IMAGE_STRIP_HEIGHTS },
+        initialValue: "medium",
+      }),
+      defineField({
+        name: "gap",
+        title: "Gap",
+        type: "string",
+        options: { list: HORIZONTAL_IMAGE_STRIP_GAPS },
+        initialValue: "medium",
+      }),
+      defineField({
+        name: "showCaptions",
+        title: "Show Captions",
+        description: "Shows each image's own caption underneath it as you scroll.",
+        type: "boolean",
+        initialValue: false,
+      }),
+      defineField({
+        name: "showScrollbar",
+        title: "Show Scrollbar",
+        type: "boolean",
+        initialValue: true,
+      }),
+      blockSettingsField,
+    ],
+    preview: horizontalImageStripPreview,
   }),
 ];

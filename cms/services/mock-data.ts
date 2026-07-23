@@ -656,6 +656,27 @@ const mockHomePageBlocks: LayoutBlock[] = [
     count: 6,
     profileUrl: "https://instagram.com/example",
   },
+  {
+    _type: "horizontalImageStrip",
+    _key: "home-strip",
+    title: "С площадки Builders Cup",
+    caption: "Кадры со съёмок последнего фестиваля.",
+    // Mixed aspect ratios (wide/portrait/square) on purpose — this is
+    // exactly what a real film-strip block looks like: every frame keeps
+    // its own natural width at a shared height, not a uniform crop.
+    images: [
+      { ...wideImage, id: "media-strip-1" },
+      { ...portraitImage, id: "media-strip-2" },
+      { ...squareImage, id: "media-strip-3" },
+      { ...wideImage, id: "media-strip-4" },
+      { ...portraitImage, id: "media-strip-5" },
+      { ...squareImage, id: "media-strip-6" },
+    ],
+    imageHeight: "large",
+    gap: "medium",
+    showCaptions: false,
+    showScrollbar: true,
+  },
 ];
 
 export const mockHomePage: HomePage = { blocks: mockHomePageBlocks };

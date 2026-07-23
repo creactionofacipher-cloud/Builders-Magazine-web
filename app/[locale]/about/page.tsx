@@ -52,25 +52,34 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutPage() {
   const [people, settings] = await Promise.all([getAllPeople(), getSiteSettings()]);
   const mailtoHref = `mailto:${settings.contacts.email}`;
+  // Email is the one field this page treats as always-present (it's the
+  // mailto: target for both the Contacts and Cooperation sections) — the
+  // rest are optional editorial copy blocks, hidden entirely rather than
+  // rendered empty when an editor hasn't filled them in yet.
+  const hasContacts = Boolean(settings.contacts.email || settings.contacts.city);
+  const socialLinks = (settings.socialLinks ?? []).filter((link) => link.label && link.url);
 
   return (
     <>
       <Section>
         <Container className="flex flex-col gap-2">
           <Heading level={1}>О журнале</Heading>
-          <Text variant="lead" className="max-w-2xl">
-            Builders Magazine — независимый печатный журнал о культуре кастомных мотоциклов и людях,
-            которые её создают.
-          </Text>
+          {settings.siteDescription && (
+            <Text variant="lead" className="max-w-2xl">
+              {settings.siteDescription}
+            </Text>
+          )}
         </Container>
       </Section>
 
-      <Section surface>
-        <Container className="flex max-w-2xl flex-col gap-4">
-          <Heading level={2}>Миссия</Heading>
-          <Text>{settings.mission}</Text>
-        </Container>
-      </Section>
+      {settings.mission && (
+        <Section surface>
+          <Container className="flex max-w-2xl flex-col gap-4">
+            <Heading level={2}>Миссия</Heading>
+            <Text>{settings.mission}</Text>
+          </Container>
+        </Section>
+      )}
 
       {PERSON_GROUPS.map((group) => {
         const members = people.filter((person) => person.groups?.includes(group));
@@ -90,32 +99,49 @@ export default async function AboutPage() {
         );
       })}
 
-      <Section surface>
-        <Container className="flex max-w-2xl flex-col gap-4">
-          <Heading level={2}>Философия</Heading>
-          <Text>{settings.philosophy}</Text>
-        </Container>
-      </Section>
+      {settings.philosophy && (
+        <Section surface>
+          <Container className="flex max-w-2xl flex-col gap-4">
+            <Heading level={2}>Философия</Heading>
+            <Text>{settings.philosophy}</Text>
+          </Container>
+        </Section>
+      )}
 
-      <Section>
-        <Container className="flex max-w-2xl flex-col gap-4">
-          <Heading level={2}>Контакты</Heading>
-          <Text>
-            Email: <Link href={mailtoHref}>{settings.contacts.email}</Link>
-          </Text>
-          {settings.contacts.city && <Text variant="muted">{settings.contacts.city}</Text>}
-        </Container>
-      </Section>
+      {(hasContacts || socialLinks.length > 0) && (
+        <Section>
+          <Container className="flex max-w-2xl flex-col gap-4">
+            <Heading level={2}>Контакты</Heading>
+            {settings.contacts.email && (
+              <Text>
+                Email: <Link href={mailtoHref}>{settings.contacts.email}</Link>
+              </Text>
+            )}
+            {settings.contacts.city && <Text variant="muted">{settings.contacts.city}</Text>}
+            {socialLinks.length > 0 && (
+              <div className="flex flex-wrap gap-4">
+                {socialLinks.map((link) => (
+                  <Link key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </Container>
+        </Section>
+      )}
 
-      <Section surface>
-        <Container className="flex max-w-2xl flex-col gap-4">
-          <Heading level={2}>Сотрудничество</Heading>
-          <Text>{settings.cooperation}</Text>
-          <ButtonLink href={mailtoHref} variant="primary" className="self-start">
-            Написать нам
-          </ButtonLink>
-        </Container>
-      </Section>
+      {settings.cooperation && (
+        <Section surface>
+          <Container className="flex max-w-2xl flex-col gap-4">
+            <Heading level={2}>Сотрудничество</Heading>
+            <Text>{settings.cooperation}</Text>
+            <ButtonLink href={mailtoHref} variant="primary" className="self-start">
+              Написать нам
+            </ButtonLink>
+          </Container>
+        </Section>
+      )}
     </>
   );
 }

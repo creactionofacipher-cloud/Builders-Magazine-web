@@ -13,9 +13,17 @@ export function generateStaticParams() {
 }
 
 // "en" is a supported locale (docs/04_TECH_STACK.md) but not yet enabled
-// (docs/10_POST_MVP.md, Phase 7), so any locale outside ENABLED_LOCALES 404s
-// instead of being rendered on demand.
-export const dynamicParams = false;
+// (docs/10_POST_MVP.md, Phase 7) — rejected below via isEnabledLocale +
+// notFound() at request time, not via `dynamicParams = false` here.
+// That flag would reject unsupported locales too, but it also propagates
+// to every dynamic segment nested under this layout ([slug] in
+// /stories, /magazine, /builders-cup, /buy/merchandise, /p) — any
+// document created after the last production build has a slug absent
+// from generateStaticParams(), so Next.js 404s it outright regardless of
+// what Sanity actually has. Confirmed live (2026-07): a freshly published
+// Issue 404'd in both the public site and Presentation's draft-mode
+// preview even though the drafts/published/CDN perspectives all agreed
+// the document existed — this flag, not stale data, was the cause.
 
 export default async function LocaleLayout({
   children,

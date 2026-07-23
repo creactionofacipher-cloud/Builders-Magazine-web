@@ -70,11 +70,21 @@ const STEGA_UNSAFE_FIELD_NAME_FRAGMENTS = [
   "group",
 ];
 
+// Checks every string segment of resultPath, not just the last one.
+// Confirmed live (2026-07): for an array-of-strings field like
+// Person.groups, each element's resultPath is `["groups", 0]` — the last
+// segment is the numeric array index, not the field name "groups", so
+// `resultPath.at(-1)` alone silently never matched "group" and the
+// Person.groups fix above did nothing until this was found. Scalar
+// fields (e.g. `settings.spacing`) still match exactly as before, since
+// their own field name is still somewhere in the path either way.
 function stegaFilter(props: Parameters<FilterDefault>[0]): boolean {
-  const fieldName = String(props.resultPath.at(-1) ?? "").toLowerCase();
-  if (STEGA_UNSAFE_FIELD_NAME_FRAGMENTS.some((unsafe) => fieldName.includes(unsafe))) {
-    return false;
-  }
+  const isUnsafe = props.resultPath.some((segment) => {
+    if (typeof segment !== "string") return false;
+    const lower = segment.toLowerCase();
+    return STEGA_UNSAFE_FIELD_NAME_FRAGMENTS.some((unsafe) => lower.includes(unsafe));
+  });
+  if (isUnsafe) return false;
   return props.filterDefault(props);
 }
 

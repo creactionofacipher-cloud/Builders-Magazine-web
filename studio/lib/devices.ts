@@ -82,6 +82,30 @@ export function storeDeviceId(id: DeviceId): void {
 // Confirmed via a real measurement: tablet's inline width of 820px
 // rendered at only 800px (the pane's own available width) until this
 // reset was added.
+// Presentation's own preview pane clips overflow (`overflow-y: hidden`
+// on one or more ancestors between the iframe and <body> — observed as
+// `#presentation-narrow-panel-preview`, but that id isn't relied on
+// directly since it can differ across Presentation's own split/panel
+// layout states; this walks up looking for whichever ancestor actually
+// clips instead). Harmless for Desktop (the iframe always exactly fills
+// the pane at width/height: 100%, so there's nothing to scroll), but
+// Tablet/Phone's fixed pixel heights (1180px/844px) routinely exceed the
+// pane's own available height on a real screen — without this, the
+// bottom portion of the frame (e.g. a page's Footer) was simply
+// unreachable: no scrollbar on the pane, and the outer Studio shell
+// itself doesn't scroll either. Confirmed live (2026-07): Tablet mode on
+// the About page cut off Footer Text at the bottom with no way to reach
+// it, exactly this cause.
+function unclipPreviewPane(iframe: HTMLIFrameElement): void {
+  let node = iframe.parentElement;
+  while (node && node !== document.body) {
+    if (getComputedStyle(node).overflowY === "hidden") {
+      node.style.overflowY = "auto";
+    }
+    node = node.parentElement;
+  }
+}
+
 export function applyDeviceFrame(iframe: HTMLIFrameElement, device: DevicePreset): void {
   iframe.style.transition = `width ${DEVICE_TRANSITION_MS}ms ease, height ${DEVICE_TRANSITION_MS}ms ease`;
   iframe.style.display = "block";
@@ -100,6 +124,7 @@ export function applyDeviceFrame(iframe: HTMLIFrameElement, device: DevicePreset
   iframe.style.alignSelf = "flex-start";
   iframe.style.width = device.width;
   iframe.style.height = device.height;
+  unclipPreviewPane(iframe);
 }
 
 // True once the iframe's *actual rendered* size matches the given device.

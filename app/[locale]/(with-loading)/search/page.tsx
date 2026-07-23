@@ -195,7 +195,7 @@ export default async function SearchPage({
           <SearchInput
             name="q"
             defaultValue={query}
-            placeholder="Например, Panhead или Ironhide"
+            placeholder="Например, черепа или пауки"
             aria-label="Поиск"
           />
           <Button type="submit" className="sm:shrink-0">

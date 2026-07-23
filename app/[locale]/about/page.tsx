@@ -99,23 +99,39 @@ export default async function AboutPage() {
         </Section>
       )}
 
-      {PERSON_GROUPS.map((group) => {
-        const members = people.filter((person) => person.groups?.includes(group));
-        if (members.length === 0) return null;
+      {(() => {
+        // One shared Section for every non-empty group, not one Section
+        // per group — Section's own vertical padding (the site-wide
+        // "layouts should breathe" rhythm) between two separate Sections
+        // made "Фотографы" read as its own unrelated block instead of a
+        // sub-group of the team. A single Section with a tighter gap
+        // between group blocks keeps that same breathing room relative
+        // to Философия/Контакты on either side, while visually grouping
+        // Команда/Фотографы together as one "who we are" block.
+        const groups = PERSON_GROUPS.map((group) => ({
+          group,
+          members: people.filter((person) => person.groups?.includes(group)),
+        })).filter(({ members }) => members.length > 0);
+
+        if (groups.length === 0) return null;
 
         return (
-          <Section key={group}>
-            <Container className="flex flex-col gap-8">
-              <Heading level={2}>{PERSON_GROUP_LABELS[group]}</Heading>
-              <Grid columns={4}>
-                {members.map((person) => (
-                  <PersonCard key={person.id} person={person} />
-                ))}
-              </Grid>
+          <Section>
+            <Container className="flex flex-col gap-12">
+              {groups.map(({ group, members }) => (
+                <div key={group} className="flex flex-col gap-8">
+                  <Heading level={2}>{PERSON_GROUP_LABELS[group]}</Heading>
+                  <Grid columns={4}>
+                    {members.map((person) => (
+                      <PersonCard key={person.id} person={person} />
+                    ))}
+                  </Grid>
+                </div>
+              ))}
             </Container>
           </Section>
         );
-      })}
+      })()}
 
       {hasContacts && (
         <Section surface>

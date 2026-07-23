@@ -29,7 +29,17 @@ export default defineType({
     }),
     defineField({ name: "author", title: "Author", type: "reference", to: [{ type: "person" }] }),
     defineField({ name: "publishedDate", title: "Published Date", type: "date" }),
-    defineField({ name: "issue", title: "Issue", type: "reference", to: [{ type: "issue" }] }),
+    // Weak: a Story shouldn't block deleting an Issue it happens to
+    // reference (this field is never actually dereferenced by any
+    // current query/page — see cms/queries/fragments.ts's storyProjection —
+    // so there's no dangling-reference behavior to guard against either).
+    defineField({
+      name: "issue",
+      title: "Issue",
+      type: "reference",
+      to: [{ type: "issue" }],
+      weak: true,
+    }),
     defineField({
       name: "gallery",
       title: "Gallery",

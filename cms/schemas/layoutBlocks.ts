@@ -93,7 +93,7 @@ export const layoutBlocks: SchemaArrayMember[] = [
     title: "Featured Issue",
     type: "object",
     fields: [
-      { name: "issue", title: "Issue", type: "reference", to: [{ type: "issue" }] },
+      { name: "issue", title: "Issue", type: "reference", to: [{ type: "issue" }], weak: true },
       blockSettingsField,
     ],
   },

@@ -209,7 +209,21 @@ export const layoutBlocks = [
     title: "Featured Issue",
     type: "object",
     fields: [
-      defineField({ name: "issue", title: "Issue", type: "reference", to: [{ type: "issue" }] }),
+      // Weak: a Featured Issue block shouldn't block deleting the Issue
+      // it highlights. Unlike Story.issue/Bike.issues, this field IS
+      // dereferenced (cms/queries/layoutBlocks.ts's layoutBlocksField())
+      // — but cms/mappers/layoutBlocks.ts's featuredIssue case already
+      // treats a null `issue` (a dangling weak reference, e.g. after the
+      // target Issue is deleted) the same as "no issue selected yet",
+      // and FeaturedIssueBlock.tsx already renders nothing in that case
+      // — no additional defensive code needed for this to be safe.
+      defineField({
+        name: "issue",
+        title: "Issue",
+        type: "reference",
+        to: [{ type: "issue" }],
+        weak: true,
+      }),
       blockSettingsField,
     ],
     preview: {

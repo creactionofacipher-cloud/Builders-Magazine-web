@@ -1,19 +1,34 @@
 import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import { IMAGE_QUALITY_PRESETS } from "./lib/imageConfig";
+
+// Origins allowed to embed this site in an iframe — Sanity's Presentation
+// tool (studio/sanity.config.ts's presentationTool) does exactly that for
+// live draft preview, loading the frontend inside an iframe hosted on the
+// *Studio's* origin, not this site's own. A plain `X-Frame-Options:
+// SAMEORIGIN` (tried first) blocks that outright — "Unable to connect" in
+// Presentation with nothing more specific in the browser console is what
+// that looks like. `frame-ancestors` (CSP) is the fix: unlike
+// X-Frame-Options it can allowlist specific *other* origins instead of
+// only same-origin-or-nothing. Update this list if the Studio ends up
+// hosted somewhere other than these two (see README.md's "Deploying the
+// Studio" section) — a self-hosted Studio domain needs to be added here
+// too, or preview breaks there the same way.
+const FRAME_ANCESTORS = [
+  "'self'",
+  "http://localhost:3333", // local Studio dev server
+  "https://*.sanity.studio", // Sanity-hosted Studio (`sanity deploy`)
+].join(" ");
 
 // Baseline security headers, applied to every route. Deliberately not a
-// strict Content-Security-Policy: this app embeds third-party iframes
-// (YouTube/Vimeo via components/ui/Embed.tsx) and Sanity's visual-editing
-// overlay talks to the Studio's origin in draft mode — a hand-written CSP
-// covering both correctly needs real testing against every embed
-// provider rather than shipping one unverified. These four don't have
-// that risk: they're widely-recommended, low-controversy defaults with
-// no legitimate reason for this site to opt out of any of them.
+// full Content-Security-Policy beyond frame-ancestors above: this app
+// embeds third-party iframes (YouTube/Vimeo via components/ui/Embed.tsx)
+// that a stricter CSP would need real testing against before shipping.
+// The other headers here don't have that risk: they're widely-recommended,
+// low-controversy defaults with no legitimate reason for this site to opt
+// out of any of them.
 const SECURITY_HEADERS = [
-  // This site has no reason to be framed by another origin — blocks
-  // clickjacking. (Not COEP/CSP frame-ancestors, which would need the
-  // same embed-compatibility review as a CSP would.)
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Content-Security-Policy", value: `frame-ancestors ${FRAME_ANCESTORS}` },
   // Stops browsers from MIME-sniffing a response into executing as a
   // different content-type than declared.
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -42,6 +57,13 @@ const nextConfig: NextConfig = {
     // Optimized variants are immutable for a given source+params, so cache
     // them at the edge far longer than the 60s default.
     minimumCacheTTL: 2678400,
+    // Every `quality` value next/image is allowed to request — Next.js
+    // otherwise defaults to allowing only [75], warning (and in a future
+    // version, presumably rejecting) any other value. Derived from
+    // lib/imageConfig.ts's IMAGE_QUALITY_PRESETS instead of a separate
+    // hardcoded list, so a new preset added there can never silently
+    // drift out of sync with what's actually allowed here.
+    qualities: Object.values(IMAGE_QUALITY_PRESETS),
   },
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];

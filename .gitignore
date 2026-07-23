@@ -35,6 +35,11 @@ studio/dist/
 
 studio/.sanity/
 
+# Sanity dataset export backups (e.g. `npx sanity dataset export ...`,
+# see README.md) — large binary archives, never meant to be committed.
+
+*.tar.gz
+
 # Logs
 
 *.log

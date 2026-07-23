@@ -68,11 +68,22 @@ export default defineType({
         }),
       ],
     }),
+    // Weak: a Bike's issue-appearance history shouldn't block deleting an
+    // Issue it lists (this field is never actually dereferenced by any
+    // current query/page — see cms/queries/fragments.ts's bikeProjection —
+    // so there's no dangling-reference behavior to guard against either).
     defineField({
       name: "issues",
       title: "Issues",
       type: "array",
-      of: [defineArrayMember({ name: "bikeIssue", type: "reference", to: [{ type: "issue" }] })],
+      of: [
+        defineArrayMember({
+          name: "bikeIssue",
+          type: "reference",
+          to: [{ type: "issue" }],
+          weak: true,
+        }),
+      ],
     }),
   ],
 });

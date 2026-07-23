@@ -17,7 +17,7 @@ export const story: SchemaTypeDefinition = {
     { name: "category", title: "Category", type: "string", options: { list: STORY_CATEGORIES } },
     { name: "author", title: "Author", type: "reference", to: [{ type: "person" }] },
     { name: "publishedDate", title: "Published Date", type: "date" },
-    { name: "issue", title: "Issue", type: "reference", to: [{ type: "issue" }] },
+    { name: "issue", title: "Issue", type: "reference", to: [{ type: "issue" }], weak: true },
     {
       name: "gallery",
       title: "Gallery",

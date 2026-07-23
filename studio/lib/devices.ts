@@ -82,28 +82,40 @@ export function storeDeviceId(id: DeviceId): void {
 // Confirmed via a real measurement: tablet's inline width of 820px
 // rendered at only 800px (the pane's own available width) until this
 // reset was added.
-// Presentation's own preview pane clips overflow (`overflow-y: hidden`
-// on one or more ancestors between the iframe and <body> — observed as
-// `#presentation-narrow-panel-preview`, but that id isn't relied on
-// directly since it can differ across Presentation's own split/panel
-// layout states; this walks up looking for whichever ancestor actually
-// clips instead). Harmless for Desktop (the iframe always exactly fills
-// the pane at width/height: 100%, so there's nothing to scroll), but
-// Tablet/Phone's fixed pixel heights (1180px/844px) routinely exceed the
-// pane's own available height on a real screen — without this, the
-// bottom portion of the frame (e.g. a page's Footer) was simply
-// unreachable: no scrollbar on the pane, and the outer Studio shell
-// itself doesn't scroll either. Confirmed live (2026-07): Tablet mode on
-// the About page cut off Footer Text at the bottom with no way to reach
-// it, exactly this cause.
+// Presentation's own preview pane clips overflow, but which ancestor
+// actually does the clipping (`overflow-y: hidden`) isn't a reliable
+// signal on its own — confirmed live (2026-07) that the *closest*
+// `overflow-y: hidden` ancestor to the iframe can be one that also wraps
+// the preview header's own toolbar (Edit toggle, URL bar, device
+// switcher) as a sibling of the pane, not just the pane itself. Making
+// that one scrollable let a tall Tablet frame scroll the toolbar out of
+// view along with the page.
+//
+// Instead this walks up from the iframe tracking each ancestor's own
+// rendered height, and stops as soon as height jumps up by more than a
+// few px versus the ancestor just inside it — that jump is the toolbar
+// (or any other sibling chrome) being added to the box, not the preview
+// pane growing. The last ancestor *before* that jump is the pane alone:
+// already tall enough to contain whatever the iframe overflows into,
+// with nothing else sharing it. Made scrollable, it clips its own
+// overflowing child (the iframe) at its own height and shows a
+// scrollbar — reproduced live: Tablet mode's Footer Text becomes
+// reachable without the toolbar moving. Harmless for Desktop (the
+// iframe always exactly fills the pane at width/height: 100%, so
+// nothing overflows and no ancestor's height ever jumps).
 function unclipPreviewPane(iframe: HTMLIFrameElement): void {
+  const HEIGHT_JUMP_THRESHOLD_PX = 8;
+  let candidate: HTMLElement | null = null;
+  let previousHeight = iframe.getBoundingClientRect().height;
   let node = iframe.parentElement;
   while (node && node !== document.body) {
-    if (getComputedStyle(node).overflowY === "hidden") {
-      node.style.overflowY = "auto";
-    }
+    const height = node.getBoundingClientRect().height;
+    if (height - previousHeight > HEIGHT_JUMP_THRESHOLD_PX) break;
+    candidate = node;
+    previousHeight = height;
     node = node.parentElement;
   }
+  if (candidate) candidate.style.overflowY = "auto";
 }
 
 export function applyDeviceFrame(iframe: HTMLIFrameElement, device: DevicePreset): void {

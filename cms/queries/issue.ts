@@ -19,7 +19,12 @@ export const issueFields = `{
   // out any entry whose target was deleted before dereferencing, so a
   // stale reference never surfaces as a null Story to the app.
   "featuredStories": featuredStories[defined(@->_id)]->${storyProjection},
-  "gallery": gallery[]->${mediaAssetProjection}
+  // Same defined(@->_id) guard as featuredStories above — an array member
+  // with no _ref at all (e.g. an "Add item" click in Studio's gallery
+  // picker that never had an asset selected) would otherwise dereference
+  // to null and crash the Gallery component, which assumes every entry is
+  // a real MediaAsset.
+  "gallery": gallery[defined(@->_id)]->${mediaAssetProjection}
 }`;
 
 // See cms/queries/story.ts's PUBLISHED_FILTER for why this treats an

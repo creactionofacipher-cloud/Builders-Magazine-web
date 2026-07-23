@@ -24,7 +24,14 @@ export function PersonCard({ person, className, highlightQuery }: PersonCardProp
         <Image asset={person.photo} preset="card" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
       )}
       <div className="flex flex-col gap-1">
-        <Heading level={3}>
+        {/* `!` overrides level=3's own text-2xl/md:text-3xl — cn() is a
+         plain class join (no tailwind-merge dedup), so a same-specificity
+         size utility here wouldn't reliably win. Sized down specifically
+         because a two-word name (unlike a card's headline/title text)
+         should read as one line — at the default level=3 size, a name
+         like "Варламов Илья" wrapped to two lines on this card's ~260px
+         width, confirmed live (2026-07). */}
+        <Heading level={3} className="!text-lg md:!text-xl">
           <HighlightText text={person.name} query={highlightQuery} />
         </Heading>
         <Text variant="muted">{person.role}</Text>

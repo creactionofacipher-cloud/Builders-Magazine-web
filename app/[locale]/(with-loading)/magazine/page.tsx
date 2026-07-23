@@ -48,10 +48,7 @@ export default async function MagazinePage({ params }: { params: Promise<{ local
   return (
     <Section>
       <Container className="flex flex-col gap-[var(--spacing-gutter-lg)]">
-        <div className="flex flex-col gap-2">
-          <Heading level={1}>Журнал</Heading>
-          <Text variant="muted">Архив печатных номеров Builders Magazine.</Text>
-        </div>
+        <Heading level={1}>Журнал</Heading>
 
         {issues.length > 0 ? (
           <Grid columns={3}>

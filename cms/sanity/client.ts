@@ -60,6 +60,14 @@ const STEGA_UNSAFE_FIELD_NAME_FRAGMENTS = [
   // alignClasses in components/layout-blocks/CtaBlock.tsx).
   "provider",
   "alignment",
+  // Person.groups (types/content.ts's PersonGroup[]) — confirmed live
+  // (2026-07): app/[locale]/about/page.tsx filters people via
+  // `person.groups?.includes(group)` against the clean PERSON_GROUPS
+  // literals; a stega-corrupted "Team"/"Photographers" value fails that
+  // exact-match check silently, so the whole team section disappears in
+  // Draft Mode/Presentation while rendering fine on the public site —
+  // same bug class as `spacing` above, just outside Layout Blocks.
+  "group",
 ];
 
 function stegaFilter(props: Parameters<FilterDefault>[0]): boolean {

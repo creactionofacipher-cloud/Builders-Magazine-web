@@ -150,7 +150,10 @@ The Studio has never been deployed as of this writing (`studio/sanity.cli.ts` ha
 - **Self-hosted on Vercel**: `npm run build:studio` produces a static `studio/dist` — this can be
   deployed as its own separate Vercel project (root directory `studio`, build command
   `npm run build`, output directory `dist`). Point `SANITY_STUDIO_URL` at whatever domain Vercel
-  assigns it.
+  assigns it. Since this is a separate Vercel project reading `studio/package.json`, it needs its
+  own `engines` pin — `studio/package.json` sets `"node": "24.x"` (Sanity 6.5's own dependencies,
+  e.g. `@sanity/icons`, require Node >=22.12; this is unrelated to the frontend's own Node pin in
+  the root `package.json`, above).
 
 Either way, remember to add the resulting origin to CORS (above) and set `SANITY_STUDIO_URL` /
 `SANITY_STUDIO_PREVIEW_URL` on the two respective sides.

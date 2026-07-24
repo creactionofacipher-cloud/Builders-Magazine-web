@@ -92,9 +92,18 @@ export function SortedMediaAssetReferenceInput(props: ReferenceInputProps) {
     };
   }, [client, query, types]);
 
+  // Preserve _key when this input is used as an array member (gallery,
+  // image strip images, etc.) — Sanity's array machinery assigns _key to
+  // a new stub before this component ever mounts, so `value?._key` is
+  // already present by the time an editor picks an image. Without
+  // spreading it back in, `set()` replaces the whole array item with
+  // just {_type, _ref}, silently dropping _key and leaving the array
+  // item unkeyed ("Missing keys" error). Plain (non-array) reference
+  // fields never have a _key on `value`, so this is a no-op there.
   const select = useCallback(
-    (id: string) => onChange(set({ _type: "reference", _ref: id })),
-    [onChange],
+    (id: string) =>
+      onChange(set({ ...(value?._key ? { _key: value._key } : {}), _type: "reference", _ref: id })),
+    [onChange, value],
   );
   const clear = useCallback(() => onChange(unset()), [onChange]);
 

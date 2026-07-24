@@ -68,6 +68,22 @@ const STEGA_UNSAFE_FIELD_NAME_FRAGMENTS = [
   // Draft Mode/Presentation while rendering fine on the public site —
   // same bug class as `spacing` above, just outside Layout Blocks.
   "group",
+  // Gallery (components/ui/Gallery.tsx) — imageHeight/gap index
+  // HEIGHT_CLASSES/GAP_CLASSES, exactly the same lookup pattern as
+  // Spacer's `size` and Editorial Divider's `spacing` above. Confirmed
+  // live (2026-07): a stega-corrupted "large" no longer === "large", so
+  // the lookup misses and cn() silently drops the height class — the
+  // strip's wrapping div collapses to 0×0 and every image in it
+  // disappears in Draft Mode/Presentation (gallerySettings.imageHeight/
+  // gap on Story/Issue/Product/BuildersCup, and the same-named fields on
+  // horizontalImageStrip/imageStrip). `layout` (gallerySettings.layout,
+  // also reused by storyGrid.layout) is additionally listed here even
+  // though Sanity's own default denylist already covers it, per this
+  // file's own stated policy of not relying on that to happen to cover
+  // fields it wasn't designed for.
+  "imageheight",
+  "gap",
+  "layout",
 ];
 
 // Checks every string segment of resultPath, not just the last one.

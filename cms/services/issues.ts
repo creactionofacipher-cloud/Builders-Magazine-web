@@ -34,11 +34,14 @@ function byNumberDesc(a: Issue, b: Issue): number {
   return b.year - a.year;
 }
 
-// Only issues an editor has actually given a purchase link — matches
-// FeaturedIssue/IssueCard's own existing `issue.buyLinks?.[0]?.url`
-// convention for "is this issue buyable".
+// Only issues an editor has actually given a *working* purchase link —
+// matches FeaturedIssue/IssueCard's own existing
+// `issue.buyLinks?.[0]?.url` convention for "is this issue buyable".
+// Checking array length alone isn't enough: a buyLinks entry can exist
+// with a label but no url yet (Studio doesn't require it), which would
+// pass a length check but render no Купить button at all.
 function hasBuyLink(issue: Issue): boolean {
-  return Boolean(issue.buyLinks && issue.buyLinks.length > 0);
+  return Boolean(issue.buyLinks?.[0]?.url);
 }
 
 export async function getLatestIssuesForSale(limit = 2): Promise<Issue[]> {

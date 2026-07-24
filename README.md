@@ -32,8 +32,9 @@ docs/                   Product/planning documentation
 
 ## Prerequisites
 
-- Node.js `>=20.9.0` (pinned in `package.json`'s `engines` field — matches Next.js 16's own
-  requirement)
+- Node.js `>=20.9.0 <21.0.0` (pinned in `package.json`'s `engines` field — the lower bound matches
+  Next.js 16's own requirement; the upper bound stops Vercel from silently switching to a newer
+  major Node version whenever one ships)
 - npm (this repo uses `package-lock.json`, not another package manager)
 - A Sanity project (see [Sanity setup](#sanity-setup) below) — the app runs on mock data without
   one, so this isn't required just to explore the frontend locally

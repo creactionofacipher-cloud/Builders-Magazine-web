@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // Ported from cms/schemas/product.ts — field-for-field.
 export default defineType({
@@ -20,6 +21,7 @@ export default defineType({
       title: "Main Image",
       type: "reference",
       to: [{ type: "mediaAsset" }],
+      components: { input: SortedMediaAssetReferenceInput },
     }),
     defineField({
       name: "gallery",
@@ -30,6 +32,7 @@ export default defineType({
           name: "galleryImage",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+          components: { input: SortedMediaAssetReferenceInput },
         }),
       ],
     }),

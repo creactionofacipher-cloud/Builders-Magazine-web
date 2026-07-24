@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // Mirrors types/content.ts's PERSON_GROUPS exactly (also duplicated in
 // cms/schemas/person.ts for the same reason — kept in sync manually).
@@ -21,7 +22,13 @@ export default defineType({
     defineField({ name: "name", title: "Name", type: "string" }),
     defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "name" } }),
     defineField({ name: "role", title: "Role", type: "string" }),
-    defineField({ name: "photo", title: "Photo", type: "reference", to: [{ type: "mediaAsset" }] }),
+    defineField({
+      name: "photo",
+      title: "Photo",
+      type: "reference",
+      to: [{ type: "mediaAsset" }],
+      components: { input: SortedMediaAssetReferenceInput },
+    }),
     defineField({ name: "bio", title: "Bio", type: "array", of: [{ type: "block" }] }),
     defineField({
       name: "groups",

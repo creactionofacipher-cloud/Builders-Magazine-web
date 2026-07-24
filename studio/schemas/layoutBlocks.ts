@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
 import { horizontalImageStripPreview } from "../components/previews/HorizontalImageStripPreview";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // General-purpose, reusable editorial composition system — not specific
 // to the homepage. `layoutBlocks` is the `of:` value for any document's
@@ -180,6 +181,7 @@ export const layoutBlocks = [
         title: "Image",
         type: "reference",
         to: [{ type: "mediaAsset" }],
+        components: { input: SortedMediaAssetReferenceInput },
       }),
       defineField({ name: "caption", title: "Caption", type: "string" }),
       blockSettingsField,
@@ -378,6 +380,7 @@ export const layoutBlocks = [
         title: "Background Image",
         type: "reference",
         to: [{ type: "mediaAsset" }],
+        components: { input: SortedMediaAssetReferenceInput },
       }),
       defineField({
         name: "backgroundColor",
@@ -479,7 +482,13 @@ export const layoutBlocks = [
         name: "images",
         title: "Images",
         type: "array",
-        of: [{ type: "reference", to: [{ type: "mediaAsset" }] }],
+        of: [
+          {
+            type: "reference",
+            to: [{ type: "mediaAsset" }],
+            components: { input: SortedMediaAssetReferenceInput },
+          },
+        ],
         validation: (Rule) => Rule.min(2).max(30).required(),
       }),
       defineField({ name: "title", title: "Title", type: "string" }),

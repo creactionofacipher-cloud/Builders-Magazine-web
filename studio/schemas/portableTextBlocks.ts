@@ -8,6 +8,7 @@ import { imageTextPreview } from "../components/previews/ImageTextPreview";
 import { fullBleedPreview } from "../components/previews/FullBleedPreview";
 import { imageStripPreview } from "../components/previews/ImageStripPreview";
 import { twoColumnPreview } from "../components/previews/TwoColumnPreview";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // Shared print-magazine-style rich text block set — reused by every field
 // that needs it (story.content, issue.description, buildersCup.description;
@@ -47,6 +48,7 @@ const BASE_PORTABLE_TEXT_BLOCKS = [
         title: "Image",
         type: "reference",
         to: [{ type: "mediaAsset" }],
+        components: { input: SortedMediaAssetReferenceInput },
       }),
       defineField({
         name: "variant",
@@ -119,7 +121,13 @@ export const portableTextBlocks = [
         name: "images",
         title: "Images",
         type: "array",
-        of: [{ type: "reference", to: [{ type: "mediaAsset" }] }],
+        of: [
+          {
+            type: "reference",
+            to: [{ type: "mediaAsset" }],
+            components: { input: SortedMediaAssetReferenceInput },
+          },
+        ],
         validation: (Rule) => Rule.min(2).max(4).required(),
       }),
       defineField({
@@ -152,6 +160,7 @@ export const portableTextBlocks = [
         title: "Image",
         type: "reference",
         to: [{ type: "mediaAsset" }],
+        components: { input: SortedMediaAssetReferenceInput },
       }),
       defineField({
         name: "position",
@@ -188,6 +197,7 @@ export const portableTextBlocks = [
         title: "Image",
         type: "reference",
         to: [{ type: "mediaAsset" }],
+        components: { input: SortedMediaAssetReferenceInput },
       }),
     ],
     preview: fullBleedPreview,
@@ -202,7 +212,13 @@ export const portableTextBlocks = [
         name: "images",
         title: "Images",
         type: "array",
-        of: [{ type: "reference", to: [{ type: "mediaAsset" }] }],
+        of: [
+          {
+            type: "reference",
+            to: [{ type: "mediaAsset" }],
+            components: { input: SortedMediaAssetReferenceInput },
+          },
+        ],
         validation: (Rule) => Rule.min(2).max(30).required(),
       }),
       defineField({

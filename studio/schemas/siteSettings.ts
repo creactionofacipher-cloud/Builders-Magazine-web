@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // Mirrors types/content.ts's SiteSettings.defaultSEO.robots exactly
 // (also duplicated in cms/schemas/siteSettings.ts) — a plain string
@@ -76,6 +77,7 @@ export default defineType({
           description: "Open Graph fallback image — used by any page that doesn't set its own.",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+          components: { input: SortedMediaAssetReferenceInput },
         }),
         defineField({
           name: "favicon",
@@ -83,6 +85,7 @@ export default defineType({
           description: "Reused for the browser tab icon, shortcut icon, and Apple touch icon.",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+          components: { input: SortedMediaAssetReferenceInput },
         }),
         defineField({
           name: "twitterImage",
@@ -90,6 +93,7 @@ export default defineType({
           description: "Falls back to OG Image above when left empty.",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+          components: { input: SortedMediaAssetReferenceInput },
         }),
         defineField({
           name: "robots",

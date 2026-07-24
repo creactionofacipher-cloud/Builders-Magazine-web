@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // Mirrors types/content.ts's STORY_CATEGORIES exactly (also duplicated
 // in cms/schemas/story.ts for the same reason — kept in sync manually).
@@ -18,6 +19,7 @@ export default defineType({
       title: "Cover Image",
       type: "reference",
       to: [{ type: "mediaAsset" }],
+      components: { input: SortedMediaAssetReferenceInput },
     }),
     defineField({ name: "shortDescription", title: "Short Description", type: "string" }),
     defineField({ name: "content", title: "Content", type: "array", of: portableTextBlocks }),
@@ -49,6 +51,7 @@ export default defineType({
           name: "galleryImage",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+          components: { input: SortedMediaAssetReferenceInput },
         }),
       ],
     }),

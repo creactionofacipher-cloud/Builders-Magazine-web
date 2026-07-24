@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
+import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
 
 // Ported from cms/schemas/issue.ts — field-for-field.
 export default defineType({
@@ -16,6 +17,7 @@ export default defineType({
       title: "Cover Image",
       type: "reference",
       to: [{ type: "mediaAsset" }],
+      components: { input: SortedMediaAssetReferenceInput },
     }),
     defineField({
       name: "description",
@@ -76,6 +78,7 @@ export default defineType({
           name: "galleryImage",
           type: "reference",
           to: [{ type: "mediaAsset" }],
+          components: { input: SortedMediaAssetReferenceInput },
         }),
       ],
     }),

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCurrentIssue } from "@/cms/services/issues";
+import { getLatestIssuesForSale } from "@/cms/services/issues";
 import { getMerchandise } from "@/cms/services/products";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
@@ -52,7 +52,7 @@ export default async function BuyPage({ params }: { params: Promise<{ locale: st
   const { locale } = await params;
   const activeLocale = isEnabledLocale(locale) ? locale : DEFAULT_LOCALE;
 
-  const [currentIssue, merchandise] = await Promise.all([getCurrentIssue(), getMerchandise()]);
+  const [latestIssues, merchandise] = await Promise.all([getLatestIssuesForSale(2), getMerchandise()]);
 
   return (
     <>
@@ -71,8 +71,8 @@ export default async function BuyPage({ params }: { params: Promise<{ locale: st
             <Heading level={2}>Журнал</Heading>
             <Link href={`/${activeLocale}/magazine`}>Смотреть все номера</Link>
           </div>
-          {currentIssue ? (
-            <FeaturedIssue issue={currentIssue} locale={activeLocale} />
+          {latestIssues.length > 0 ? (
+            <FeaturedIssue issues={latestIssues} locale={activeLocale} />
           ) : (
             <Text variant="muted">Скоро здесь появится актуальный номер.</Text>
           )}

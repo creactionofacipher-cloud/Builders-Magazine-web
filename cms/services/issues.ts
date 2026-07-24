@@ -26,9 +26,24 @@ export async function getAllIssues(): Promise<Issue[]> {
   return [...mockIssues].filter(isPublished).sort(byReleaseDateDesc);
 }
 
-export async function getCurrentIssue(): Promise<Issue | null> {
+// Number desc, Year desc tiebreaker — the Buy page's "latest issues for
+// sale" showcase, not release-date order (an issue can be released later
+// but assigned an earlier Number, e.g. a delayed reprint).
+function byNumberDesc(a: Issue, b: Issue): number {
+  if (b.number !== a.number) return b.number - a.number;
+  return b.year - a.year;
+}
+
+// Only issues an editor has actually given a purchase link — matches
+// FeaturedIssue/IssueCard's own existing `issue.buyLinks?.[0]?.url`
+// convention for "is this issue buyable".
+function hasBuyLink(issue: Issue): boolean {
+  return Boolean(issue.buyLinks && issue.buyLinks.length > 0);
+}
+
+export async function getLatestIssuesForSale(limit = 2): Promise<Issue[]> {
   const issues = await getAllIssues();
-  return issues[0] ?? null;
+  return issues.filter(hasBuyLink).sort(byNumberDesc).slice(0, limit);
 }
 
 export async function getIssueBySlug(slug: string): Promise<Issue | null> {

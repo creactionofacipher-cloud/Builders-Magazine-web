@@ -16,7 +16,7 @@ export function FeaturedIssueBlock({ block, locale }: FeaturedIssueBlockProps) {
   return (
     <Section {...getBlockSectionProps(block.settings)}>
       <Container width={resolveContainerWidth(block.settings)}>
-        <FeaturedIssue issue={block.issue} locale={locale} />
+        <FeaturedIssue issues={[block.issue]} locale={locale} />
       </Container>
     </Section>
   );

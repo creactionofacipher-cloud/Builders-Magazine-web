@@ -15,7 +15,7 @@ import { Text } from "@/components/ui/Text";
 import { Badge } from "@/components/ui/Badge";
 import { RichText } from "@/components/ui/RichText";
 import { Image } from "@/components/ui/Image";
-import { Gallery } from "@/components/ui/Gallery";
+import { GallerySection } from "@/components/ui/GallerySection";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { StoryCollection } from "@/components/editorial/StoryCollection";
 
@@ -133,14 +133,7 @@ export default async function IssuePage({
         </Section>
       )}
 
-      {issue.gallery && issue.gallery.length > 0 && (
-        <Section>
-          <Container className="flex flex-col gap-8">
-            <Heading level={2}>Галерея</Heading>
-            <Gallery images={issue.gallery} {...issue.gallerySettings} />
-          </Container>
-        </Section>
-      )}
+      <GallerySection images={issue.gallery} settings={issue.gallerySettings} />
     </>
   );
 }

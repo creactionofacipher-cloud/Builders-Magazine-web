@@ -14,7 +14,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { Badge } from "@/components/ui/Badge";
 import { RichText } from "@/components/ui/RichText";
-import { Gallery } from "@/components/ui/Gallery";
+import { GallerySection } from "@/components/ui/GallerySection";
 import { Hero } from "@/components/editorial/Hero";
 import { BikeCard } from "@/components/editorial/BikeCard";
 import { BuilderCard } from "@/components/editorial/BuilderCard";
@@ -109,14 +109,7 @@ export default async function StoryPage({
         </Container>
       </Section>
 
-      {story.gallery && story.gallery.length > 0 && (
-        <Section surface>
-          <Container className="flex flex-col gap-8">
-            <Heading level={2}>Галерея</Heading>
-            <Gallery images={story.gallery} {...story.gallerySettings} />
-          </Container>
-        </Section>
-      )}
+      <GallerySection images={story.gallery} settings={story.gallerySettings} surface />
 
       {hasRelatedContent && (
         <Section>

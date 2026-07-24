@@ -15,7 +15,7 @@ import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
 import { RichText } from "@/components/ui/RichText";
 import { Image } from "@/components/ui/Image";
-import { Gallery } from "@/components/ui/Gallery";
+import { GallerySection } from "@/components/ui/GallerySection";
 import { BikeCard } from "@/components/editorial/BikeCard";
 
 export async function generateStaticParams() {
@@ -134,14 +134,7 @@ export default async function BuildersCupEventPage({
         </Section>
       )}
 
-      {event.gallery && event.gallery.length > 0 && (
-        <Section surface>
-          <Container className="flex flex-col gap-8">
-            <Heading level={2}>Галерея</Heading>
-            <Gallery images={event.gallery} {...event.gallerySettings} />
-          </Container>
-        </Section>
-      )}
+      <GallerySection images={event.gallery} settings={event.gallerySettings} surface />
     </>
   );
 }

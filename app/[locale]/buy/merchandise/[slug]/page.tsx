@@ -15,7 +15,7 @@ import { Text } from "@/components/ui/Text";
 import { Badge } from "@/components/ui/Badge";
 import { RichText } from "@/components/ui/RichText";
 import { Image } from "@/components/ui/Image";
-import { Gallery } from "@/components/ui/Gallery";
+import { GallerySection } from "@/components/ui/GallerySection";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { ProductCard } from "@/components/editorial/ProductCard";
 
@@ -138,14 +138,7 @@ export default async function ProductPage({
         </Container>
       </Section>
 
-      {product.gallery && product.gallery.length > 0 && (
-        <Section surface>
-          <Container className="flex flex-col gap-8">
-            <Heading level={2}>Галерея</Heading>
-            <Gallery images={product.gallery} {...product.gallerySettings} />
-          </Container>
-        </Section>
-      )}
+      <GallerySection images={product.gallery} settings={product.gallerySettings} surface />
 
       {relatedProducts.length > 0 && (
         <Section>

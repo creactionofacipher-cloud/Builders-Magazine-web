@@ -92,17 +92,27 @@ export function SortedMediaAssetReferenceInput(props: ReferenceInputProps) {
     };
   }, [client, query, types]);
 
-  // Preserve _key when this input is used as an array member (gallery,
-  // image strip images, etc.) — Sanity's array machinery assigns _key to
-  // a new stub before this component ever mounts, so `value?._key` is
-  // already present by the time an editor picks an image. Without
-  // spreading it back in, `set()` replaces the whole array item with
-  // just {_type, _ref}, silently dropping _key and leaving the array
-  // item unkeyed ("Missing keys" error). Plain (non-array) reference
-  // fields never have a _key on `value`, so this is a no-op there.
+  // Preserve _key and _type when this input is used as an array member
+  // (gallery, bike images, etc.) — Sanity's array machinery creates the
+  // new stub before this component ever mounts, already carrying _key
+  // AND _type (for a *named* array member, e.g. defineArrayMember({name:
+  // "galleryImage", type: "reference", ...}), the stub's _type is that
+  // member's name — "galleryImage" — not the literal string "reference";
+  // that's how Sanity disambiguates which array-member schema an item
+  // belongs to). Overwriting either with a fresh object drops _key
+  // ("Missing keys") and/or replaces the correct _type with a value the
+  // array's schema doesn't recognize ("Item of type reference not valid
+  // for this list"). Plain (non-array) reference fields have no existing
+  // value yet, so both fall back to their normal defaults.
   const select = useCallback(
     (id: string) =>
-      onChange(set({ ...(value?._key ? { _key: value._key } : {}), _type: "reference", _ref: id })),
+      onChange(
+        set({
+          ...(value?._key ? { _key: value._key } : {}),
+          _type: value?._type ?? "reference",
+          _ref: id,
+        }),
+      ),
     [onChange, value],
   );
   const clear = useCallback(() => onChange(unset()), [onChange]);

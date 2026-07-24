@@ -15,6 +15,10 @@ export const issue: SchemaTypeDefinition = {
     { name: "description", title: "Description", type: "array", of: portableTextBlocks },
     { name: "releaseDate", title: "Release Date", type: "date" },
     { name: "advertisers", title: "Advertisers", type: "array", of: [{ type: "string" }] },
+    // Optional, positive-only validation in studio/schemas/issue.ts —
+    // needs the real Rule-builder API, which this lightweight type
+    // intentionally doesn't model. See types.ts.
+    { name: "price", title: "Price", type: "number" },
     {
       name: "buyLinks",
       title: "Buy Links",

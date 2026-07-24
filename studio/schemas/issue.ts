@@ -33,6 +33,16 @@ export default defineType({
       type: "array",
       of: [{ type: "string" }],
     }),
+    // Optional — unlike Product, no separate currency field (always
+    // formatted as RUB on the frontend, see lib/formatPrice.ts). Placed
+    // next to Buy Links since both are this document's only commercial
+    // fields.
+    defineField({
+      name: "price",
+      title: "Price",
+      type: "number",
+      validation: (Rule) => Rule.positive(),
+    }),
     defineField({
       name: "buyLinks",
       title: "Buy Links",

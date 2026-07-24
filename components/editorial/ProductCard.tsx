@@ -1,5 +1,6 @@
 import type { Product } from "@/types/content";
 import type { EnabledLocale } from "@/lib/i18n/locales";
+import { formatPrice } from "@/lib/formatPrice";
 import { Link } from "@/components/ui/Link";
 import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
@@ -21,11 +22,7 @@ interface ProductCardProps {
 // on the card. The external purchase button lives only on the detail
 // page (/buy/merchandise/[slug]).
 export function ProductCard({ product, locale, className, highlightQuery }: ProductCardProps) {
-  const priceLabel = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: product.currency,
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const priceLabel = formatPrice(product.price, product.currency);
 
   return (
     <Link

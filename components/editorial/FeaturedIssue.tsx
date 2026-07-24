@@ -1,5 +1,6 @@
 import type { Issue } from "@/types/content";
 import type { EnabledLocale } from "@/lib/i18n/locales";
+import { formatPrice } from "@/lib/formatPrice";
 import { Grid } from "@/components/layout/Grid";
 import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
@@ -14,6 +15,12 @@ interface FeaturedIssueProps {
   issues: Issue[];
   locale: EnabledLocale;
   className?: string;
+  /** Shows each issue's price (lib/formatPrice.ts, always RUB — Issue has
+   * no currency field) between the excerpt and the button row. Opt-in and
+   * off by default: this component is also used by the homepage/Layout
+   * Blocks' Featured Issue block (FeaturedIssueBlock.tsx), where price
+   * must never appear — only the Buy page's Журнал showcase passes this. */
+  showPrice?: boolean;
 }
 
 // Spotlights one or more issues, sharing a single per-issue card
@@ -22,17 +29,25 @@ interface FeaturedIssueProps {
 // treatment (homepage/Layout Block usage, and this component's original
 // only shape); more than one lays the same card out in a two-up Grid
 // instead (e.g. the Buy page's latest-issues-for-sale showcase).
-export function FeaturedIssue({ issues, locale, className }: FeaturedIssueProps) {
+export function FeaturedIssue({ issues, locale, className, showPrice = false }: FeaturedIssueProps) {
   if (issues.length === 0) return null;
 
   if (issues.length === 1) {
-    return <FeaturedIssueCard issue={issues[0]} locale={locale} spotlight className={className} />;
+    return (
+      <FeaturedIssueCard
+        issue={issues[0]}
+        locale={locale}
+        spotlight
+        showPrice={showPrice}
+        className={className}
+      />
+    );
   }
 
   return (
     <Grid columns={2} className={className}>
       {issues.map((issue) => (
-        <FeaturedIssueCard key={issue.id} issue={issue} locale={locale} />
+        <FeaturedIssueCard key={issue.id} issue={issue} locale={locale} showPrice={showPrice} />
       ))}
     </Grid>
   );
@@ -46,9 +61,16 @@ interface FeaturedIssueCardProps {
    * FeaturedIssue renders exactly one issue. Multi-issue showcases stack
    * image above text instead, so each card stays legible at grid width. */
   spotlight?: boolean;
+  showPrice?: boolean;
 }
 
-function FeaturedIssueCard({ issue, locale, className, spotlight = false }: FeaturedIssueCardProps) {
+function FeaturedIssueCard({
+  issue,
+  locale,
+  className,
+  spotlight = false,
+  showPrice = false,
+}: FeaturedIssueCardProps) {
   const excerpt = portableTextToPlainText(issue.description, 220);
   const buyHref = issue.buyLinks?.[0]?.url;
   const issueHref = `/${locale}/magazine/${issue.slug}`;
@@ -76,6 +98,7 @@ function FeaturedIssueCard({ issue, locale, className, spotlight = false }: Feat
           </Link>
         </Heading>
         {excerpt && <Text variant="body">{excerpt}</Text>}
+        {showPrice && issue.price != null && <Text variant="lead">{formatPrice(issue.price, "RUB")}</Text>}
         <div className="flex flex-wrap gap-4">
           <ButtonLink href={issueHref} variant="secondary">
             Подробнее

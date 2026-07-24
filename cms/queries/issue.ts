@@ -13,6 +13,7 @@ export const issueFields = `{
   ${richTextField("description")},
   releaseDate,
   advertisers,
+  price,
   buyLinks,
   status,
   // featuredStory is a weak reference (studio/schemas/issue.ts) — filters

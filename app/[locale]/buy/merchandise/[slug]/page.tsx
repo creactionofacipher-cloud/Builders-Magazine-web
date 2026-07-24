@@ -4,6 +4,7 @@ import { getMerchandise, getProductBySlug, getRelatedProducts } from "@/cms/serv
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
+import { formatPrice } from "@/lib/formatPrice";
 import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
 import { buildProductJsonLd } from "@/lib/seo/structuredData";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -75,11 +76,7 @@ export default async function ProductPage({
     notFound();
   }
 
-  const priceLabel = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: product.currency,
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const priceLabel = formatPrice(product.price, product.currency);
 
   const relatedProducts = await getRelatedProducts(product.slug);
 

@@ -1,5 +1,6 @@
 import type { Issue } from "@/types/content";
 import type { EnabledLocale } from "@/lib/i18n/locales";
+import { formatPrice } from "@/lib/formatPrice";
 import { Link } from "@/components/ui/Link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Image } from "@/components/ui/Image";
@@ -45,6 +46,11 @@ export function IssueCard({ issue, locale, className, highlightQuery }: IssueCar
           {excerpt && <Text variant="muted">{excerpt}</Text>}
         </div>
       </Link>
+      {issue.price != null && (
+        <Text variant="muted" className="text-xs tracking-wide uppercase">
+          {formatPrice(issue.price, "RUB")}
+        </Text>
+      )}
       {buyHref && (
         <ButtonLink href={buyHref} variant="secondary" size="sm" className="self-start">
           Купить

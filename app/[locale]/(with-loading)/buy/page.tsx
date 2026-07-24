@@ -72,7 +72,7 @@ export default async function BuyPage({ params }: { params: Promise<{ locale: st
             <Link href={`/${activeLocale}/magazine`}>Смотреть все номера</Link>
           </div>
           {latestIssues.length > 0 ? (
-            <FeaturedIssue issues={latestIssues} locale={activeLocale} />
+            <FeaturedIssue issues={latestIssues} locale={activeLocale} showPrice />
           ) : (
             <Text variant="muted">Скоро здесь появится актуальный номер.</Text>
           )}

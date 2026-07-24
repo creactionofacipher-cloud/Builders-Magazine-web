@@ -4,6 +4,7 @@ import { getAllIssues, getIssueBySlug } from "@/cms/services/issues";
 import { getSiteSettings } from "@/cms/services/siteSettings";
 import { DEFAULT_LOCALE, isEnabledLocale } from "@/lib/i18n/locales";
 import { SITE_URL } from "@/lib/site";
+import { formatPrice } from "@/lib/formatPrice";
 import { resolveOgImages, resolveTwitterImages } from "@/lib/seo/images";
 import { buildIssueJsonLd } from "@/lib/seo/structuredData";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -102,6 +103,7 @@ export default async function IssuePage({
             <Heading level={1}>{issue.title}</Heading>
             <Text variant="muted">{releaseDateLabel}</Text>
             {issue.description && <RichText value={issue.description} />}
+            {issue.price != null && <Text variant="lead">{formatPrice(issue.price, "RUB")}</Text>}
             {issue.buyLinks && issue.buyLinks.length > 0 && (
               <div className="flex flex-wrap gap-4 pt-2">
                 {issue.buyLinks.map((link) => (

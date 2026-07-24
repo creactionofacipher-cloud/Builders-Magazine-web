@@ -291,6 +291,7 @@ export const mockIssues: Issue[] = [
       ),
     ],
     releaseDate: "2025-11-01",
+    price: 1200,
     buyLinks: [
       { label: "Купить на сайте", url: "https://example.com/buy/issue-03" },
       { label: "Купить в фирменном магазине", url: "https://example.com/shop/issue-03" },

@@ -259,6 +259,11 @@ export interface Issue {
   releaseDate: string;
   advertisers?: string[];
   buyLinks?: { label: string; url: string }[];
+  // Optional — no currency field like Product has, always formatted as
+  // RUB (lib/formatPrice.ts) matching the site's default/primary
+  // currency. Absent on most issues; only shown where explicitly asked
+  // for (IssueCard, the Buy page's Журнал showcase), never elsewhere.
+  price?: number;
   status: PublishStatus;
   featuredStories?: Story[];
   gallery?: MediaAsset[];

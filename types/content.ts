@@ -97,6 +97,27 @@ export interface RichTextFullBleedBlock {
   image?: MediaAsset;
 }
 
+// In-article version of the Horizontal Image Strip Layout Block
+// (HorizontalImageStripBlock, below) — same film-strip idea, embedded
+// inline in an article instead of a full page section. Named "imageStrip"
+// (not "horizontalImageStrip") so its _type never collides with the Layout
+// Block's, even though the two live in unrelated arrays: it also has a
+// smaller field set (no title, matching imageRow's own convention of
+// having a caption but no title). HorizontalImageStripHeight/Gap are
+// declared further down in this file's Layout Blocks section — forward
+// references between type/interface declarations are fine in TypeScript,
+// unlike const/let.
+export interface RichTextImageStripBlock {
+  _type: "imageStrip";
+  _key: string;
+  images: MediaAsset[];
+  imageHeight?: HorizontalImageStripHeight;
+  gap?: HorizontalImageStripGap;
+  showCaptions?: boolean;
+  showScrollbar?: boolean;
+  caption?: string;
+}
+
 // Nested Portable Text, restricted Studio-side to the base block set
 // (block/richTextImage/pullQuote/divider/embed — see
 // studio/schemas/portableTextBlocks.ts's BASE_PORTABLE_TEXT_BLOCKS).
@@ -119,6 +140,7 @@ export type RichText = (
   | RichTextImageRowBlock
   | RichTextImageTextBlock
   | RichTextFullBleedBlock
+  | RichTextImageStripBlock
   | RichTextTwoColumnTextBlock
 )[];
 

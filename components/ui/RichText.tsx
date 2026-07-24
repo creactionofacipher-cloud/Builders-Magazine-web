@@ -5,6 +5,7 @@ import { basePortableTextComponents, groupInlineImages } from "./richtext/base";
 import { RichTextImageRow } from "./richtext/RichTextImageRow";
 import { RichTextImageText } from "./richtext/RichTextImageText";
 import { RichTextFullBleed } from "./richtext/RichTextFullBleed";
+import { RichTextImageStrip } from "./richtext/RichTextImageStrip";
 import { RichTextTwoColumns } from "./richtext/RichTextTwoColumns";
 
 const portableTextComponents: PortableTextComponents = {
@@ -14,6 +15,7 @@ const portableTextComponents: PortableTextComponents = {
     imageRow: RichTextImageRow,
     imageText: RichTextImageText,
     fullBleedImage: RichTextFullBleed,
+    imageStrip: RichTextImageStrip,
     twoColumnText: RichTextTwoColumns,
   },
 };

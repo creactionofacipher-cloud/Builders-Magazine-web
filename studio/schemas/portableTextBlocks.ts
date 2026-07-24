@@ -6,6 +6,7 @@ import { embedPreview } from "../components/previews/EmbedPreview";
 import { imageRowPreview } from "../components/previews/ImageRowPreview";
 import { imageTextPreview } from "../components/previews/ImageTextPreview";
 import { fullBleedPreview } from "../components/previews/FullBleedPreview";
+import { imageStripPreview } from "../components/previews/ImageStripPreview";
 import { twoColumnPreview } from "../components/previews/TwoColumnPreview";
 
 // Shared print-magazine-style rich text block set — reused by every field
@@ -19,6 +20,14 @@ export const IMAGE_ROW_LAYOUTS = ["equal", "2-1", "1-2", "large-left", "large-ri
 export const IMAGE_ROW_GAPS = ["small", "medium", "large"];
 export const IMAGE_TEXT_POSITIONS = ["left", "right"];
 export const IMAGE_TEXT_WIDTHS = ["35%", "40%", "50%"];
+// Mirrors studio/schemas/layoutBlocks.ts's own copy of these two lists
+// (also duplicated there, same reasoning as every other option-list
+// const in this codebase — see STORY_CATEGORIES for precedent). Not
+// imported from there directly: layoutBlocks.ts imports portableTextBlocks
+// for its own "richText" block's content field, so the reverse import
+// would be circular.
+export const IMAGE_STRIP_HEIGHTS = ["small", "medium", "large"];
+export const IMAGE_STRIP_GAPS = ["none", "small", "medium", "large"];
 
 // The block set allowed inside a twoColumnText's own `content` array (see
 // below) — plain blocks plus the simple single-object blocks, not the
@@ -182,6 +191,50 @@ export const portableTextBlocks = [
       }),
     ],
     preview: fullBleedPreview,
+  }),
+  defineArrayMember({
+    name: "imageStrip",
+    title: "Image Strip",
+    description: "2–30 photographs in a full-width, horizontally scrollable film strip.",
+    type: "object",
+    fields: [
+      defineField({
+        name: "images",
+        title: "Images",
+        type: "array",
+        of: [{ type: "reference", to: [{ type: "mediaAsset" }] }],
+        validation: (Rule) => Rule.min(2).max(30).required(),
+      }),
+      defineField({
+        name: "imageHeight",
+        title: "Image Height",
+        type: "string",
+        options: { list: IMAGE_STRIP_HEIGHTS },
+        initialValue: "medium",
+      }),
+      defineField({
+        name: "gap",
+        title: "Gap",
+        type: "string",
+        options: { list: IMAGE_STRIP_GAPS },
+        initialValue: "medium",
+      }),
+      defineField({
+        name: "showCaptions",
+        title: "Show Captions",
+        description: "Shows each image's own caption underneath it as you scroll.",
+        type: "boolean",
+        initialValue: false,
+      }),
+      defineField({
+        name: "showScrollbar",
+        title: "Show Scrollbar",
+        type: "boolean",
+        initialValue: true,
+      }),
+      defineField({ name: "caption", title: "Caption", type: "string" }),
+    ],
+    preview: imageStripPreview,
   }),
   defineArrayMember({
     name: "twoColumnText",

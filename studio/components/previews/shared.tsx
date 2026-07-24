@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { previewImageUrl } from "../../lib/imageUrl";
 
 // Fixed footprint every custom block preview media renders into — Sanity
 // gives the `media` slot in a Portable Text block's collapsed row a
@@ -55,6 +56,41 @@ export function GlyphFrame({ children, style }: { children: ReactNode; style?: C
       }}
     >
       {children}
+    </div>
+  );
+}
+
+// Row of MiniImage thumbnails with a "+N" overflow tile — shared by
+// HorizontalImageStripPreview (Layout Block) and ImageStripPreview
+// (RichText block), the two places an image count can run well past
+// what a handful of fixed `select` index paths can cover (see either
+// preview's own comment on that constraint). `files` is already sliced
+// to the resolved thumbnail paths; `overflow` is how many more images
+// exist beyond those.
+export function ImageStripThumbnails({ files, overflow }: { files: unknown[]; overflow: number }) {
+  if (files.length === 0) return undefined;
+  return (
+    <div style={{ ...GLYPH_BOX, display: "flex", gap: 1, overflow: "hidden", borderRadius: 3 }}>
+      {files.map((file, index) => (
+        <div key={index} style={{ flex: 1, position: "relative" }}>
+          <MiniImage url={previewImageUrl(file)} />
+        </div>
+      ))}
+      {overflow > 0 && (
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#e0e0e0",
+            fontSize: 9,
+            color: "#666",
+          }}
+        >
+          +{overflow}
+        </div>
+      )}
     </div>
   );
 }

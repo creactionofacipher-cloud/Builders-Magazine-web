@@ -45,6 +45,9 @@ export function richTextField(fieldName: string): string {
     _type == "fullBleedImage" => {
       "image": image->${mediaAssetProjection}
     },
+    _type == "imageStrip" => {
+      "images": images[]->${mediaAssetProjection}
+    },
     _type == "twoColumnText" => {
       "content": content[]{
         ...,

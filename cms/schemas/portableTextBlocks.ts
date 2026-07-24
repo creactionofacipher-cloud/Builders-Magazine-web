@@ -12,6 +12,8 @@ export const IMAGE_ROW_LAYOUTS = ["equal", "2-1", "1-2", "large-left", "large-ri
 export const IMAGE_ROW_GAPS = ["small", "medium", "large"];
 export const IMAGE_TEXT_POSITIONS = ["left", "right"];
 export const IMAGE_TEXT_WIDTHS = ["35%", "40%", "50%"];
+export const IMAGE_STRIP_HEIGHTS = ["small", "medium", "large"];
+export const IMAGE_STRIP_GAPS = ["none", "small", "medium", "large"];
 
 // Mirrors studio/schemas/portableTextBlocks.ts's BASE_PORTABLE_TEXT_BLOCKS
 // — the block set allowed inside twoColumnText's own `content` array. Kept
@@ -100,6 +102,24 @@ export const portableTextBlocks: SchemaArrayMember[] = [
     title: "Full Bleed Image",
     type: "object",
     fields: [{ name: "image", title: "Image", type: "reference", to: [{ type: "mediaAsset" }] }],
+  },
+  {
+    name: "imageStrip",
+    title: "Image Strip",
+    type: "object",
+    fields: [
+      {
+        name: "images",
+        title: "Images",
+        type: "array",
+        of: [{ name: "imageRef", type: "reference", to: [{ type: "mediaAsset" }] }],
+      },
+      { name: "imageHeight", title: "Image Height", type: "string", options: { list: IMAGE_STRIP_HEIGHTS } },
+      { name: "gap", title: "Gap", type: "string", options: { list: IMAGE_STRIP_GAPS } },
+      { name: "showCaptions", title: "Show Captions", type: "boolean" },
+      { name: "showScrollbar", title: "Show Scrollbar", type: "boolean" },
+      { name: "caption", title: "Caption", type: "string" },
+    ],
   },
   {
     name: "twoColumnText",

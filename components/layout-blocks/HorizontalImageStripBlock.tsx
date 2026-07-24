@@ -3,7 +3,7 @@ import { Section } from "@/components/layout/Section";
 import { Container } from "@/components/layout/Container";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
-import { ImageStrip } from "@/components/ui/ImageStrip";
+import { Gallery } from "@/components/ui/Gallery";
 import { getBlockSectionProps, resolveContainerWidth } from "./blockSettings";
 
 interface HorizontalImageStripBlockProps {
@@ -11,10 +11,9 @@ interface HorizontalImageStripBlockProps {
 }
 
 // Full-bleed horizontal film-strip — a standalone Layout Block section,
-// not an in-article gallery (that's RichTextImageStrip, the same
-// components/ui/ImageStrip.tsx visual embedded inline in an article
-// instead of a full page section) and not a single-column immersive
-// reader (that's Gallery.tsx).
+// a thin config layer over Gallery's "strip" layout (not an in-article
+// gallery, that's RichTextImageStrip, the same Gallery strip mode
+// embedded inline in an article instead of a full page section).
 export function HorizontalImageStripBlock({ block }: HorizontalImageStripBlockProps) {
   const images = block.images ?? [];
   if (images.length < 2) return null;
@@ -30,7 +29,8 @@ export function HorizontalImageStripBlock({ block }: HorizontalImageStripBlockPr
           </Container>
         )}
 
-        <ImageStrip
+        <Gallery
+          layout="strip"
           images={images}
           imageHeight={block.imageHeight}
           gap={block.gap}

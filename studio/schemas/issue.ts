@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
 import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
+import { gallerySettingsField } from "./gallerySettings";
 
 // Ported from cms/schemas/issue.ts — field-for-field.
 export default defineType({
@@ -82,5 +83,6 @@ export default defineType({
         }),
       ],
     }),
+    gallerySettingsField,
   ],
 });

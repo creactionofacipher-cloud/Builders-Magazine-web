@@ -174,6 +174,8 @@ export default function DevComponentsPage() {
         </Grid>
         <Text variant="muted">Gallery</Text>
         <Gallery images={galleryImages} />
+        <Text variant="muted">Gallery (strip)</Text>
+        <Gallery layout="strip" images={galleryImages} showCaptions />
         <Text variant="muted">ImageGrid</Text>
         <ImageGrid images={galleryImages} />
       </Catalog>

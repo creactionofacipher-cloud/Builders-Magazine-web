@@ -137,7 +137,7 @@ export default async function IssuePage({
         <Section>
           <Container className="flex flex-col gap-8">
             <Heading level={2}>Галерея</Heading>
-            <Gallery images={issue.gallery} />
+            <Gallery images={issue.gallery} {...issue.gallerySettings} />
           </Container>
         </Section>
       )}

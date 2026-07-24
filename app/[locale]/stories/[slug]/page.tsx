@@ -113,7 +113,7 @@ export default async function StoryPage({
         <Section surface>
           <Container className="flex flex-col gap-8">
             <Heading level={2}>Галерея</Heading>
-            <Gallery images={story.gallery} />
+            <Gallery images={story.gallery} {...story.gallerySettings} />
           </Container>
         </Section>
       )}

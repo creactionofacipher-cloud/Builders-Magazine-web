@@ -11,7 +11,8 @@ export const buildersCupFields = `{
   location,
   ${richTextField("description")},
   "coverImage": coverImage->${mediaAssetProjection},
-  "gallery": gallery[]->${mediaAssetProjection},
+  "gallery": gallery[defined(@->_id)]->${mediaAssetProjection},
+  "gallerySettings": gallerySettings,
   "participants": participants[]->${bikeProjection},
   "winners": winners[]->${bikeProjection}
 }`;

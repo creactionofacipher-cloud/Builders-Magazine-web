@@ -142,7 +142,7 @@ export default async function ProductPage({
         <Section surface>
           <Container className="flex flex-col gap-8">
             <Heading level={2}>Галерея</Heading>
-            <Gallery images={product.gallery} />
+            <Gallery images={product.gallery} {...product.gallerySettings} />
           </Container>
         </Section>
       )}

@@ -1,5 +1,6 @@
 import type { SchemaTypeDefinition } from "./types";
 import { portableTextBlocks } from "./portableTextBlocks";
+import { gallerySettingsField } from "./gallerySettings";
 
 // Mirrors types/content.ts's STORY_CATEGORIES exactly.
 const STORY_CATEGORIES = ["Bike", "Builder", "Culture", "Interview", "Event"];
@@ -24,6 +25,7 @@ export const story: SchemaTypeDefinition = {
       type: "array",
       of: [{ name: "galleryImage", type: "reference", to: [{ type: "mediaAsset" }] }],
     },
+    gallerySettingsField,
     {
       name: "relatedBike",
       title: "Related Bike",

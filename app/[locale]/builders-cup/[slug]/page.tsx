@@ -138,7 +138,7 @@ export default async function BuildersCupEventPage({
         <Section surface>
           <Container className="flex flex-col gap-8">
             <Heading level={2}>Галерея</Heading>
-            <Gallery images={event.gallery} />
+            <Gallery images={event.gallery} {...event.gallerySettings} />
           </Container>
         </Section>
       )}

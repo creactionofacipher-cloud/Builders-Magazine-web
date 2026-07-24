@@ -1,5 +1,6 @@
 import type { SchemaTypeDefinition } from "./types";
 import { portableTextBlocks } from "./portableTextBlocks";
+import { gallerySettingsField } from "./gallerySettings";
 
 export const buildersCup: SchemaTypeDefinition = {
   name: "buildersCup",
@@ -18,6 +19,7 @@ export const buildersCup: SchemaTypeDefinition = {
       type: "array",
       of: [{ name: "galleryImage", type: "reference", to: [{ type: "mediaAsset" }] }],
     },
+    gallerySettingsField,
     {
       name: "participants",
       title: "Participants",

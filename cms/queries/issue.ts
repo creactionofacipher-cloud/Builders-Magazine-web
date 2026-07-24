@@ -24,7 +24,8 @@ export const issueFields = `{
   // picker that never had an asset selected) would otherwise dereference
   // to null and crash the Gallery component, which assumes every entry is
   // a real MediaAsset.
-  "gallery": gallery[defined(@->_id)]->${mediaAssetProjection}
+  "gallery": gallery[defined(@->_id)]->${mediaAssetProjection},
+  "gallerySettings": gallerySettings
 }`;
 
 // See cms/queries/story.ts's PUBLISHED_FILTER for why this treats an

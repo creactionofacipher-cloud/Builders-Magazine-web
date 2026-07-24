@@ -1,5 +1,6 @@
 import type { SchemaTypeDefinition } from "./types";
 import { portableTextBlocks } from "./portableTextBlocks";
+import { gallerySettingsField } from "./gallerySettings";
 
 export const issue: SchemaTypeDefinition = {
   name: "issue",
@@ -42,5 +43,6 @@ export const issue: SchemaTypeDefinition = {
       type: "array",
       of: [{ name: "galleryImage", type: "reference", to: [{ type: "mediaAsset" }] }],
     },
+    gallerySettingsField,
   ],
 };

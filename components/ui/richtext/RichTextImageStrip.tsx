@@ -1,11 +1,11 @@
 import type { RichTextImageStripBlock } from "@/types/content";
-import { ImageStrip } from "@/components/ui/ImageStrip";
+import { Gallery } from "@/components/ui/Gallery";
 import { Text } from "@/components/ui/Text";
 import { IMAGE_VARIANT_CLASSES } from "./base";
 
 // In-article version of components/layout-blocks/HorizontalImageStripBlock.tsx
-// — same components/ui/ImageStrip.tsx visual, breaking out of the reading
-// column the same way RichTextFullBleed.tsx breaks its own image out
+// — same Gallery "strip" layout, breaking out of the reading column the
+// same way RichTextFullBleed.tsx breaks its own image out
 // (IMAGE_VARIANT_CLASSES.fullWidth — "full width" in this codebase's
 // existing article vocabulary is that proportional breakout, not true
 // 100vw; see base.tsx's comment on why). The caption stays inside the
@@ -16,7 +16,8 @@ export function RichTextImageStrip({ value }: { value: RichTextImageStripBlock }
 
   return (
     <figure className="clear-both">
-      <ImageStrip
+      <Gallery
+        layout="strip"
         images={images}
         imageHeight={value.imageHeight}
         gap={value.gap}

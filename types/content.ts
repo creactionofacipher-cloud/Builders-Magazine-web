@@ -103,16 +103,15 @@ export interface RichTextFullBleedBlock {
 // (not "horizontalImageStrip") so its _type never collides with the Layout
 // Block's, even though the two live in unrelated arrays: it also has a
 // smaller field set (no title, matching imageRow's own convention of
-// having a caption but no title). HorizontalImageStripHeight/Gap are
-// declared further down in this file's Layout Blocks section — forward
-// references between type/interface declarations are fine in TypeScript,
-// unlike const/let.
+// having a caption but no title). GalleryHeight/Gap are declared further
+// down in this file's Gallery section — forward references between
+// type/interface declarations are fine in TypeScript, unlike const/let.
 export interface RichTextImageStripBlock {
   _type: "imageStrip";
   _key: string;
   images: MediaAsset[];
-  imageHeight?: HorizontalImageStripHeight;
-  gap?: HorizontalImageStripGap;
+  imageHeight?: GalleryHeight;
+  gap?: GalleryGap;
   showCaptions?: boolean;
   showScrollbar?: boolean;
   caption?: string;
@@ -242,6 +241,7 @@ export interface Story {
   publishedDate: string;
   issue?: Issue;
   gallery?: MediaAsset[];
+  gallerySettings?: GallerySettings;
   relatedBike?: Bike[];
   relatedBuilder?: Builder[];
   tags?: string[];
@@ -262,6 +262,7 @@ export interface Issue {
   status: PublishStatus;
   featuredStories?: Story[];
   gallery?: MediaAsset[];
+  gallerySettings?: GallerySettings;
 }
 
 export interface BuildersCup {
@@ -273,6 +274,7 @@ export interface BuildersCup {
   description?: RichText;
   coverImage: MediaAsset;
   gallery?: MediaAsset[];
+  gallerySettings?: GallerySettings;
   participants?: Bike[];
   winners?: Bike[];
   stories?: Story[];
@@ -349,6 +351,7 @@ export interface Product {
   shortDescription: string;
   mainImage: MediaAsset;
   gallery?: MediaAsset[];
+  gallerySettings?: GallerySettings;
   price: number;
   currency: string;
   sizes?: string[];
@@ -585,26 +588,43 @@ export interface EditorialDividerBlock extends LayoutBlockBase {
   spacing?: SpacerSize;
 }
 
-// Full-width horizontally scrollable strip of photographs — a magazine
-// contact-sheet/film-strip section, distinct from RichText's imageRow
-// (which belongs inside an article's reading column and never scrolls)
-// and from Gallery/ImageGrid (single-column/grid, not a horizontal
-// scroller). Images are stored as direct references exactly like Full
-// Width Photo — no separate per-image caption/credit fields beyond what
-// MediaAsset itself already carries.
-export const HORIZONTAL_IMAGE_STRIP_HEIGHTS = ["small", "medium", "large"] as const;
-export type HorizontalImageStripHeight = (typeof HORIZONTAL_IMAGE_STRIP_HEIGHTS)[number];
+// Gallery — the single reusable multi-image renderer (components/ui/Gallery.tsx),
+// supporting a "grid" layout (single-column stack, its original/only
+// behavior) and a "strip" layout (a magazine contact-sheet/film-strip
+// section, distinct from RichText's imageRow, which belongs inside an
+// article's reading column and never scrolls, and from ImageGrid, a
+// separate compact multi-column thumbnail component). Every Gallery
+// consumer — the plain `gallery` field on Story/Issue/BuildersCup/Product,
+// and the dedicated HorizontalImageStripBlock/RichTextImageStripBlock
+// (both hardcode layout: "strip") — shares these same types.
+export const GALLERY_LAYOUTS = ["grid", "strip"] as const;
+export type GalleryLayout = (typeof GALLERY_LAYOUTS)[number];
 
-export const HORIZONTAL_IMAGE_STRIP_GAPS = ["none", "small", "medium", "large"] as const;
-export type HorizontalImageStripGap = (typeof HORIZONTAL_IMAGE_STRIP_GAPS)[number];
+export const GALLERY_HEIGHTS = ["small", "medium", "large"] as const;
+export type GalleryHeight = (typeof GALLERY_HEIGHTS)[number];
+
+export const GALLERY_GAPS = ["none", "small", "medium", "large"] as const;
+export type GalleryGap = (typeof GALLERY_GAPS)[number];
+
+// Settings for the plain `gallery` field on Story/Issue/BuildersCup/Product
+// — a new, optional sibling field (gallerySettings) so existing documents
+// (which lack it entirely) keep resolving to `layout: "grid"`, today's
+// only behavior, with zero data migration.
+export interface GallerySettings {
+  layout?: GalleryLayout;
+  imageHeight?: GalleryHeight;
+  gap?: GalleryGap;
+  showCaptions?: boolean;
+  showScrollbar?: boolean;
+}
 
 export interface HorizontalImageStripBlock extends LayoutBlockBase {
   _type: "horizontalImageStrip";
   images: MediaAsset[];
   title?: string;
   caption?: string;
-  imageHeight?: HorizontalImageStripHeight;
-  gap?: HorizontalImageStripGap;
+  imageHeight?: GalleryHeight;
+  gap?: GalleryGap;
   showCaptions?: boolean;
   showScrollbar?: boolean;
 }

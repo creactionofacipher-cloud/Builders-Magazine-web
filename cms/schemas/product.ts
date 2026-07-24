@@ -1,4 +1,5 @@
 import type { SchemaTypeDefinition } from "./types";
+import { gallerySettingsField } from "./gallerySettings";
 
 export const product: SchemaTypeDefinition = {
   name: "product",
@@ -16,6 +17,7 @@ export const product: SchemaTypeDefinition = {
       type: "array",
       of: [{ name: "galleryImage", type: "reference", to: [{ type: "mediaAsset" }] }],
     },
+    gallerySettingsField,
     { name: "price", title: "Price", type: "number" },
     // Required + defaults to "RUB" in studio/schemas/product.ts — that
     // needs the real Rule-builder API (a function, not plain data), which

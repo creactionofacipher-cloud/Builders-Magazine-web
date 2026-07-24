@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
 import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
+import { gallerySettingsField } from "./gallerySettings";
 
 // Ported from cms/schemas/buildersCup.ts — field-for-field.
 export default defineType({
@@ -38,6 +39,7 @@ export default defineType({
         }),
       ],
     }),
+    gallerySettingsField,
     defineField({
       name: "participants",
       title: "Participants",

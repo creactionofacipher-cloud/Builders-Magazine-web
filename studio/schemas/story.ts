@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { portableTextBlocks } from "./portableTextBlocks";
 import { SortedMediaAssetReferenceInput } from "../components/inputs/SortedMediaAssetReferenceInput";
+import { gallerySettingsField } from "./gallerySettings";
 
 // Mirrors types/content.ts's STORY_CATEGORIES exactly (also duplicated
 // in cms/schemas/story.ts for the same reason — kept in sync manually).
@@ -55,6 +56,7 @@ export default defineType({
         }),
       ],
     }),
+    gallerySettingsField,
     defineField({
       name: "relatedBike",
       title: "Related Bike",

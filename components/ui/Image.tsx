@@ -3,6 +3,7 @@ import type { MediaAsset } from "@/types/content";
 import { cn } from "@/utils/cn";
 import { LightboxImage } from "@/components/lightbox/LightboxImage";
 import { getImageQuality, type ImageQualityPreset } from "@/lib/imageConfig";
+import { capSourceWidth } from "@/lib/sanityImageUrl";
 
 interface ImageProps {
   asset: MediaAsset;
@@ -64,7 +65,7 @@ export function Image({
         className={cn("relative overflow-hidden bg-surface", fill && "h-full w-full")}
       >
         <NextImage
-          src={asset.url}
+          src={capSourceWidth(asset.url)}
           alt={decorative ? "" : (asset.altText ?? "")}
           {...(fill ? { fill: true } : { width: asset.width, height: asset.height })}
           sizes={sizes}

@@ -3,6 +3,7 @@
 import { useContext, useEffect, useId } from "react";
 import type { Slide, SlideImage } from "yet-another-react-lightbox";
 import type { MediaAsset } from "@/types/content";
+import { capSourceWidth } from "@/lib/sanityImageUrl";
 import { LightboxContext } from "./LightboxProvider";
 
 // Custom fields for the info panel (see Lightbox.tsx's render.slideFooter) —
@@ -24,7 +25,10 @@ export interface AppSlide extends SlideImage {
 
 function toSlide(asset: MediaAsset): AppSlide {
   return {
-    src: asset.url,
+    // Capped the same way as Image.tsx's next/image src — the lightbox
+    // renders this directly (no next/image proxy), so an uncapped 100MB+
+    // original would force the browser to download it whole.
+    src: capSourceWidth(asset.url),
     alt: asset.altText,
     width: asset.width,
     height: asset.height,

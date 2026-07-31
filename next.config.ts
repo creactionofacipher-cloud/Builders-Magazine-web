@@ -50,6 +50,16 @@ const nextConfig: NextConfig = {
         pathname: "/images/**",
       },
     ],
+    // Trimmed from Next's own default ([640, 750, 828, 1080, 1200, 1920,
+    // 2048, 3840]) — 828 sits 10% from 750 and 2048 sits 6% from 1920,
+    // close enough that the neighboring step covers them with no visible
+    // quality loss. Each entry here is a distinct cached optimization
+    // variant (× 2 formats below) that Vercel has to generate and store
+    // per image the first time some visitor's viewport/DPR requests it,
+    // so fewer, better-spaced steps means less wasted bandwidth/compute
+    // without actually capping the resolution ceiling (3840 stays, for
+    // Hero/full-bleed `sizes="100vw"` images on large/high-DPI displays).
+    deviceSizes: [640, 750, 1080, 1200, 1920, 3840],
     // AVIF first — Next serves whichever format the requester's Accept
     // header supports, checked in this order. Defaults to WebP-only
     // otherwise.

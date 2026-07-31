@@ -12,11 +12,15 @@ import { SITE_URL } from "@/lib/site";
 // mechanisms solve different problems and shouldn't be combined here.
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: "/dev",
-    },
+    rules: [
+      { userAgent: "*", allow: "/", disallow: "/dev" },
+      // Googlebot's dedicated image-indexing crawler (separate from the
+      // main Googlebot rule above) is the most aggressive at re-fetching
+      // every size/format variant next/image's optimizer can generate for
+      // a given source image — real bandwidth cost with no upside, since
+      // this site doesn't rely on Google Images search traffic.
+      { userAgent: "Googlebot-Image", disallow: "/_next/image" },
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

@@ -8,9 +8,10 @@
 // fixes this for every asset, not just the two that happened to be large
 // enough to trip Vercel's limit today.
 //
-// 3840 matches next.config.ts's (default, unoverridden) largest
-// `deviceSizes` entry — next/image itself never requests a wider variant
-// than that, so this cap is lossless for every current use case.
+// 3840 matches next.config.ts's `deviceSizes` largest entry — next/image
+// itself never requests a wider variant than that, so this cap is
+// lossless for every current use case. Keep these two numbers in sync if
+// either changes.
 const MAX_SOURCE_WIDTH = 3840;
 
 export function capSourceWidth(url: string, maxWidth: number = MAX_SOURCE_WIDTH): string {

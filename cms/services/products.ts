@@ -1,7 +1,11 @@
 import { cache } from "react";
 import type { Product } from "@/types/content";
 import { isSanityConfigured, sanityFetch } from "@/cms/sanity/client";
-import { ALL_PRODUCTS_QUERY, PRODUCT_BY_SLUG_QUERY } from "@/cms/queries/product";
+import {
+  ALL_PRODUCTS_QUERY,
+  PRODUCT_BY_SLUG_QUERY,
+  RELATED_PRODUCTS_QUERY,
+} from "@/cms/queries/product";
 import { mapProduct } from "@/cms/mappers/product";
 import { mockProducts } from "./mock-data";
 
@@ -42,9 +46,19 @@ export const getProductBySlug = cache(async (slug: string): Promise<Product | nu
 // are simply other catalog entries. Kept as a service function (not
 // filtered inline on the page) so the curation strategy can change later
 // (e.g. a real "related" reference, or same-category matching) without
-// touching the detail page. Composes over getMerchandise() above, so it
-// is already dual-path with no changes needed here.
+// touching the detail page. Deliberately does NOT compose over
+// getMerchandise() — that fetches every product's full description and
+// entire dereferenced gallery, which ProductCard never renders; on a
+// product detail page (which calls this once per view/build), that was
+// a full-catalog, full-weight re-fetch just to show 3 cards. Uses its
+// own lighter, capped RELATED_PRODUCTS_QUERY instead (see
+// cms/queries/product.ts for why that's type-safe against Product).
 export const getRelatedProducts = cache(async (slug: string, limit = 3): Promise<Product[]> => {
-  const all = await getMerchandise();
-  return all.filter((product) => product.slug !== slug).slice(0, limit);
+  if (isSanityConfigured) {
+    const raw = await sanityFetch<Product[]>(RELATED_PRODUCTS_QUERY, { slug });
+    return raw.map(mapProduct).slice(0, limit);
+  }
+  return mockProducts
+    .filter((product) => product.slug !== slug && isPublished(product))
+    .slice(0, limit);
 });

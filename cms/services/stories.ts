@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Story, StoryCategory, StorySortOrder } from "@/types/content";
 import { isSanityConfigured, sanityFetch } from "@/cms/sanity/client";
 import { STORIES_QUERY, STORY_BY_SLUG_QUERY } from "@/cms/queries/story";
@@ -32,35 +33,41 @@ interface GetStoriesOptions {
 // (cms/services/layoutBlocks.ts's resolveDynamicBlocks()) as well as
 // every pre-existing caller — `tag`/`limit`/`sort` are all optional so
 // none of those callers need to change.
-export async function getStories({
-  category,
-  tag,
-  limit,
-  sort = "newest",
-}: GetStoriesOptions = {}): Promise<Story[]> {
-  let stories: Story[];
-  if (isSanityConfigured) {
-    const raw = await sanityFetch<RawStory[]>(STORIES_QUERY, {
-      category: category ?? null,
-      tag: tag ?? null,
-    });
-    stories = raw.map(mapStory);
-  } else {
-    stories = [...mockStories].filter(isPublished).sort(byPublishedDateDesc);
-    if (category) stories = stories.filter((story) => story.category === category);
-    if (tag) stories = stories.filter((story) => story.tags?.includes(tag));
-  }
-  // Both paths fetch/sort newest-first already — "oldest" just reverses
-  // that, avoiding a second GROQ query shape for the opposite direction.
-  if (sort === "oldest") stories = [...stories].reverse();
-  return limit ? stories.slice(0, limit) : stories;
-}
+//
+// cache()-wrapped for consistency with every other service function
+// (see cms/services/siteSettings.ts's getSiteSettings for the original
+// precedent), but note the options object means it only actually dedupes
+// when two call sites pass the *same* object reference — React's cache()
+// keys object arguments by identity, not deep equality, so e.g. two
+// separate `{ category: "Bike" }` literals from different call sites
+// still fetch independently. Real per-render duplicate calls (the thing
+// this pattern exists to fix) happen with getStoryBySlug below, not here.
+export const getStories = cache(
+  async ({ category, tag, limit, sort = "newest" }: GetStoriesOptions = {}): Promise<Story[]> => {
+    let stories: Story[];
+    if (isSanityConfigured) {
+      const raw = await sanityFetch<RawStory[]>(STORIES_QUERY, {
+        category: category ?? null,
+        tag: tag ?? null,
+      });
+      stories = raw.map(mapStory);
+    } else {
+      stories = [...mockStories].filter(isPublished).sort(byPublishedDateDesc);
+      if (category) stories = stories.filter((story) => story.category === category);
+      if (tag) stories = stories.filter((story) => story.tags?.includes(tag));
+    }
+    // Both paths fetch/sort newest-first already — "oldest" just reverses
+    // that, avoiding a second GROQ query shape for the opposite direction.
+    if (sort === "oldest") stories = [...stories].reverse();
+    return limit ? stories.slice(0, limit) : stories;
+  },
+);
 
-export async function getStoryBySlug(slug: string): Promise<Story | null> {
+export const getStoryBySlug = cache(async (slug: string): Promise<Story | null> => {
   if (isSanityConfigured) {
     const raw = await sanityFetch<RawStory | null>(STORY_BY_SLUG_QUERY, { slug });
     return raw ? mapStory(raw) : null;
   }
   const story = mockStories.find((s) => s.slug === slug);
   return story && isPublished(story) ? story : null;
-}
+});

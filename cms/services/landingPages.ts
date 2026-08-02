@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { LandingPage } from "@/types/content";
 import { isSanityConfigured, sanityFetch } from "@/cms/sanity/client";
 import { ALL_LANDING_PAGES_QUERY, LANDING_PAGE_BY_SLUG_QUERY } from "@/cms/queries/landingPage";
@@ -5,13 +6,14 @@ import { mapLandingPage, type RawLandingPage } from "@/cms/mappers/landingPage";
 import { resolveDynamicBlocks } from "./layoutBlocks";
 import { mockLandingPages } from "./mock-data";
 
-// Collection, not a singleton — same mock/Sanity dual-path shape as
-// cms/services/stories.ts, no cache() wrapper needed (that's only used
-// where the same singleton gets fetched from more than one call site per
-// render, e.g. getSiteSettings/getHomepage). Only used for slug
-// enumeration (sitemap.ts, generateStaticParams) — never rendered
-// directly — so blocks are left un-resolved here; getLandingPageBySlug
-// below is the one that actually renders a page's blocks.
+// Both wrapped in React's cache() so multiple call sites within the same
+// render (a page's generateMetadata() plus its page body — confirmed
+// app/[locale]/p/[slug]/page.tsx calls getLandingPageBySlug from both)
+// share one underlying fetch instead of each triggering its own (see
+// cms/services/siteSettings.ts's getSiteSettings for the original
+// precedent of this pattern) — this isn't limited to singletons like
+// getSiteSettings/getHomepage, any function called more than once per
+// render benefits equally.
 // Mirrors the Sanity path's PUBLISHED_FILTER (cms/queries/landingPage.ts) —
 // an untouched status field is treated as visible, only an explicit
 // "draft" hides it.
@@ -19,15 +21,15 @@ function isPublished(page: LandingPage): boolean {
   return page.status !== "draft";
 }
 
-export async function getLandingPages(): Promise<LandingPage[]> {
+export const getLandingPages = cache(async (): Promise<LandingPage[]> => {
   if (isSanityConfigured) {
     const raw = await sanityFetch<RawLandingPage[]>(ALL_LANDING_PAGES_QUERY);
     return raw.map(mapLandingPage);
   }
   return mockLandingPages.filter(isPublished);
-}
+});
 
-export async function getLandingPageBySlug(slug: string): Promise<LandingPage | null> {
+export const getLandingPageBySlug = cache(async (slug: string): Promise<LandingPage | null> => {
   if (isSanityConfigured) {
     const raw = await sanityFetch<RawLandingPage | null>(LANDING_PAGE_BY_SLUG_QUERY, { slug });
     if (!raw) return null;
@@ -37,4 +39,4 @@ export async function getLandingPageBySlug(slug: string): Promise<LandingPage | 
   const page = mockLandingPages.find((p) => p.slug === slug);
   if (!page || !isPublished(page)) return null;
   return { ...page, blocks: await resolveDynamicBlocks(page.blocks) };
-}
+});

@@ -2,6 +2,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { presentationTool, defineLocations } from "sanity/presentation";
+import { media } from "sanity-plugin-media";
 import { schemaTypes } from "./schemas";
 import { structure } from "./structure";
 import { getFrontendOrigin, resolvePreviewPath } from "./lib/previewUrl";
@@ -130,6 +131,19 @@ export default defineConfig({
       },
     }),
     visionTool(),
+    // Browses every raw asset in the project (sanity.imageAsset/fileAsset),
+    // not just ones wrapped by a mediaAsset document — the "Media" panel
+    // under Structure only ever lists mediaAsset documents, so a file
+    // left orphaned after a Replace (its old asset has no mediaAsset
+    // document pointing at it anymore) is otherwise invisible in Studio
+    // and only reachable via the API. This plugin's own "Media Library"
+    // tab shows all of them, including unused ones, with a bulk-delete
+    // action — the actual fix for "deleting from Media Asset doesn't
+    // free storage": Sanity doesn't cascade-delete a referenced asset
+    // when the document is deleted (by design, since assets can be
+    // shared), so this plugin is the review-and-clean-up step for
+    // whatever that leaves behind.
+    media(),
   ],
 
   schema: {

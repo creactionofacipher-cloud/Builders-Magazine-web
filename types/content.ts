@@ -362,6 +362,10 @@ export interface Product {
   sizes?: string[];
   materials?: string;
   externalBuyUrl: string;
+  // Optional, defaults to false in Studio — absent/false both mean "for
+  // sale as normal"; only an explicit true hides the price and shows the
+  // Sold Out label (see components/editorial/ProductCard.tsx).
+  soldOut?: boolean;
   status: PublishStatus;
 }
 

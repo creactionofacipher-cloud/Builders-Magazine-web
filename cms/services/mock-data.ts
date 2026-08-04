@@ -460,6 +460,7 @@ export const mockProducts: Product[] = [
     gallery: [squareImage],
     price: 1800,
     currency: "RUB",
+    soldOut: true,
     sizes: ["Один размер (регулируется)"],
     materials: "Хлопок, регулируемый ремешок",
     externalBuyUrl: "https://example.com/shop/cap",

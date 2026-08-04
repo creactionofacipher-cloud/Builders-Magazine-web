@@ -37,9 +37,22 @@ export function ProductCard({ product, locale, className, highlightQuery }: Prod
         className="transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-90"
       />
       <div className="flex flex-col gap-1">
-        <Text variant="muted" className="text-xs tracking-wide uppercase">
-          {priceLabel}
-        </Text>
+        {product.soldOut ? (
+          // Plain element, not <Text variant="muted">, deliberately: cn()
+          // is a non-merging string join (utils/cn.ts), so stacking a
+          // color override className on top of a variant that already
+          // sets text-muted would leave which one wins to Tailwind's
+          // generated CSS order rather than intent. text-error is the
+          // theme's existing semantic color for exactly this kind of
+          // state (styles/tokens.css) — no new color introduced.
+          <p className="font-body text-xs font-bold tracking-wide text-error uppercase">
+            Sold Out
+          </p>
+        ) : (
+          <Text variant="muted" className="text-xs tracking-wide uppercase">
+            {priceLabel}
+          </Text>
+        )}
         <Heading level={3}>
           <HighlightText text={product.name} query={highlightQuery} />
         </Heading>

@@ -51,10 +51,29 @@ export default defineType({
     defineField({ name: "materials", title: "Materials", type: "string" }),
     defineField({ name: "externalBuyUrl", title: "External Buy URL", type: "url" }),
     defineField({
+      name: "soldOut",
+      title: "Sold Out",
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
       name: "status",
       title: "Status",
       type: "string",
       options: { list: ["draft", "published"] },
     }),
   ],
+  preview: {
+    select: {
+      name: "name",
+      shortDescription: "shortDescription",
+      soldOut: "soldOut",
+    },
+    prepare({ name, shortDescription, soldOut }) {
+      return {
+        title: name || "Untitled",
+        subtitle: soldOut ? [shortDescription, "SOLD OUT"].filter(Boolean).join(" • ") : shortDescription,
+      };
+    },
+  },
 });

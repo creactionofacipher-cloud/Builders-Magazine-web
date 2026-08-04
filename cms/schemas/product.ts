@@ -31,6 +31,10 @@ export const product: SchemaTypeDefinition = {
     { name: "sizes", title: "Sizes", type: "array", of: [{ type: "string" }] },
     { name: "materials", title: "Materials", type: "string" },
     { name: "externalBuyUrl", title: "External Buy URL", type: "url" },
+    // initialValue: false in studio/schemas/product.ts — this lightweight
+    // type doesn't model behavioral properties like initialValue, same
+    // as currency's required-ness/default above.
+    { name: "soldOut", title: "Sold Out", type: "boolean" },
     { name: "status", title: "Status", type: "string", options: { list: ["draft", "published"] } },
   ],
 };

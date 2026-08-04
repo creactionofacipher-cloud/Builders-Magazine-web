@@ -17,6 +17,7 @@ export const productFields = `{
   sizes,
   materials,
   externalBuyUrl,
+  soldOut,
   status
 }`;
 
@@ -30,15 +31,15 @@ export const PRODUCT_BY_SLUG_QUERY = `*[_type == "product" && slug.current == $s
 
 // Dedicated, lighter query for cms/services/products.ts's
 // getRelatedProducts — ProductCard (the only thing that renders these)
-// reads just name/shortDescription/mainImage/price/currency, never
-// description or gallery. Reusing productFields/ALL_PRODUCTS_QUERY here
-// would mean re-fetching every product's full portable-text description
-// and entire dereferenced gallery on every single product detail page
-// view just to compute 3 related cards — description/gallery/
-// gallerySettings are all optional on Product, so omitting them here is
-// type-safe. Excludes the current product in GROQ (not after fetching)
-// and caps at 12 so this stays cheap regardless of catalog size; the
-// service layer slices to the actual requested limit.
+// reads just name/shortDescription/mainImage/price/currency/soldOut,
+// never description or gallery. Reusing productFields/ALL_PRODUCTS_QUERY
+// here would mean re-fetching every product's full portable-text
+// description and entire dereferenced gallery on every single product
+// detail page view just to compute 3 related cards — description/
+// gallery/gallerySettings are all optional on Product, so omitting them
+// here is type-safe. Excludes the current product in GROQ (not after
+// fetching) and caps at 12 so this stays cheap regardless of catalog
+// size; the service layer slices to the actual requested limit.
 export const RELATED_PRODUCTS_QUERY = `*[_type == "product" && slug.current != $slug && ${PUBLISHED_FILTER}] | order(_createdAt desc) [0...12] {
   "id": _id,
   "slug": slug.current,
@@ -50,5 +51,6 @@ export const RELATED_PRODUCTS_QUERY = `*[_type == "product" && slug.current != $
   sizes,
   materials,
   externalBuyUrl,
+  soldOut,
   status
 }`;

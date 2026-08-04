@@ -61,7 +61,7 @@ export function buildArticleJsonLd(story: Story, settings: SiteSettings) {
     "@type": "Article",
     headline: story.title,
     description: story.shortDescription,
-    image: [story.coverImage.url],
+    image: story.coverImage ? [story.coverImage.url] : undefined,
     // Typed as required (Story.publishedDate: string), but real content
     // can still leave it empty — same "type says required, CMS doesn't
     // enforce it" gap seen elsewhere. `|| undefined` drops it from the
@@ -86,7 +86,7 @@ export function buildEventJsonLd(event: BuildersCup, settings: SiteSettings) {
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
     location: event.location ? { "@type": "Place", name: event.location } : undefined,
-    image: [event.coverImage.url],
+    image: event.coverImage ? [event.coverImage.url] : undefined,
     description: event.description
       ? portableTextToPlainText(event.description, 300)
       : undefined,
@@ -104,7 +104,7 @@ export function buildIssueJsonLd(issue: Issue, settings: SiteSettings) {
     "@type": "PublicationIssue",
     issueNumber: issue.number,
     name: issue.title,
-    image: [issue.coverImage.url],
+    image: issue.coverImage ? [issue.coverImage.url] : undefined,
     datePublished: issue.releaseDate || undefined,
     description: issue.description
       ? portableTextToPlainText(issue.description, 300)
@@ -127,7 +127,7 @@ export function buildProductJsonLd(product: Product) {
     "@type": "Product",
     name: product.name,
     description: product.shortDescription,
-    image: [product.mainImage.url],
+    image: product.mainImage ? [product.mainImage.url] : undefined,
     offers: {
       "@type": "Offer",
       url: absoluteUrl(`/buy/merchandise/${product.slug}`),

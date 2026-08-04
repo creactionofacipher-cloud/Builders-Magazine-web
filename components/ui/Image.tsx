@@ -6,7 +6,11 @@ import { getImageQuality, type ImageQualityPreset } from "@/lib/imageConfig";
 import { capSourceWidth } from "@/lib/sanityImageUrl";
 
 interface ImageProps {
-  asset: MediaAsset;
+  /** Nullable because a reference field (e.g. coverImage/mainImage) can be
+   * unset on an in-progress draft — Studio doesn't require these fields,
+   * so GROQ dereferences them to null. Renders nothing rather than
+   * crashing when that happens (see builders-cup/[slug]/page.tsx). */
+  asset: MediaAsset | null | undefined;
   /** Quality preset (lib/imageConfig.ts) — this is the only place a
    * next/image `quality` number gets produced; callers pick the preset
    * matching this image's editorial weight rather than a raw number. */
@@ -46,6 +50,8 @@ export function Image({
   lightbox = false,
   decorative = false,
 }: ImageProps) {
+  if (!asset) return null;
+
   const hasCaption = showCaption && Boolean(asset.caption || asset.copyright);
   // Sanity computes a tiny base64 LQIP for every uploaded image asset
   // automatically (file.asset->metadata.lqip, read via

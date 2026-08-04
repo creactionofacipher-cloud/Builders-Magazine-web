@@ -53,9 +53,6 @@ export default async function BuildersCupPage({ params }: { params: Promise<{ lo
         <Container className="flex flex-col gap-[var(--spacing-gutter-lg)]">
           <div className="flex flex-col gap-2">
             <Heading level={1}>Builders Cup</Heading>
-            <Text variant="muted">
-              Официальная платформа слёта кастомных мотоциклов Builders Cup.
-            </Text>
           </div>
 
           {latest ? (

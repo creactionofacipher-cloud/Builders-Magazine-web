@@ -94,7 +94,19 @@ export default async function ProductPage({
           />
           <div className="flex flex-col gap-4">
             <Heading level={1}>{product.name}</Heading>
-            <Text variant="lead">{priceLabel}</Text>
+            {product.soldOut ? (
+              // Same reasoning as components/editorial/ProductCard.tsx:
+              // a plain element rather than stacking a color override
+              // className onto <Text variant="lead">, since utils/cn.ts
+              // doesn't merge/dedupe classes. Matches Text's own "lead"
+              // size/leading so the layout doesn't shift, just bolder and
+              // in the theme's existing --color-error token.
+              <p className="font-body text-lg leading-relaxed font-bold text-error uppercase md:text-xl">
+                Sold Out
+              </p>
+            ) : (
+              <Text variant="lead">{priceLabel}</Text>
+            )}
 
             {product.description && <RichText value={product.description} />}
 
@@ -120,7 +132,7 @@ export default async function ProductPage({
               </div>
             )}
 
-            {product.externalBuyUrl && (
+            {!product.soldOut && product.externalBuyUrl && (
               <ButtonLink
                 href={product.externalBuyUrl}
                 target="_blank"

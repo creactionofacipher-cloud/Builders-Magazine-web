@@ -399,8 +399,15 @@ export const mockBuildersCupEvents: BuildersCup[] = [
     ],
     coverImage: wideImage,
     gallery: [wideImage, squareImage],
-    participants: [bike, bike2, bike3],
-    winners: [bike],
+    nominations: [
+      { id: "bc-2025-best-chopper", title: "Best Chopper" },
+      { id: "bc-2025-peoples-choice", title: "People's Choice" },
+    ],
+    participants: [
+      { ...bike, winner: true, nomination: { title: "Best Chopper" } },
+      { ...bike2, winner: false },
+      { ...bike3, winner: true, nomination: { title: "People's Choice" } },
+    ],
   },
   {
     id: "builders-cup-2024",
@@ -416,8 +423,8 @@ export const mockBuildersCupEvents: BuildersCup[] = [
     ],
     coverImage: squareImage,
     gallery: [squareImage],
-    participants: [bike2],
-    winners: [bike2],
+    nominations: [{ id: "bc-2024-best-paint", title: "Best Paint" }],
+    participants: [{ ...bike2, winner: true, nomination: { title: "Best Paint" } }],
   },
 ];
 

@@ -113,21 +113,13 @@ export default async function BuildersCupEventPage({
           <Container className="flex flex-col gap-8">
             <Heading level={2}>Участники</Heading>
             <Grid columns={3}>
-              {event.participants.map((bike) => (
-                <BikeCard key={bike.id} bike={bike} />
-              ))}
-            </Grid>
-          </Container>
-        </Section>
-      )}
-
-      {event.winners && event.winners.length > 0 && (
-        <Section>
-          <Container className="flex flex-col gap-8">
-            <Heading level={2}>Победители</Heading>
-            <Grid columns={3}>
-              {event.winners.map((bike) => (
-                <BikeCard key={bike.id} bike={bike} />
+              {event.participants.map((participant) => (
+                <BikeCard
+                  key={participant.id}
+                  bike={participant}
+                  winner={participant.winner}
+                  nomination={participant.nomination}
+                />
               ))}
             </Grid>
           </Container>

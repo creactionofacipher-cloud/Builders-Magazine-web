@@ -270,6 +270,28 @@ export interface Issue {
   gallerySettings?: GallerySettings;
 }
 
+// Mirrors studio/schemas/buildersCup.ts's `nominations` array — an
+// embedded object, not a document, since a nomination only ever makes
+// sense scoped to the one Builders Cup event it belongs to.
+export interface BuildersCupNomination {
+  id: string;
+  title: string;
+  description?: string;
+}
+
+// A BuildersCup participant, merged with its result. `winner`/`nomination`
+// come from either the current `participantEntry` shape or, for events
+// authored before nominations existed, the legacy `winners[]` field
+// (always `winner: false` with no `nomination` in that case) — see
+// cms/queries/buildersCup.ts. A bike can only ever hold one nomination
+// per event under this model (one participants[] entry per bike); if
+// that stops being enough, `nomination` becomes `nominations: []` here
+// and in the schema, not a second field.
+export interface BuildersCupParticipant extends Bike {
+  winner: boolean;
+  nomination?: { title: string };
+}
+
 export interface BuildersCup {
   id: string;
   slug: string;
@@ -280,8 +302,8 @@ export interface BuildersCup {
   coverImage: MediaAsset;
   gallery?: MediaAsset[];
   gallerySettings?: GallerySettings;
-  participants?: Bike[];
-  winners?: Bike[];
+  nominations?: BuildersCupNomination[];
+  participants?: BuildersCupParticipant[];
   stories?: Story[];
 }
 

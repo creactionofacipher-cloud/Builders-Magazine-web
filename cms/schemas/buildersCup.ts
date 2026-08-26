@@ -21,14 +21,44 @@ export const buildersCup: SchemaTypeDefinition = {
     },
     gallerySettingsField,
     {
+      name: "nominations",
+      title: "Nominations",
+      type: "array",
+      of: [
+        {
+          name: "nomination",
+          title: "Nomination",
+          type: "object",
+          fields: [
+            { name: "title", title: "Title", type: "string" },
+            { name: "description", title: "Description", type: "text" },
+          ],
+        },
+      ],
+    },
+    {
       name: "participants",
       title: "Participants",
       type: "array",
-      of: [{ name: "participant", type: "reference", to: [{ type: "bike" }] }],
+      of: [
+        // Legacy shape — kept so documents authored before nominations
+        // existed keep working without any migration.
+        { name: "participant", title: "Participant (legacy)", type: "reference", to: [{ type: "bike" }] },
+        {
+          name: "participantEntry",
+          title: "Participant",
+          type: "object",
+          fields: [
+            { name: "participant", title: "Bike", type: "reference", to: [{ type: "bike" }] },
+            { name: "winner", title: "Winner", type: "boolean" },
+            { name: "nomination", title: "Nomination", type: "string" },
+          ],
+        },
+      ],
     },
     {
       name: "winners",
-      title: "Winners",
+      title: "Winners (Legacy)",
       type: "array",
       of: [{ name: "winner", type: "reference", to: [{ type: "bike" }] }],
     },

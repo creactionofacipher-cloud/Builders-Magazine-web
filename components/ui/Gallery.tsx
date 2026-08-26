@@ -19,11 +19,30 @@ const HEIGHT_CLASSES: Record<GalleryHeight, string> = {
   large: "md:h-[340px] lg:h-[460px]",
 };
 
-const SIZES_BY_HEIGHT: Record<GalleryHeight, string> = {
-  small: "(min-width: 1024px) 330px, (min-width: 768px) 285px, 85vw",
-  medium: "(min-width: 1024px) 480px, (min-width: 768px) 390px, 85vw",
-  large: "(min-width: 1024px) 690px, (min-width: 768px) 510px, 85vw",
+// Same md/lg pixel values as HEIGHT_CLASSES above, kept in sync manually
+// (Tailwind arbitrary values in a className string aren't readable back
+// out as numbers) — used to compute each image's actual on-screen width
+// below, not just its height.
+const HEIGHT_PX: Record<GalleryHeight, { md: number; lg: number }> = {
+  small: { md: 190, lg: 220 },
+  medium: { md: 260, lg: 320 },
+  large: { md: 340, lg: 460 },
 };
+
+// Strip images are height-constrained (`w-auto`, a fixed height class) —
+// their on-screen width is `height × aspect ratio`, which varies per
+// photo. A single static `sizes` guess per height tier under-predicts
+// the real width for a wide/panoramic image (e.g. a 3840×1634 cover at
+// `imageHeight: "large"` renders ~1081px wide on desktop, not the ~690px
+// a fixed-aspect guess would assume), so next/image picks a too-small
+// source and the browser stretches it — visibly soft/blurry. Deriving
+// `sizes` from each asset's own width/height instead keeps the
+// `srcSet` candidate next/image picks matched to the real render size.
+function stripSizes(asset: MediaAsset, imageHeight: GalleryHeight): string {
+  const { md, lg } = HEIGHT_PX[imageHeight];
+  const ratio = asset.width / asset.height;
+  return `(min-width: 1024px) ${Math.round(lg * ratio)}px, (min-width: 768px) ${Math.round(md * ratio)}px, 85vw`;
+}
 
 const GAP_CLASSES: Record<GalleryGap, string> = {
   none: "gap-0",
@@ -56,7 +75,6 @@ export function Gallery({
     if (images.length < 2) return null;
 
     const heightClass = HEIGHT_CLASSES[imageHeight];
-    const sizes = SIZES_BY_HEIGHT[imageHeight];
     const gapClass = GAP_CLASSES[gap];
 
     return (
@@ -87,7 +105,7 @@ export function Gallery({
                 fill
                 lightbox
                 priority={index === 0}
-                sizes={sizes}
+                sizes={stripSizes(asset, imageHeight)}
                 className="h-full w-full"
               />
             </div>

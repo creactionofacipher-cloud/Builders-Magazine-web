@@ -41,9 +41,6 @@ export const buildersCup: SchemaTypeDefinition = {
       title: "Participants",
       type: "array",
       of: [
-        // Legacy shape — kept so documents authored before nominations
-        // existed keep working without any migration.
-        { name: "participant", title: "Participant (legacy)", type: "reference", to: [{ type: "bike" }] },
         {
           name: "participantEntry",
           title: "Participant",
@@ -55,12 +52,6 @@ export const buildersCup: SchemaTypeDefinition = {
           ],
         },
       ],
-    },
-    {
-      name: "winners",
-      title: "Winners (Legacy)",
-      type: "array",
-      of: [{ name: "winner", type: "reference", to: [{ type: "bike" }] }],
     },
     {
       name: "stories",

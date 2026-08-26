@@ -2,7 +2,6 @@ import type { Bike } from "@/types/content";
 import { Image } from "@/components/ui/Image";
 import { Heading } from "@/components/ui/Heading";
 import { Text } from "@/components/ui/Text";
-import { Badge } from "@/components/ui/Badge";
 import { HighlightText } from "@/components/ui/HighlightText";
 import { cn } from "@/utils/cn";
 
@@ -13,9 +12,10 @@ interface BikeCardProps {
    * renders inside search results. Omitted everywhere else. */
   highlightQuery?: string;
   /** Builders Cup result — omitted everywhere the card isn't a Builders
-   * Cup participant. A winner with no resolved nomination (legacy events
-   * authored before nominations existed — see cms/queries/buildersCup.ts)
-   * renders as a plain card, same as a non-winner: no empty badge. */
+   * Cup participant. A winner whose nomination key no longer matches any
+   * entry in the event's nominations (e.g. the nomination was deleted
+   * after being awarded) renders as a plain card, same as a non-winner:
+   * no empty badge. */
   winner?: boolean;
   nomination?: { title: string };
 }
@@ -40,7 +40,17 @@ export function BikeCard({ bike, className, highlightQuery, winner, nomination }
         </Heading>
         {bike.builder && <Text variant="muted">{bike.builder.name}</Text>}
         {winner && nomination?.title && (
-          <Badge className="mt-1 w-fit border-success text-success">🏆 {nomination.title}</Badge>
+          // Not <Badge>: Badge's own text-xs/px-2/text-muted classes would
+          // collide with the bigger, two-tone styling this needs — cn()
+          // is a non-merging join (see ProductCard's Sold Out label for
+          // the same reasoning), so stacking overrides on top of Badge's
+          // defaults leaves which one wins to generated CSS order, not
+          // intent.
+          <span className="mt-1 inline-flex w-fit items-center gap-2 rounded-[var(--radius-sm)] border border-border px-3 py-1 font-body text-sm tracking-wide uppercase">
+            <span className="font-bold text-foreground">Winner</span>
+            <span className="w-px self-stretch bg-border" />
+            <span className="font-medium text-muted">{nomination.title}</span>
+          </span>
         )}
       </div>
     </article>

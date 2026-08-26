@@ -3,17 +3,13 @@ import { mediaAssetProjection, bikeProjection, richTextField } from "./fragments
 // Exported so cms/queries/layoutBlocks.ts's layoutBlocksField() can resolve
 // a buildersCupHighlight Layout Block's `event` reference through this
 // exact same projection — no second, drifting copy of the shape.
-// participants[] mixes two array-member shapes (see
-// studio/schemas/buildersCup.ts): a legacy plain `bike` reference
-// (_type == "participant", authored before nominations existed) and the
-// current `participantEntry` object (participant reference + winner +
-// nomination key). Both branches resolve to the same flat shape — Bike
-// fields plus `winner`/`nomination` — so the mapper and frontend never
-// need to know which one a given entry came from. `^.winners[]._ref`
-// reads the sibling legacy `winners` field (see below) to mark a
-// pre-nominations winner without any data migration; such a bike has no
-// nomination, which the frontend already renders as a plain participant
-// badge-free (see components/editorial/BikeCard.tsx).
+// Each participants[] entry (studio/schemas/buildersCup.ts's
+// `participantEntry`) is a bike reference plus a `winner` flag and,
+// when won, the `_key` of one of this same document's `nominations`.
+// `^.nominations[_key == ^.nomination][0]` resolves that key against the
+// sibling nominations array — a nomination only ever makes sense scoped
+// to the event it belongs to, so there's nothing to dereference across
+// documents.
 export const buildersCupFields = `{
   "id": _id,
   "slug": slug.current,
@@ -26,16 +22,9 @@ export const buildersCupFields = `{
   "gallerySettings": gallerySettings,
   "nominations": nominations[]{"id": _key, title, description},
   "participants": participants[]{
-    _type == "participant" => {
-      ...@->${bikeProjection},
-      "winner": @._ref in ^.winners[]._ref,
-      "nomination": null
-    },
-    _type == "participantEntry" => {
-      ...participant->${bikeProjection},
-      winner,
-      "nomination": ^.nominations[_key == ^.nomination][0]{title}
-    }
+    ...participant->${bikeProjection},
+    winner,
+    "nomination": ^.nominations[_key == ^.nomination][0]{title}
   }
 }`;
 

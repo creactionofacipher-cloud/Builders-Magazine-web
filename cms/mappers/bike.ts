@@ -4,7 +4,7 @@ import type { Bike } from "@/types/content";
 // pairs (cms/queries/fragments.ts) since Sanity has no dynamic-key
 // object field — this is the one real transform every Bike-shaped
 // response needs, whether fetched top-level or nested (Story.relatedBike,
-// Builder.projects, BuildersCup.participants/winners).
+// Builder.projects, BuildersCup.participants).
 export interface RawBike extends Omit<Bike, "specifications"> {
   specifications?: { key: string; value: string }[];
 }

@@ -70,19 +70,9 @@ export default defineType({
     defineField({
       name: "participants",
       title: "Participants",
-      description:
-        "Existing plain reference entries keep working as-is. Add new entries as “Participant” to mark a Winner and pick a Nomination.",
+      description: "Add a participant, then mark Winner and pick a Nomination if it won.",
       type: "array",
       of: [
-        // Legacy shape — unchanged so documents authored before nominations
-        // existed keep working without any migration (see
-        // cms/queries/buildersCup.ts, which still reads these).
-        defineArrayMember({
-          name: "participant",
-          title: "Participant (legacy)",
-          type: "reference",
-          to: [{ type: "bike" }],
-        }),
         defineArrayMember({
           name: "participantEntry",
           title: "Participant",
@@ -138,14 +128,6 @@ export default defineType({
           },
         }),
       ],
-    }),
-    defineField({
-      name: "winners",
-      title: "Winners (Legacy)",
-      description:
-        "Superseded by the Winner toggle on each participant above. Kept so events created before nominations existed keep rendering unchanged.",
-      type: "array",
-      of: [defineArrayMember({ name: "winner", type: "reference", to: [{ type: "bike" }] })],
     }),
     defineField({
       name: "stories",

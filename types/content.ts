@@ -279,14 +279,11 @@ export interface BuildersCupNomination {
   description?: string;
 }
 
-// A BuildersCup participant, merged with its result. `winner`/`nomination`
-// come from either the current `participantEntry` shape or, for events
-// authored before nominations existed, the legacy `winners[]` field
-// (always `winner: false` with no `nomination` in that case) — see
-// cms/queries/buildersCup.ts. A bike can only ever hold one nomination
-// per event under this model (one participants[] entry per bike); if
-// that stops being enough, `nomination` becomes `nominations: []` here
-// and in the schema, not a second field.
+// A BuildersCup participant, merged with its result (studio/schemas/
+// buildersCup.ts's `participantEntry`). A bike can only ever hold one
+// nomination per event under this model (one participants[] entry per
+// bike); if that stops being enough, `nomination` becomes
+// `nominations: []` here and in the schema, not a second field.
 export interface BuildersCupParticipant extends Bike {
   winner: boolean;
   nomination?: { title: string };

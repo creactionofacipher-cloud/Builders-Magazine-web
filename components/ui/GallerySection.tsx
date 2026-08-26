@@ -8,6 +8,12 @@ interface GallerySectionProps {
   images?: MediaAsset[];
   settings?: GallerySettings;
   surface?: boolean;
+  /** Passed straight to the underlying Section, same as its own className
+   * prop — for a caller that needs to pull this section closer to
+   * whatever precedes it (e.g. a negative -mt when it directly follows
+   * another section with no unrelated content between them), not for
+   * general layout. */
+  className?: string;
 }
 
 // The "Галерея" section shared by every detail page's own gallery field
@@ -19,12 +25,12 @@ interface GallerySectionProps {
 // does for the Layout Block version — Container is what caps width via
 // max-w-7xl, so anything that needs to break out of it just has to not
 // be inside one.
-export function GallerySection({ images, settings, surface }: GallerySectionProps) {
+export function GallerySection({ images, settings, surface, className }: GallerySectionProps) {
   if (!images || images.length === 0) return null;
 
   if (settings?.layout === "strip") {
     return (
-      <Section surface={surface}>
+      <Section surface={surface} className={className}>
         <div className="flex flex-col gap-8">
           <Container>
             <Heading level={2}>Галерея</Heading>
@@ -36,7 +42,7 @@ export function GallerySection({ images, settings, surface }: GallerySectionProp
   }
 
   return (
-    <Section surface={surface}>
+    <Section surface={surface} className={className}>
       <Container className="flex flex-col gap-8">
         <Heading level={2}>Галерея</Heading>
         <Gallery images={images} {...settings} />

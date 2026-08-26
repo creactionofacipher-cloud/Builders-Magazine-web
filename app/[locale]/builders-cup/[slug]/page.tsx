@@ -126,7 +126,20 @@ export default async function BuildersCupEventPage({
         </Section>
       )}
 
-      <GallerySection images={event.gallery} settings={event.gallerySettings} surface />
+      <GallerySection
+        images={event.gallery}
+        settings={event.gallerySettings}
+        surface
+        // Halves the visible gap to "Участники" directly above (two
+        // adjacent Sections otherwise stack their padding on both sides
+        // of the boundary) — only when that section actually rendered;
+        // Gallery follows the hero Section unpulled otherwise.
+        className={
+          event.participants && event.participants.length > 0
+            ? "-mt-[var(--spacing-section)] md:-mt-[var(--spacing-section-lg)]"
+            : undefined
+        }
+      />
     </>
   );
 }
